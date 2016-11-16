@@ -1,8 +1,24 @@
-# smackui
-A UI for SMACK
+# README
 
-## Slack Channel
-https://smackui.slack.com
+This README would normally document whatever steps are necessary to get the
+application up and running.
 
-## Team Idea Proposal 
-https://docs.google.com/document/d/1fYhlxn2HOZSSccu2Cv5e_hBZhID1sLV3Oxor_4dGqOM/edit?ts=57e01a84
+Things you may want to cover:
+
+* Ruby version
+
+* System dependencies
+
+* Configuration
+
+* Database creation
+
+* Database initialization
+
+* How to run the test suite
+
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+
+* ...
