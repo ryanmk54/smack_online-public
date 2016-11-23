@@ -14,12 +14,12 @@ default: &default
   encoding: utf8
   pool: 5
   username: root
-  password: *****
+  #password: 'hihi'
   host: localhost
 
 development:
   <<: *default
-  database: ****
+  database: web_server_test
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -49,6 +49,6 @@ test:
 #
 production:
   <<: *default
-  database: *****
-  username: *****
+  database: web_server_test
+  username: root
   password: <%= ENV['WEB_SERVER_DATABASE_PASSWORD'] %>
