@@ -66,7 +66,10 @@ function addFileToFileList(filename) {
 }
 
 function updateInputEditor(filename) {
-  zip.file(filename, editor.getValue());
+  // TODO don't change the editor value if they click on a folder
+  if (currentFile != "") {
+    zip.file(currentFile, editor.getValue());
+  }
   // input editor is called editor
   zip.file(filename).async("string")
     .then(function success(content) {
@@ -78,3 +81,10 @@ function updateInputEditor(filename) {
       // handle the error
     });
 }
+
+//$().ready(function() {
+//  $('.edit_project').on('ajax:beforeSend', function(event, xhr, settings) {
+//    debugger;
+//    
+//  });
+//});
