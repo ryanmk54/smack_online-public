@@ -1,6 +1,9 @@
-<!-- Start form for submission -->
 
-<%= form_for(project) do |f| %>
+<% default_zip = "UEsDBBQDAAAAAPhcdkkAAAAAAAAAAAAAAAAIAAAAZGVmYXVsdC9QSwMEFAMAAAgA+Fx2SUINDm8hAAAAJAAAABQAAABkZWZhdWx0L2MrKyBmaWxlLmNwcMvMK1HITczM0wAxEovSk3UUkjMSi7RA7LLoWE2Faq5aAFBLAQI/AxQDAAAAAPhcdkkAAAAAAAAAAAAAAAAIACQAAAAAAAAAEIDtQQAAAABkZWZhdWx0LwoAIAAAAAAAAQAYAADyVc3vRNIBgEijge9E0gEA8lXN70TSAVBLAQI/AxQDAAAIAPhcdklCDQ5vIQAAACQAAAAUACQAAAAAAAAAIICkgSYAAABkZWZhdWx0L2MrKyBmaWxlLmNwcAoAIAAAAAAAAQAYAADyVc3vRNIBAPJVze9E0gEA8lXN70TSAVBLBQYAAAAAAgACAMAAAAB5AAAAAAA="
+%>
+
+<!-- Start form for submission -->
+<%= form_for(project, remote: true) do |f| %>
   <% if project.errors.any? %>
     <div hidden id="error_explanation">
       <h2 hidden><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
@@ -18,8 +21,8 @@
   </div>
 
   <div hidden class="field">
-    <%= f.label :output %>
-    <%= f.text_field :output %>
+    <%= f.label :input %>
+    <%= f.text_field :input, value: default_zip %>
   </div>
 
   <div hidden class="field">
@@ -28,8 +31,11 @@
   </div>
 
   <div hidden class="actions">
-    <%= f.submit %>
+  <div class="field">
+    <%= f.label :code %>
+    <%= f.file_field(:code) %>
   </div>
+
 <% end %>
 
 <!-- End form for submission -->
