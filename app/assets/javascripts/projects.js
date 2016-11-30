@@ -24,8 +24,21 @@
 
 var fileList = [];
 var files = {};
+var zip;
+var currentFile = "";
+
+$().ready(function(){
+  loadEditorFromInput();
+});
+
+function loadEditorFromInput() {
+  var base64Input = document.getElementById("project_input").value;
+  console.log(base64Input);
+  loadEditor(base64Input);
+}
+
 function loadEditor(base64Input) {
-  var zip = new JSZip();
+  zip = new JSZip();
   zip.loadAsync(base64Input, {base64: true})
     .then(function success(zip) {
       zip.forEach(function (relativePath, file) {
@@ -33,11 +46,35 @@ function loadEditor(base64Input) {
 
         file.async("string").then(function success(content) {
           files[relativePath] = content;
+          addFileToFileList(relativePath);
         }, function error(e) {
           console.log("converting file to text failed");
         });
       });
     }, function error(e) {
       console.log("loadAsync failed");
+    });
+}
+
+function addFileToFileList(filename) {
+  var fileListElement = document.getElementById("file-list");
+  var fileElement = document.createElement("div");
+  fileElement.id = filename;
+  fileElement.appendChild(document.createTextNode(filename));
+  fileElement.onclick = function() { updateInputEditor(filename) };
+  fileListElement.appendChild(fileElement);
+}
+
+function updateInputEditor(filename) {
+  zip.file(filename, editor.getValue());
+  // input editor is called editor
+  zip.file(filename).async("string")
+    .then(function success(content) {
+      // use the content
+      currentFile = filename;
+      editor.setValue(content);
+      console.log(content);
+    }, function error(e) {
+      // handle the error
     });
 }
