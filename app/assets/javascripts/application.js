@@ -13,6 +13,7 @@
 //= require ace/ace
 //= require jszip
 //= require jquery
+//= bootstrap-select
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
