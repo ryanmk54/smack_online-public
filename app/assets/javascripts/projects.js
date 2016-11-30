@@ -41,9 +41,3 @@ function loadEditor(base64Input) {
       console.log("loadAsync failed");
     });
 }
-
-function addFileNameToFileList(filename) {
-}
-function populateFileList(filesArr) {
-}
-
