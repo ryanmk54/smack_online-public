@@ -30,10 +30,13 @@
     <%= f.text_field :eta %>
   </div>
 
-  <div hidden class="actions">
   <div class="field">
     <%= f.label :code %>
     <%= f.file_field(:code) %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
   </div>
 
 <% end %>
@@ -150,24 +153,24 @@ main()
 
 <!-- Bootstrap -->
 <script>
-  $(document).ready(function () {
-    var mySelect = $('#first-disabled2');
+  //$(document).ready(function () {
+  //  var mySelect = $('#first-disabled2');
 
-    $('#special').on('click', function () {
-      mySelect.find('option:selected').prop('disabled', true);
-      mySelect.selectpicker('refresh');
-    });
+  //  $('#special').on('click', function () {
+  //    mySelect.find('option:selected').prop('disabled', true);
+  //    mySelect.selectpicker('refresh');
+  //  });
 
-    $('#special2').on('click', function () {
-      mySelect.find('option:disabled').prop('disabled', false);
-      mySelect.selectpicker('refresh');
-    });
+  //  $('#special2').on('click', function () {
+  //    mySelect.find('option:disabled').prop('disabled', false);
+  //    mySelect.selectpicker('refresh');
+  //  });
 
-    $('#basic2').selectpicker({
-      liveSearch: true,
-      maxOptions: 1
-    });
-  });
+  //  $('#basic2').selectpicker({
+  //    liveSearch: true,
+  //    maxOptions: 1
+  //  });
+  //});
 </script>
 
 <!-- End scripts -->
