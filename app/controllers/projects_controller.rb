@@ -1,8 +1,9 @@
 class ProjectsController < ApplicationController
+  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
   before_action :set_project, only: [:show, :edit, :update]
 
-  SERVICE_REQUEST_URL = "http://httpbin.org/post"
-  #SERVICE_REQUEST_URL = "<prod_server>/job_started"
+  #SERVICE_REQUEST_URL = "http://httpbin.org/post"
+  SERVICE_REQUEST_URL = "ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started"
 
   # GET /projects/1
   # GET /projects/1.json
@@ -38,7 +39,7 @@ class ProjectsController < ApplicationController
     end
 
     # This line is used for testing until the view is sending base64 directly over
-    #params[:project][:code] = Base64.strict_encode64(params[:project][:code].read)
+    params[:project][:code] = Base64.strict_encode64(params[:project][:code].read)
 
     save_base64_input_to_file_system
     send_service_input
@@ -58,7 +59,7 @@ class ProjectsController < ApplicationController
     end
 
     # This line is used for testing until the view is sending base64 directly over
-    #params[:project][:code] = Base64.strict_encode64(params[:project][:code].read)
+    params[:project][:code] = Base64.strict_encode64(params[:project][:code].read)
 
     save_base64_input_to_file_system
     send_service_input
@@ -67,7 +68,7 @@ class ProjectsController < ApplicationController
   # POST /projects/receive_service_output
   def receive_service_output
     # Get params and associate :output with the project with id :id
-    project = Object.find(params[:id])
+    project = Project.find(params[:id])
     project[:eta] = 0
     project[:output] = params[:output]
     project.save
