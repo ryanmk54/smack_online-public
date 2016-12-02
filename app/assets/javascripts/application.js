@@ -10,10 +10,11 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require ace/ace
-//= require jszip
 //= require jquery
-//= bootstrap-select
+//= require jquery.turbolinks
 //= require jquery_ujs
+//= require ace/ace
+//= require bootstrap-select
+//= require jszip
 //= require turbolinks
 //= require_tree .

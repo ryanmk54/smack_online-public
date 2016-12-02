@@ -1,51 +1,24 @@
-
-<% default_zip = "UEsDBBQDAAAAAPhcdkkAAAAAAAAAAAAAAAAIAAAAZGVmYXVsdC9QSwMEFAMAAAgA+Fx2SUINDm8hAAAAJAAAABQAAABkZWZhdWx0L2MrKyBmaWxlLmNwcMvMK1HITczM0wAxEovSk3UUkjMSi7RA7LLoWE2Faq5aAFBLAQI/AxQDAAAAAPhcdkkAAAAAAAAAAAAAAAAIACQAAAAAAAAAEIDtQQAAAABkZWZhdWx0LwoAIAAAAAAAAQAYAADyVc3vRNIBgEijge9E0gEA8lXN70TSAVBLAQI/AxQDAAAIAPhcdklCDQ5vIQAAACQAAAAUACQAAAAAAAAAIICkgSYAAABkZWZhdWx0L2MrKyBmaWxlLmNwcAoAIAAAAAAAAQAYAADyVc3vRNIBAPJVze9E0gEA8lXN70TSAVBLBQYAAAAAAgACAMAAAAB5AAAAAAA="
-%>
-
 <!-- Start form for submission -->
 <%= form_for(project, remote: true) do |f| %>
-  <% if project.errors.any? %>
-    <div hidden id="error_explanation">
-      <h2 hidden><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
-      <ul hidden>
-      <% project.errors.full_messages.each do |message| %>
-        <li hidden><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div hidden class="field">
-    <%= f.label :title %>
-    <%= f.text_field :title %>
+  <div hidden>
+  <%= f.text_field :title %>
+  <%= f.text_field :input, value: @encoded_zip%>
+  <%= f.text_field :eta %>
   </div>
-
-  <div hidden class="field">
-    <%= f.label :input %>
-    <%= f.text_field :input, value: @encoded_zip%>
-  </div>
-
-  <div hidden class="field">
-    <%= f.label :eta %>
-    <%= f.text_field :eta %>
-  </div>
-
-  <div class="field">
-    <%= f.label :code %>
-    <%= f.file_field(:code) %>
-  </div>
-
   <div class="actions">
     <%= f.submit %>
   </div>
-
 <% end %>
+<div class="field">
+  <%= label_tag :input_upload %>
+  <%= file_field_tag :input_upload %>
+</div>
+
 
 <!-- End form for submission -->
 
 <!-- Start page body -->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
  <!-- Body -->
@@ -70,8 +43,8 @@
       </div>
 
       <!-- Files -->
-      <div class="file-list-container row">
-        <div class="lgray height100">
+      <div id="file-list-container" class="file-list-container row">
+        <div id="file-list" class="lgray height100">
         </div>
       </div>
     </div>
@@ -96,6 +69,7 @@
         <!-- Left -->
         <div class="editor-container col-xs-6 col-sm-6 col-md-6 col-lg-6">
           <div id="editor1">
+            <!--
 <pre>/* Hello World program */
 
 #include<stdio.h>
@@ -105,6 +79,7 @@ main()
     printf("Hello World");
 
 }</pre>
+-->
         </div>
         </div>
 

@@ -24,20 +24,103 @@
 
 var fileList = [];
 var files = {};
-function loadEditor(base64Input) {
-  var zip = new JSZip();
+var zip;
+var currentFile = "";
+var base64InputID = "project_input";
+var zipUploadID = "input_upload";
+
+$().ready(function(){
+  zip = new JSZip();
+  var base64Input = document.getElementById(base64InputID);
+  if (base64Input.value != '') {
+    loadEditorFromInput();
+  }
+});
+
+function loadEditorFromInput() {
+  var base64Input = document.getElementById(base64InputID).value;
+  console.log(base64Input);
   zip.loadAsync(base64Input, {base64: true})
     .then(function success(zip) {
-      zip.forEach(function (relativePath, file) {
-        fileList.push(relativePath);
-
-        file.async("string").then(function success(content) {
-          files[relativePath] = content;
-        }, function error(e) {
-          console.log("converting file to text failed");
-        });
-      });
+      loadEditor();
     }, function error(e) {
-      console.log("loadAsync failed");
+      console.log("loadAsync in loadEditorFromInput failed");
     });
 }
+
+function loadEditorFromZipUpload() {
+  var zipInputElement = document.getElementById(zipUploadID);
+  zip.loadAsync(zipInputElement.files[0])
+    .then(function success(zip) {
+      loadEditor();
+    }, function error(e) {
+      console.log("loadAsync in loadEditorFromZipUpload failed");
+    });
+}
+
+function loadEditor(base64Input) {
+  zip.forEach(function (relativePath, file) {
+    fileList.push(relativePath);
+
+    file.async("string").then(function success(content) {
+      files[relativePath] = content;
+      addFileToFileList(relativePath);
+    }, function error(e) {
+      console.log("converting file to text failed");
+    });
+  });
+}
+
+function addFileToFileList(filename) {
+  var fileListElement = document.getElementById("file-list");
+  var fileElement = document.createElement("div");
+  fileElement.id = filename;
+  fileElement.appendChild(document.createTextNode(filename));
+  fileElement.onclick = function() { updateInputEditor(filename) };
+  fileListElement.appendChild(fileElement);
+}
+
+function updateInputEditor(filename) {
+  // TODO don't change the editor value if they click on a folder
+  if (currentFile != "") {
+    zip.file(currentFile, editor.getValue());
+  }
+  // input editor is called editor
+  zip.file(filename).async("string")
+    .then(function success(content) {
+      // use the content
+      currentFile = filename;
+      editor.setValue(content);
+      console.log(content);
+    }, function error(e) {
+      // handle the error
+    });
+}
+
+$().ready(function() {
+  console.log("entered ready function");
+  $('form.edit_project').on('ajax:before', function(event, xhr, settings) {
+    console.log('ajax before');
+    zip.generateAsync({type: "base64"})
+      .then(function (content) {
+        var base64Input = document.getElementById(base64InputID);
+        base64Input.value = content;
+      });
+  });
+  $('form.edit_project').on('ajax:beforeSend', function(event, xhr, settings) {
+    console.log('ajax beforeSend');
+  });
+  $('form.edit_project').on('ajax:send', function(event, xhr, settings) {
+    console.log('ajax send');
+  });
+  $('form.edit_project').on('ajax:success', function(event, xhr, settings) {
+    console.log('ajax success');
+  });
+  $('form.edit_project').on('ajax:error', function(event, xhr, settings) {
+    console.log('ajax error');
+  });
+  $('#input_upload').change(function() {
+    console.log("#input_upload has changed");
+    loadEditorFromZipUpload();
+  });
+});
