@@ -104,24 +104,26 @@ function updateInputEditor(filename) {
 
 $().ready(function() {
   console.log("entered ready function");
-  $('form.edit_project').on('ajax:before', function(event, xhr, settings) {
+  $('form').on('ajax:before', function(event, xhr, settings) {
     console.log('ajax before');
     zip.generateAsync({type: "base64"})
       .then(function (content) {
         var base64Input = document.getElementById(base64InputID);
         base64Input.value = content;
+        event.target.submit();
       });
+    return false;
   });
-  $('form.edit_project').on('ajax:beforeSend', function(event, xhr, settings) {
+  $('form').on('ajax:beforeSend', function(event, xhr, settings) {
     console.log('ajax beforeSend');
   });
-  $('form.edit_project').on('ajax:send', function(event, xhr, settings) {
+  $('form').on('ajax:send', function(event, xhr, settings) {
     console.log('ajax send');
   });
-  $('form.edit_project').on('ajax:success', function(event, xhr, settings) {
+  $('form').on('ajax:success', function(event, xhr, settings) {
     console.log('ajax success');
   });
-  $('form.edit_project').on('ajax:error', function(event, xhr, settings) {
+  $('form').on('ajax:error', function(event, xhr, settings) {
     console.log('ajax error');
   });
   $('#input_upload').change(function() {
