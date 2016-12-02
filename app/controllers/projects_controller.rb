@@ -23,7 +23,10 @@ class ProjectsController < ApplicationController
     if(File.file?(Rails.root.join('public', 'system', 'projects', 'input', @project.id.to_s)))
       file = File.open(Rails.root.join('public', 'system', 'projects', 'input', @project.id.to_s))
       @base64_input = file.read
+      puts @base64_input
       file.close
+    else
+      puts "no base64 input"
     end
     if(File.file?(Rails.root.join('public', 'system', 'projects', 'output', @project.id.to_s)))
       file = File.open(Rails.root.join('public', 'system', 'projects', 'output', @project.id.to_s))

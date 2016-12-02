@@ -2,7 +2,7 @@
 <%= form_for(project, remote: true) do |f| %>
   <div hidden>
   <%= f.text_field :title %>
-  <%= f.text_field :input, value: @encoded_zip%>
+  <%= f.text_field :input, value: @base64_input%>
   <%= f.text_field :eta %>
   </div>
   <div class="actions">
