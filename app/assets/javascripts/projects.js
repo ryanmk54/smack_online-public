@@ -28,12 +28,17 @@ var zip;
 var currentFile = "";
 var base64InputID = "project_input";
 var zipUploadID = "input_upload";
+var outputID = "output";
 
 $().ready(function(){
   zip = new JSZip();
   var base64Input = document.getElementById(base64InputID);
   if (base64Input.value != '') {
     loadEditorFromInput();
+  }
+  var output = document.getElementById(outputID);
+  if (output.value != '') {
+    editor2.setValue(output.value);
   }
 });
 
