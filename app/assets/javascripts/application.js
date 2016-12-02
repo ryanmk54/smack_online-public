@@ -11,10 +11,8 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery.turbolinks
 //= require jquery_ujs
 //= require ace/ace
 //= require bootstrap-select
 //= require jszip
-//= require turbolinks
 //= require_tree .
