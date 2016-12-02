@@ -26,34 +26,49 @@ var fileList = [];
 var files = {};
 var zip;
 var currentFile = "";
+var base64InputID = "project_input";
+var zipUploadID = "input_upload";
 
 $().ready(function(){
-  loadEditorFromInput();
+  zip = new JSZip();
+  var base64Input = document.getElementById(base64InputID);
+  if (base64Input.value != '') {
+    loadEditorFromInput();
+  }
 });
 
 function loadEditorFromInput() {
-  var base64Input = document.getElementById("project_input").value;
+  var base64Input = document.getElementById(base64InputID).value;
   console.log(base64Input);
-  loadEditor(base64Input);
+  zip.loadAsync(base64Input, {base64: true})
+    .then(function success(zip) {
+      loadEditor();
+    }, function error(e) {
+      console.log("loadAsync in loadEditorFromInput failed");
+    });
+}
+
+function loadEditorFromZipUpload() {
+  var zipInputElement = document.getElementById(zipUploadID);
+  zip.loadAsync(zipInputElement.files[0])
+    .then(function success(zip) {
+      loadEditor();
+    }, function error(e) {
+      console.log("loadAsync in loadEditorFromZipUpload failed");
+    });
 }
 
 function loadEditor(base64Input) {
-  zip = new JSZip();
-  zip.loadAsync(base64Input, {base64: true})
-    .then(function success(zip) {
-      zip.forEach(function (relativePath, file) {
-        fileList.push(relativePath);
+  zip.forEach(function (relativePath, file) {
+    fileList.push(relativePath);
 
-        file.async("string").then(function success(content) {
-          files[relativePath] = content;
-          addFileToFileList(relativePath);
-        }, function error(e) {
-          console.log("converting file to text failed");
-        });
-      });
+    file.async("string").then(function success(content) {
+      files[relativePath] = content;
+      addFileToFileList(relativePath);
     }, function error(e) {
-      console.log("loadAsync failed");
+      console.log("converting file to text failed");
     });
+  });
 }
 
 function addFileToFileList(filename) {
@@ -82,9 +97,30 @@ function updateInputEditor(filename) {
     });
 }
 
-//$().ready(function() {
-//  $('.edit_project').on('ajax:beforeSend', function(event, xhr, settings) {
-//    debugger;
-//    
-//  });
-//});
+$().ready(function() {
+  console.log("entered ready function");
+  $('form.edit_project').on('ajax:before', function(event, xhr, settings) {
+    console.log('ajax before');
+    zip.generateAsync({type: "base64"})
+      .then(function (content) {
+        var base64Input = document.getElementById(base64InputID);
+        base64Input.value = content;
+      });
+  });
+  $('form.edit_project').on('ajax:beforeSend', function(event, xhr, settings) {
+    console.log('ajax beforeSend');
+  });
+  $('form.edit_project').on('ajax:send', function(event, xhr, settings) {
+    console.log('ajax send');
+  });
+  $('form.edit_project').on('ajax:success', function(event, xhr, settings) {
+    console.log('ajax success');
+  });
+  $('form.edit_project').on('ajax:error', function(event, xhr, settings) {
+    console.log('ajax error');
+  });
+  $('#input_upload').change(function() {
+    console.log("#input_upload has changed");
+    loadEditorFromZipUpload();
+  });
+});
