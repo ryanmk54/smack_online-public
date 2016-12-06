@@ -11,7 +11,7 @@
 <% end %>
 <div class="field">
   <%= label_tag :input_upload %>
-  <%= file_field_tag :input_upload %>
+  <%= file_field_tag :input_upload, accept: ".zip, application/zip" %>
 </div>
 <div hidden>
   <%= text_field_tag :output, value: @output %>

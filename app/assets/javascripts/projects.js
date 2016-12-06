@@ -85,6 +85,9 @@ function addFileToFileList(filename) {
   fileListElement.appendChild(fileElement);
 }
 
+// Unzips the file out of zip and 
+// sets the contents of the editor 
+// to the contents of the file
 function updateInputEditor(filename) {
   // TODO don't change the editor value if they click on a folder
   if (currentFile != "") {
@@ -100,6 +103,25 @@ function updateInputEditor(filename) {
     }, function error(e) {
       // handle the error
     });
+}
+
+function outputZipError(errorMessage) {
+  console.log(errorMessage);
+  alert(errorMessage);
+}
+
+function validateZipUpload() {
+  var zipUpload = document.getElementById(zipUploadID);
+
+  if (zipUpload.files.length != 1) {
+    outputZipError("Multiple files aren't allowed");
+    return false;
+  }
+  if (zipUpload.files[0].type != "application/zip") {
+    outputZipError("Only zip files are allowed");
+    return false;
+  }
+  return true;
 }
 
 $().ready(function() {
@@ -128,6 +150,8 @@ $().ready(function() {
   });
   $('#input_upload').change(function() {
     console.log("#input_upload has changed");
-    loadEditorFromZipUpload();
+    if (validateZipUpload()) {
+      loadEditorFromZipUpload();
+    }
   });
 });
