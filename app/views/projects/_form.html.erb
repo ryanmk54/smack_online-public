@@ -1,18 +1,3 @@
-<!-- Start form for submission -->
-<%= form_for(project, remote: true) do |f| %>
-  <div hidden>
-  <%= f.text_field :title %>
-  <%= f.text_field :input, value: @base64_input%>
-  <%= f.text_field :eta %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
-<div class="field">
-  <%= label_tag :input_upload %>
-  <%= file_field_tag :input_upload %>
-</div>
 <div hidden>
   <%= text_field_tag :output, value: @output %>
 </div>
@@ -41,13 +26,24 @@
 
       <!-- Project Selection -->
       <div class="project-selection-container row">
-        <div class="gray height100">
+        <div class="gray col-xs-12 col-sm-12 col-md-12 col-lg-12 height100">
+          <%= form_for(project, remote: true) do |f| %>
+  <div hidden>
+  <%= f.text_field :title %>
+  <%= f.text_field :input, value: @base64_input%>
+  <%= f.text_field :eta %>
+  </div>
         </div>
       </div>
 
       <!-- Files -->
       <div id="file-list-container" class="file-list-container row">
-        <div id="file-list" class="lgray height100">
+        <div id="file-list" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 lgray height100">
+          <!-- Start form for submission -->
+<div class="field">
+  <%= label_tag :input_upload %>
+  <%= file_field_tag :input_upload %>
+</div>
         </div>
       </div>
     </div>
@@ -104,7 +100,13 @@ main()
             <option value="volvo">Option 1</option>
             <option value="saab">Option 2</option>
           </select>
-          <button class="btn btn-primary run-button">Run</button>
+            <!-- <div class="actions"> -->
+    <%= 
+      f.submit value: "Run", class: 'btn btn-default run-button'
+    
+    %>
+  <!-- </div> -->
+<% end %>
         </div>
         
         <!-- Bottom Right -->
@@ -127,28 +129,6 @@ main()
     var editor2 = ace.edit("editor2");
     editor2.setTheme("ace/theme/twilight");
     editor2.session.setMode("ace/mode/c_cpp");
-</script>
-
-<!-- Bootstrap -->
-<script>
-  //$(document).ready(function () {
-  //  var mySelect = $('#first-disabled2');
-
-  //  $('#special').on('click', function () {
-  //    mySelect.find('option:selected').prop('disabled', true);
-  //    mySelect.selectpicker('refresh');
-  //  });
-
-  //  $('#special2').on('click', function () {
-  //    mySelect.find('option:disabled').prop('disabled', false);
-  //    mySelect.selectpicker('refresh');
-  //  });
-
-  //  $('#basic2').selectpicker({
-  //    liveSearch: true,
-  //    maxOptions: 1
-  //  });
-  //});
 </script>
 
 <!-- End scripts -->
