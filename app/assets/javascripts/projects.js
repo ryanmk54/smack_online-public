@@ -64,6 +64,8 @@ function loadEditorFromZipUpload() {
 }
 
 function loadEditor(base64Input) {
+  emptyFileList();
+
   zip.forEach(function (relativePath, file) {
     fileList.push(relativePath);
 
@@ -76,14 +78,22 @@ function loadEditor(base64Input) {
   });
 }
 
+var fileListElementId = "file-list";
 function addFileToFileList(filename) {
-  var fileListElement = document.getElementById("file-list");
+  var fileListElement = document.getElementById(fileListElementId);
   var fileElement = document.createElement("div");
   fileElement.id = filename;
   fileElement.className = "file";
   fileElement.appendChild(document.createTextNode(filename));
   fileElement.onclick = function() { updateInputEditor(filename) };
   fileListElement.appendChild(fileElement);
+}
+
+function emptyFileList() {
+  var fileDivs = document.getElementsByClassName("file");
+  for (let i = fileDivs.length - 1; i >= 0; --i) {
+    fileDivs[i].remove();
+  }
 }
 
 // Unzips the file out of zip and 
