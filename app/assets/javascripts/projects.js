@@ -80,6 +80,7 @@ function addFileToFileList(filename) {
   var fileListElement = document.getElementById("file-list");
   var fileElement = document.createElement("div");
   fileElement.id = filename;
+  fileElement.className = "file";
   fileElement.appendChild(document.createTextNode(filename));
   fileElement.onclick = function() { updateInputEditor(filename) };
   fileListElement.appendChild(fileElement);
