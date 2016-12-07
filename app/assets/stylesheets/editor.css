@@ -27,6 +27,7 @@ html
   top: 50%;
   transform: translateY(-50%);
   margin-right: 1%;
+  z-index: 10000000000000;
 }
 
 .tool-select-button
@@ -75,7 +76,7 @@ body {
 
 .editor-container
 {
-  height: 100%; padding:0; margin:0;
+  height: 100%; padding:0; margin:0; z-index: 1;
 }
 
 .bottom-container
