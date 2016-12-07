@@ -116,9 +116,14 @@ function updateInputEditor(filename) {
     });
 }
 
+function clearZipError() {
+  outputZipError("");
+}
+
 function outputZipError(errorMessage) {
   console.log(errorMessage);
-  alert(errorMessage);
+  var errorSpanElement = document.getElementById("input_upload_status");
+  errorSpanElement.textContent = errorMessage;
 }
 
 function validateZipUpload() {
@@ -132,6 +137,7 @@ function validateZipUpload() {
     outputZipError("Only zip files are allowed");
     return false;
   }
+  clearZipError();
   return true;
 }
 
