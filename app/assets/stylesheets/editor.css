@@ -65,7 +65,7 @@ html
 
 .lightskyblue
 {
-  background-color: #87CEFA;
+  background-color: #2D496B;
 }
 
 /* Account for fixed navbar */
@@ -134,12 +134,9 @@ body {
     z-index: 0;
 }
 
-body,
-overflow: hidden;
-.navbar-fixed-top,
-.navbar-fixed-bottom {
-  min-width: 970px;
-
+.hidden-overflow
+{
+  overflow: hidden;
 }
 
 .sidebar {
@@ -284,7 +281,7 @@ height: 100%;
 
 .blue
 {
-  background-color: blue;
+  background-color: #3687D0;
 }
 
 .yellow
@@ -304,7 +301,12 @@ height: 100%;
 
 .gray
 {
-  background-color: gray;
+  background-color: #12151A;
+}
+
+.white-color
+{
+  color: white;
 }
 
 

@@ -1,5 +1,5 @@
 <div hidden>
-  <%= text_field_tag :output, @output %>
+  <%= text_field_tag :output, value: @output %>
 </div>
 
 
@@ -25,25 +25,25 @@
     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 height100">
 
       <!-- Project Selection -->
-      <div class="project-selection-container row">
-        <div class="gray col-xs-12 col-sm-12 col-md-12 col-lg-12 height100">
+<!--       <div class="project-selection-container row">
+        <div class="blue col-xs-12 col-sm-12 col-md-12 col-lg-12 height100">
           <%= form_for(project, remote: true) do |f| %>
-          <div hidden>
-            <%= f.text_field :title %>
-            <%= f.text_field :input, value: @base64_input%>
-            <%= f.text_field :eta %>
-          </div>
+  <div hidden>
+  <%= f.text_field :title %>
+  <%= f.text_field :input, value: @base64_input%>
+  <%= f.text_field :eta %>
+  </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Files -->
-      <div id="file-list-container" class="file-list-container row">
-        <div id="file-list" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 lgray height100">
+      <div id="file-list-container" class="height100 file-list-container row">
+        <div id="file-list" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 gray height100">
           <!-- Start form for submission -->
-          <div class="field">
-            <%= label_tag :input_upload, "Upload Project" %>
-            <%= file_field_tag :input_upload, accept: ".zip, application/zip"  %>
-          </div>
+<div class="field white-color">
+  <%= label_tag :input_upload %>
+  <%= file_field_tag :input_upload, class: 'white-color' %>
+</div>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@
 
       <!-- Top -->
       <div class="tool-selection-container row">
-        <div class="centered lgray height100">
+        <div class="centered lgray height100 hidden-overflow">
           <select class="col-xs-10 col-sm-10 col-md-10 col-lg-10 tool-select selectpicker">
             <option>Smack</option>
             <option>Boogie</option>
@@ -95,13 +95,16 @@ main()
       <div class="bottom-container yellow row">
 
         <!-- Bottom Left -->
-        <div class="gray col-xs-6 col-sm-6 col-md-6 col-lg-6 height100">
+        <div class="lgray col-xs-6 col-sm-6 col-md-6 col-lg-6 height100 hidden-overflow">
           <select multiple class="col-xs-10 col-sm-10 col-md-10 col-lg-10 options-select selectpicker" data-live-search="true">
             <option value="volvo">Option 1</option>
             <option value="saab">Option 2</option>
           </select>
             <!-- <div class="actions"> -->
-    <%= f.submit value: "Run", class: 'btn btn-default run-button' %>
+    <%= 
+      f.submit value: "Run", class: 'btn btn-default btn-primary run-button'
+    
+    %>
   <!-- </div> -->
 <% end %>
         </div>
