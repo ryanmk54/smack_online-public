@@ -1,5 +1,5 @@
 <div hidden>
-  <%= text_field_tag :output, value: @output %>
+  <%= text_field_tag :output, @output %>
 </div>
 
 
@@ -27,12 +27,6 @@
       <!-- Project Selection -->
 <!--       <div class="project-selection-container row">
         <div class="blue col-xs-12 col-sm-12 col-md-12 col-lg-12 height100">
-          <%= form_for(project, remote: true) do |f| %>
-  <div hidden>
-  <%= f.text_field :title %>
-  <%= f.text_field :input, value: @base64_input%>
-  <%= f.text_field :eta %>
-  </div>
         </div>
       </div> -->
 
@@ -41,8 +35,9 @@
         <div id="file-list" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 gray height100">
           <!-- Start form for submission -->
 <div class="field white-color">
-  <%= label_tag :input_upload %>
-  <%= file_field_tag :input_upload, class: 'white-color' %>
+  <%= label_tag :input_upload, "Upload Project" %>
+  <%= file_field_tag :input_upload, accept: ".zip, application/zip", class: 'white-color' %>
+  <span id="input_upload_status"></span>
 </div>
         </div>
       </div>
@@ -101,12 +96,15 @@ main()
             <option value="saab">Option 2</option>
           </select>
             <!-- <div class="actions"> -->
-    <%= 
-      f.submit value: "Run", class: 'btn btn-default btn-primary run-button'
-    
-    %>
-  <!-- </div> -->
+<%= form_for(project, remote: true) do |f| %>
+  <div hidden>
+    <%= f.text_field :title %>
+    <%= f.text_field :input, value: @base64_input%>
+    <%= f.text_field :eta %>
+  </div>
+  <%= f.submit value: "Run", class: 'btn btn-default btn-primary run-button' %>
 <% end %>
+  <!-- </div> -->
         </div>
         
         <!-- Bottom Right -->
