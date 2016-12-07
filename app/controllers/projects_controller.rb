@@ -3,50 +3,25 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update]
 
   # Production SMACK server URL
-  SERVICE_REQUEST_URL = "ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started"
-
-  # GET /projects/1.json
-  def show
-    #now need to send back ouput EXPLICITLY
-    respond_to do |format|
-      format.json
-    end
-  end
+  SERVICE_REQUEST_URL = 'ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started'
 
   # GET /projects/new
+  # Displays the initial code editor to the user.
   def new
     @project = Project.new
   end
 
-  # GET /projects/1/edit
-  def edit
-    if(File.file?(Rails.root.join('public', 'system', 'projects', 'input', @project.id.to_s)))
-      file = File.open(Rails.root.join('public', 'system', 'projects', 'input', @project.id.to_s))
-      @base64_input = file.read
-      puts @base64_input
-      file.close
-    else
-      puts "no base64 input"
-    end
-    if(File.file?(Rails.root.join('public', 'system', 'projects', 'output', @project.id.to_s)))
-      file = File.open(Rails.root.join('public', 'system', 'projects', 'output', @project.id.to_s))
-      @output = file.read
-      file.close
-    end
-  end
-
   # POST /projects.json
+  # Creates a new project, makes a request to the SMACK server,
+  # and saves the input to the file system as a Base64 string.
   def create
     @project = Project.new(project_params)
+    @project.save # Need to save before send_service_input in order to know the project id
 
-    # This line is used for testing until the view is sending base64 directly over
-    #params[:project][:input] = Base64.strict_encode64(params[:project][:input].read)
-
-    @project.save # Need to save before send_service_input so the project id is known
+    @project.input = params[:project][:input] # Save the input
     @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
-    save_base64_input_to_file_system
 
-    # Save the new project to the database
+    # Save the new project to the database and redirect the user to 'edit'
     respond_to do |format|
       if @project.save
         format.html { redirect_to edit_project_path(@project)}
@@ -56,41 +31,55 @@ class ProjectsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /projects/1
-  def update
-    # This line is used for testing until the view is sending base64 directly over
-    #params[:project][:input] = Base64.strict_encode64(params[:project][:input].read)
+  # GET /projects/1/edit
+  # Displays an already existing project to the user.
+  def edit
+    @base64_input = @project.input
+    @output = @project.output
+  end
 
+  # PATCH/PUT /projects/1
+  # Updates the project db attributes, saves the new input to the file system,
+  # deletes the old output from file system.
+  def update
     # Delete the old output so the client doesn't get confused thinking it is the new output.
-    output_path = Rails.root.join('public', 'system', 'projects', 'output', @project.id.to_s)
-    File.delete(output_path) if File.exist?(output_path)
+    @project.output = nil
+
+    @project.input = params[:project][:input]
     params[:project][:eta] = send_service_input # Make a request to the SMACK server with updated project
-    params[:project][:output] = nil # The output is nil until the SMACK job is finished.
-    save_base64_input_to_file_system
 
     respond_to do |format|
       if @project.update(project_params)
-        format.html { redirect_to edit_project_path(@project), notice: 'Project was successfully updated.' }
+        format.html { redirect_to edit_project_path(@project)}
       else
-        format.html { render :edit }
+        format.html { render :edit } # If the save fails, show the user the edit window again.
       end
     end
   end
 
+  # GET /projects/1.json will be called every "eta" seconds (AJAX)
+  # until there is output associated with the open project.
+  def show
+    respond_to do |format|
+      format.json
+    end
+  end
+
   # POST /projects/receive_service_output
+  # Called by the SMACK server when a project has finished running.
+  # Saves the output to the file_system
   def receive_service_output
-    puts "REEEEEIIICCCEEEIIIIVVEEEEDDDDD!!!!!!!!!!!!!!!!!!!!!!!"
     # Get params and associate :output with the project with id :id
     @project = Project.find(params[:id])
-    save_output_string_to_file_system
+    @project.output = params[:output]
   end
 
   private
-  # Sends post request to verification service
+
+  # Sends post request to verification service.
+  # Returns: eta
   def send_service_input
     # Send the request
-
-    puts "SEEEEENNNNNnNNNNNNTTTTTTTTT!!!!!!!!!!!!!!!!!!!!!!!"
     base64Input = params[:project][:input]
     response = RestClient.post(SERVICE_REQUEST_URL,
     {
@@ -98,24 +87,9 @@ class ProjectsController < ApplicationController
         :options => @project[:options],
         :input => base64Input
     }.to_json, {content_type: :json, accept: :json})
+
     # Set the project's eta to the SMACK server's predicted processing time
-    #return response[:eta]
-    return 5
-  end
-
-  # Saves the associated base64 input to %rails.root%/public/sytem/projects/<project_id>
-  def save_base64_input_to_file_system
-    input = params[:project][:input] # The base64 input is passed here
-    file = File.open(Rails.root.join('public', 'system', 'projects', 'input', @project.id.to_s), 'wb')
-    file.write(input)
-    file.close
-  end
-
-  def save_output_string_to_file_system
-    output = params[:output]
-    file = File.open(Rails.root.join('public', 'system', 'projects', 'output', @project.id.to_s), 'wb')
-    file.write(output)
-    file.close
+    return JSON.parse(response.body)['eta']
   end
 
   # Use callbacks to share common setup or constraints between actions.
