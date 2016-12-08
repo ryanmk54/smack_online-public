@@ -105,6 +105,7 @@ function emptyFileList() {
 // to the contents of the file
 function updateInputEditor(filename) {
   // TODO don't change the editor value if they click on a folder
+  // currently an error is output to the console if they click a folder
   if (currentFile != "") {
     zip.file(currentFile, editor.getValue());
   }
@@ -157,6 +158,8 @@ function validateZipUpload() {
 
 /**
  * Events that are bound on DOM ready
+ * TODO the log messages below should be removed 
+ * or hidden with a flag
  */
 $().ready(function() {
   console.log("entered ready function");
