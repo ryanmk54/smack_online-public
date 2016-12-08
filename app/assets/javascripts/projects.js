@@ -11,21 +11,29 @@ var base64InputID = "project_input";
 var zipUploadID = "input_upload";
 var outputID = "output";
 
+
 $().ready(function(){
   zip = new JSZip();
+
+  // Load input editor 
   var base64Input = document.getElementById(base64InputID);
   if (base64Input.value != '') {
     loadEditorFromInput();
   }
+
+  // Load output editor
   var output = document.getElementById(outputID);
   if (output.value != '') {
     editor2.setValue(output.value);
   }
 });
 
+
 function loadEditorFromInput() {
   var base64Input = document.getElementById(base64InputID).value;
   console.log(base64Input);
+
+  // Load the input editor from the base64 input from the server
   zip.loadAsync(base64Input, {base64: true})
     .then(function success(zip) {
       loadEditor();
@@ -33,6 +41,7 @@ function loadEditorFromInput() {
       console.log("loadAsync in loadEditorFromInput failed");
     });
 }
+
 
 function loadEditorFromZipUpload() {
   var zipInputElement = document.getElementById(zipUploadID);
@@ -44,12 +53,15 @@ function loadEditorFromZipUpload() {
     });
 }
 
+
 function loadEditor(base64Input) {
   emptyFileList();
 
   zip.forEach(function (relativePath, file) {
     fileList.push(relativePath);
 
+    // Load each file as a string and add it to the file list
+    // TODO the files and fileList variables are probably obsolete
     file.async("string").then(function success(content) {
       files[relativePath] = content;
       addFileToFileList(relativePath);
@@ -59,6 +71,12 @@ function loadEditor(base64Input) {
   });
 }
 
+
+/**
+ * Creates a div element
+ * based on the given filename
+ * and appends it to the file list
+ */
 var fileListElementId = "file-list";
 function addFileToFileList(filename) {
   var fileListElement = document.getElementById(fileListElementId);
@@ -70,12 +88,17 @@ function addFileToFileList(filename) {
   fileListElement.appendChild(fileElement);
 }
 
+
+/**
+ * Deletes all file divs from the file list element
+ */
 function emptyFileList() {
   var fileDivs = document.getElementsByClassName("file");
   for (let i = fileDivs.length - 1; i >= 0; --i) {
     fileDivs[i].remove();
   }
 }
+
 
 // Unzips the file out of zip and 
 // sets the contents of the editor 
@@ -85,7 +108,8 @@ function updateInputEditor(filename) {
   if (currentFile != "") {
     zip.file(currentFile, editor.getValue());
   }
-  // input editor is called editor
+
+  // input editor variable is called editor
   zip.file(filename).async("string")
     .then(function success(content) {
       // use the content
@@ -97,9 +121,11 @@ function updateInputEditor(filename) {
     });
 }
 
+
 function clearZipError() {
   outputZipError("");
 }
+
 
 function outputZipError(errorMessage) {
   console.log(errorMessage);
@@ -107,21 +133,31 @@ function outputZipError(errorMessage) {
   errorSpanElement.textContent = errorMessage;
 }
 
+
 function validateZipUpload() {
   var zipUpload = document.getElementById(zipUploadID);
 
+  // Verify only one file was uploaded
   if (zipUpload.files.length != 1) {
     outputZipError("Multiple files aren't allowed");
     return false;
   }
+
+  // Check the MIME type
   if (zipUpload.files[0].type != "application/zip") {
     outputZipError("Only zip files are allowed");
     return false;
   }
+
+  // If all checks pass, clear the error
   clearZipError();
   return true;
 }
 
+
+/**
+ * Events that are bound on DOM ready
+ */
 $().ready(function() {
   console.log("entered ready function");
   $('form').on('ajax:before', function(event, xhr, settings) {
