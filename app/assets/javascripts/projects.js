@@ -2,25 +2,6 @@
  * All this logic will automatically be available in application.js.
  */
 
-/**
- * When the edit action is called 
- * with an html response type, 
- * the edit view is returned with the following:
- *  id, 
- *  title, 
- *  input as base64 in a hidden form field
- *  output in a hidden form field
- *  eta/status in a hidden form field
- * As soon as the DOM is loaded, 
- * loadEditor is called with the base64Input.
- * loadEditor will then proceed to:
- *  populate the file list
- *    // should populateFileList 
- *    // add the files all at once or one at a time?
- *  possibly set the text in the ace code editor
- *  populate the output panel
- * 
- */
 
 var fileList = [];
 var files = {};
