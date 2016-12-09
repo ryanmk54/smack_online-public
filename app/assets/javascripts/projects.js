@@ -145,8 +145,10 @@ function validateZipUpload() {
   }
 
   // Check the MIME type
-  if (zipUpload.files[0].type != "application/zip") {
+  let mimeType = zipUpload.files[0].type
+  if (mimeType != "application/zip") {
     outputZipError("Only zip files are allowed");
+    console.log("MIME type " + mimeType + " not supported");
     return false;
   }
 
