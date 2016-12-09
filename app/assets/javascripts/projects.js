@@ -186,6 +186,7 @@ $().ready(function() {
     console.log('ajax error');
   });
   $('#run_project').on('click', function() {
+    editor2.setValue('Processing...');
     zip.generateAsync({type: "base64"})
       .then(function (content) {
         var base64Input = document.getElementById(base64InputID);
