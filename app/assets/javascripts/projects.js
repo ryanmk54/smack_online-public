@@ -149,7 +149,7 @@ function validateZipUpload() {
   let validMimeTypes = [
     "application/zip", 
     "application/x-zip-compressed",
-    "application/octet-stream
+    "application/octet-stream"
   ];
   if (mimeType != "application/zip") {
     outputZipError("Only zip files are allowed");
