@@ -175,13 +175,6 @@ $().ready(function() {
   });
   $('form').on('ajax:beforeSend', function(event, xhr, settings) {
     console.log('ajax beforeSend');
-    zip.generateAsync({type: "base64"})
-      .then(function (content) {
-        var base64Input = document.getElementById(base64InputID);
-        base64Input.value = content;
-        event.target.submit();
-      });
-    return false;
   });
   $('form').on('ajax:send', function(event, xhr, settings) {
     console.log('ajax send');
@@ -192,6 +185,17 @@ $().ready(function() {
   $('form').on('ajax:error', function(event, xhr, settings) {
     console.log('ajax error');
   });
+  $('#run_project').on('click', function() {
+    zip.generateAsync({type: "base64"})
+      .then(function (content) {
+        var base64Input = document.getElementById(base64InputID);
+        base64Input.value = content;
+        $.rails.handleRemote($('form'));
+      });
+    return false;
+  });
+
+
   $('#input_upload').change(function() {
     console.log("#input_upload has changed");
     if (validateZipUpload()) {
