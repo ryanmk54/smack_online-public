@@ -21,10 +21,13 @@ class ProjectsController < ApplicationController
     @project.input = params[:project][:input] # Save the input
     @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
 
+    puts @project.output
+
     # Save the new project to the database and redirect the user to 'edit'
     respond_to do |format|
       if @project.save
         format.html { redirect_to edit_project_path(@project)}
+        format.js { render :edit  }
       else
         format.html { render :new }
       end
