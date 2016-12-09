@@ -96,7 +96,7 @@ main()
             <option value="saab">Option 2</option>
           </select>
             <!-- <div class="actions"> -->
-<%= form_for(project, remote: true) do |f| %>
+<%= form_for(project, remote: true, format: :js) do |f| %>
   <div hidden>
     <%= f.text_field :title %>
     <%= f.text_field :input, value: @base64_input%>

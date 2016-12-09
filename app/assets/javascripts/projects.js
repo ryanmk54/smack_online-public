@@ -170,19 +170,18 @@ function validateZipUpload() {
  */
 $().ready(function() {
   console.log("entered ready function");
-  $('form').on('ajax:before', function(event, xhr, settings) {
+  $('form').on('ajax:before', function(event) {
     console.log('ajax before');
+  });
+  $('form').on('ajax:beforeSend', function(event, xhr, settings) {
+    console.log('ajax beforeSend');
     zip.generateAsync({type: "base64"})
       .then(function (content) {
         var base64Input = document.getElementById(base64InputID);
         base64Input.value = content;
-        xhr.setRequestHeader("Accept", "text/javascript");
         event.target.submit();
       });
     return false;
-  });
-  $('form').on('ajax:beforeSend', function(event, xhr, settings) {
-    console.log('ajax beforeSend');
   });
   $('form').on('ajax:send', function(event, xhr, settings) {
     console.log('ajax send');
