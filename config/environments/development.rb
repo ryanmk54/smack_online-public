@@ -45,6 +45,9 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
+  # RK added to make it more readable in Firefox
+  config.assets.digest = false
+
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
