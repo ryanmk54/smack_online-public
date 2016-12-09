@@ -145,7 +145,12 @@ function validateZipUpload() {
   }
 
   // Check the MIME type
-  let mimeType = zipUpload.files[0].type
+  let mimeType = zipUpload.files[0].type;
+  let validMimeTypes = [
+    "application/zip", 
+    "application/x-zip-compressed",
+    "application/octet-stream
+  ];
   if (mimeType != "application/zip") {
     outputZipError("Only zip files are allowed");
     console.log("MIME type " + mimeType + " not supported");
@@ -171,6 +176,7 @@ $().ready(function() {
       .then(function (content) {
         var base64Input = document.getElementById(base64InputID);
         base64Input.value = content;
+        xhr.setRequestHeader("Accept", "text/javascript");
         event.target.submit();
       });
     return false;
