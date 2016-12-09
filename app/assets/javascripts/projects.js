@@ -151,7 +151,7 @@ function validateZipUpload() {
     "application/x-zip-compressed",
     "application/octet-stream"
   ];
-  if (mimeType != "application/zip") {
+  if ($.inArray(mimeType, validMimeTypes) == -1) {
     outputZipError("Only zip files are allowed");
     console.log("MIME type " + mimeType + " not supported");
     return false;
