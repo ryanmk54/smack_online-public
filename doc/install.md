@@ -31,7 +31,8 @@ cd chruby-0.3.9/
 sudo make install
 ~~~~~
 
-Add the following to `~/.bashrc`. The first line adds the chruby command. The second line adds auto-switching.
+Add the following to `~/.bashrc`. The first line adds the chruby command. 
+The second line adds auto-switching.
 ~~~~~
 source /usr/local/share/chruby/chruby.sh
 source /usr/local/share/chruby/auto.sh
@@ -39,7 +40,8 @@ source /usr/local/share/chruby/auto.sh
 
 
 ## Verify project directory has a .ruby-version file
-verify there is a file called .ruby-version that has `ruby-2.3.1` on the first line. This will make chruby automatically switch to ruby-2.3.1 when you cd to your project directory.
+Verify there is a file called .ruby-version that has `ruby-2.3.1` on the first line. 
+This will make chruby automatically switch to ruby-2.3.1 when you cd to your project directory.
 
 
 ## PGP
