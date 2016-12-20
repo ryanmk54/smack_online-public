@@ -2,54 +2,64 @@
  * All this logic will automatically be available in application.js.
  */
 
+/**
+ * TODO editor is loaded in two places
+ * on page load and when they upload a zip
+ */
 
-var fileList = [];
-var files = {};
+// IFFE to prevent pollution of the global namespace
+(function(){
+
+const outputElementId = 'output';
+const zipUploadElementId = 'input_upload';
+const base64InputElementId = 'project_input';
+const fileListElementId = 'file-list';
+
 var zip;
 var currentFile = "";
-var base64InputID = "project_input";
-var zipUploadID = "input_upload";
-var outputID = "output";
-
 
 $().ready(function(){
   zip = new JSZip();
 
   // Load input editor 
-  var base64Input = document.getElementById(base64InputID);
+  var base64Input = document.getElementById(base64InputElementId);
   if (base64Input.value != '') {
     loadEditorFromInput();
   }
 
   // Load output editor
-  var output = document.getElementById(outputID);
+  var output = document.getElementById(outputElementId);
   if (output.value != '') {
     editor2.setValue(output.value);
   }
 });
 
 
+/**
+ * TODO loadEditorFromInput and loadEditorFromZip
+ * don't actually load the editor, they populate
+ * the zip, change the function names to reflect that
+ */
 function loadEditorFromInput() {
-  var base64Input = document.getElementById(base64InputID).value;
-  console.log(base64Input);
+  var base64Input = document.getElementById(base64InputElementId).value;
 
   // Load the input editor from the base64 input from the server
   zip.loadAsync(base64Input, {base64: true})
     .then(function success(zip) {
       loadEditor();
     }, function error(e) {
-      console.log("loadAsync in loadEditorFromInput failed");
+      throw("loadAsync in loadEditorFromInput failed");
     });
 }
 
 
 function loadEditorFromZipUpload() {
-  var zipInputElement = document.getElementById(zipUploadID);
+  var zipInputElement = document.getElementById(zipUploadElementId);
   zip.loadAsync(zipInputElement.files[0])
     .then(function success(zip) {
       loadEditor();
     }, function error(e) {
-      console.log("loadAsync in loadEditorFromZipUpload failed");
+      throw("loadAsync in loadEditorFromZipUpload failed");
     });
 }
 
@@ -57,16 +67,12 @@ function loadEditorFromZipUpload() {
 function loadEditor(base64Input) {
   emptyFileList();
 
+  // Load each file as a string and add it to the file list
   zip.forEach(function (relativePath, file) {
-    fileList.push(relativePath);
-
-    // Load each file as a string and add it to the file list
-    // TODO the files and fileList variables are probably obsolete
     file.async("string").then(function success(content) {
-      files[relativePath] = content;
       addFileToFileList(relativePath);
     }, function error(e) {
-      console.log("converting file to text failed");
+      throw("converting file to text failed");
     });
   });
 }
@@ -77,7 +83,6 @@ function loadEditor(base64Input) {
  * based on the given filename
  * and appends it to the file list
  */
-var fileListElementId = "file-list";
 function addFileToFileList(filename) {
   var fileListElement = document.getElementById(fileListElementId);
   var fileElement = document.createElement("div");
@@ -106,6 +111,8 @@ function emptyFileList() {
 function updateInputEditor(filename) {
   // TODO don't change the editor value if they click on a folder
   // currently an error is output to the console if they click a folder
+  //
+  // updates the zip with the contents of the editor
   if (currentFile != "") {
     zip.file(currentFile, editor.getValue());
   }
@@ -129,14 +136,14 @@ function clearZipError() {
 
 
 function outputZipError(errorMessage) {
-  console.log(errorMessage);
+  throw(errorMessage);
   var errorSpanElement = document.getElementById("input_upload_status");
   errorSpanElement.textContent = errorMessage;
 }
 
 
 function validateZipUpload() {
-  var zipUpload = document.getElementById(zipUploadID);
+  var zipUpload = document.getElementById(zipUploadElementId);
 
   // Verify only one file was uploaded
   if (zipUpload.files.length != 1) {
@@ -169,27 +176,11 @@ function validateZipUpload() {
  * or hidden with a flag
  */
 $().ready(function() {
-  console.log("entered ready function");
-  $('form').on('ajax:before', function(event) {
-    console.log('ajax before');
-  });
-  $('form').on('ajax:beforeSend', function(event, xhr, settings) {
-    console.log('ajax beforeSend');
-  });
-  $('form').on('ajax:send', function(event, xhr, settings) {
-    console.log('ajax send');
-  });
-  $('form').on('ajax:success', function(event, xhr, settings) {
-    console.log('ajax success');
-  });
-  $('form').on('ajax:error', function(event, xhr, settings) {
-    console.log('ajax error');
-  });
   $('#run_project').on('click', function() {
     editor2.setValue('Processing...');
     zip.generateAsync({type: "base64"})
       .then(function (content) {
-        var base64Input = document.getElementById(base64InputID);
+        var base64Input = document.getElementById(base64InputElementId);
         base64Input.value = content;
         $.rails.handleRemote($('form'));
       });
@@ -204,3 +195,5 @@ $().ready(function() {
     }
   });
 });
+
+})();
