@@ -1,12 +1,3 @@
-/* Place all the behaviors and hooks related to the matching controller here.
- * All this logic will automatically be available in application.js.
- */
-
-/**
- * TODO editor is loaded in two places
- * on page load and when they upload a zip
- */
-
 // IFFE to prevent pollution of the global namespace
 (function(){
 
@@ -15,62 +6,94 @@ const zipUploadElementId = 'input_upload';
 const base64InputElementId = 'project_input';
 const fileListElementId = 'file-list';
 
-var zip;
 var currentFile = "";
 
+
 $().ready(function(){
-  zip = new JSZip();
 
   // Load input editor 
-  var base64Input = document.getElementById(base64InputElementId);
+  let base64Input = document.getElementById(base64InputElementId);
   if (base64Input.value != '') {
-    loadEditorFromInput();
+    loadZipFromBase64Input()
+      .then(function success(zip) {
+        loadIDE(zip);
+      }, function error(e) {
+        throw("unable to load zip from base 64 input");
+      });
   }
 
+
   // Load output editor
-  var output = document.getElementById(outputElementId);
+  let output = document.getElementById(outputElementId);
   if (output.value != '') {
     editor2.setValue(output.value);
   }
+
+
+  // handle the run button click
+  $('#run_project').on('click', function() {
+    editor2.setValue('Processing...');
+
+    // zip up the files and ask rails to submit it
+    zip.generateAsync({type: "base64"})
+      .then(function (content) {
+        var base64Input = document.getElementById(base64InputElementId);
+        base64Input.value = content;
+        $.rails.handleRemote($('form'));
+      });
+    return false;
+  });
+
+
+  // handle the zip file upload button
+  $('#input_upload').change(function() {
+    if (isZipUploadValid()) {
+      // if the zip is valid, clear any previous errors
+      clearZipError();
+
+      loadZipFromFileUpload()
+        .then(function success(zip) {
+          loadIDE(zip);
+        }, function error(e) {
+          throw("unable to load zip from file upload");
+        });
+    }
+  });
 });
 
 
+
 /**
- * TODO loadEditorFromInput and loadEditorFromZip
- * don't actually load the editor, they populate
- * the zip, change the function names to reflect that
+ * @description Loads a zip object from the base64 input sent by the server
+ *
+ * @see https://stuk.github.io/jszip/documentation/api_jszip/load_async_object.html
  */
-function loadEditorFromInput() {
+function loadZipFromBase64Input() {
   var base64Input = document.getElementById(base64InputElementId).value;
-
-  // Load the input editor from the base64 input from the server
-  zip.loadAsync(base64Input, {base64: true})
-    .then(function success(zip) {
-      loadEditor();
-    }, function error(e) {
-      throw("loadAsync in loadEditorFromInput failed");
-    });
+  return JSZip.loadAsync(base64Input, {base64: true});
 }
 
 
-function loadEditorFromZipUpload() {
+/**
+ * @description Loads a zip object from the zip file uploaded by the user
+ *
+ * @see https://stuk.github.io/jszip/documentation/api_jszip/load_async_object.html
+ */
+function loadZipFromFileUpload() {
   var zipInputElement = document.getElementById(zipUploadElementId);
-  zip.loadAsync(zipInputElement.files[0])
-    .then(function success(zip) {
-      loadEditor();
-    }, function error(e) {
-      throw("loadAsync in loadEditorFromZipUpload failed");
-    });
+  return JSZip.loadAsync(zipInputElement.files[0]);
 }
 
 
-function loadEditor(base64Input) {
+function loadIDE(zip) {
+  // Empty the files list in case the editor
+  // has already been loaded once before
   emptyFileList();
 
   // Load each file as a string and add it to the file list
   zip.forEach(function (relativePath, file) {
     file.async("string").then(function success(content) {
-      addFileToFileList(relativePath);
+      addFileToFileList(zip, relativePath);
     }, function error(e) {
       throw("converting file to text failed");
     });
@@ -83,13 +106,13 @@ function loadEditor(base64Input) {
  * based on the given filename
  * and appends it to the file list
  */
-function addFileToFileList(filename) {
+function addFileToFileList(zip, filename) {
   var fileListElement = document.getElementById(fileListElementId);
   var fileElement = document.createElement("div");
   fileElement.id = filename;
   fileElement.className = "file";
   fileElement.appendChild(document.createTextNode(filename));
-  fileElement.onclick = function() { updateInputEditor(filename) };
+  fileElement.onclick = function() { updateInputEditor(zip, filename) };
   fileListElement.appendChild(fileElement);
 }
 
@@ -108,9 +131,10 @@ function emptyFileList() {
 // Unzips the file out of zip and 
 // sets the contents of the editor 
 // to the contents of the file
-function updateInputEditor(filename) {
+function updateInputEditor(zip, filename) {
   // TODO don't change the editor value if they click on a folder
   // currently an error is output to the console if they click a folder
+  // TODO save the file in the zip as soon as the editor loses focus
   //
   // updates the zip with the contents of the editor
   if (currentFile != "") {
@@ -123,9 +147,8 @@ function updateInputEditor(filename) {
       // use the content
       currentFile = filename;
       editor.setValue(content);
-      console.log(content);
     }, function error(e) {
-      // handle the error
+      throw(e);
     });
 }
 
@@ -136,13 +159,16 @@ function clearZipError() {
 
 
 function outputZipError(errorMessage) {
-  throw(errorMessage);
   var errorSpanElement = document.getElementById("input_upload_status");
   errorSpanElement.textContent = errorMessage;
+
+  if (errorMessage != '') {
+    console.error(errorMessage);
+  }
 }
 
 
-function validateZipUpload() {
+function isZipUploadValid() {
   var zipUpload = document.getElementById(zipUploadElementId);
 
   // Verify only one file was uploaded
@@ -160,40 +186,11 @@ function validateZipUpload() {
   ];
   if ($.inArray(mimeType, validMimeTypes) == -1) {
     outputZipError("Only zip files are allowed");
-    console.log("MIME type " + mimeType + " not supported");
+    console.error("MIME type " + mimeType + " not supported");
     return false;
   }
 
-  // If all checks pass, clear the error
-  clearZipError();
   return true;
 }
-
-
-/**
- * Events that are bound on DOM ready
- * TODO the log messages below should be removed 
- * or hidden with a flag
- */
-$().ready(function() {
-  $('#run_project').on('click', function() {
-    editor2.setValue('Processing...');
-    zip.generateAsync({type: "base64"})
-      .then(function (content) {
-        var base64Input = document.getElementById(base64InputElementId);
-        base64Input.value = content;
-        $.rails.handleRemote($('form'));
-      });
-    return false;
-  });
-
-
-  $('#input_upload').change(function() {
-    console.log("#input_upload has changed");
-    if (validateZipUpload()) {
-      loadEditorFromZipUpload();
-    }
-  });
-});
 
 })();
