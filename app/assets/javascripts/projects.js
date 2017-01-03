@@ -145,8 +145,13 @@ function validateZipUpload() {
   }
 
   // Check the MIME type
-  let mimeType = zipUpload.files[0].type
-  if (mimeType != "application/zip") {
+  let mimeType = zipUpload.files[0].type;
+  let validMimeTypes = [
+    "application/zip", 
+    "application/x-zip-compressed",
+    "application/octet-stream"
+  ];
+  if ($.inArray(mimeType, validMimeTypes) == -1) {
     outputZipError("Only zip files are allowed");
     console.log("MIME type " + mimeType + " not supported");
     return false;
@@ -165,15 +170,8 @@ function validateZipUpload() {
  */
 $().ready(function() {
   console.log("entered ready function");
-  $('form').on('ajax:before', function(event, xhr, settings) {
+  $('form').on('ajax:before', function(event) {
     console.log('ajax before');
-    zip.generateAsync({type: "base64"})
-      .then(function (content) {
-        var base64Input = document.getElementById(base64InputID);
-        base64Input.value = content;
-        event.target.submit();
-      });
-    return false;
   });
   $('form').on('ajax:beforeSend', function(event, xhr, settings) {
     console.log('ajax beforeSend');
@@ -187,6 +185,18 @@ $().ready(function() {
   $('form').on('ajax:error', function(event, xhr, settings) {
     console.log('ajax error');
   });
+  $('#run_project').on('click', function() {
+    editor2.setValue('Processing...');
+    zip.generateAsync({type: "base64"})
+      .then(function (content) {
+        var base64Input = document.getElementById(base64InputID);
+        base64Input.value = content;
+        $.rails.handleRemote($('form'));
+      });
+    return false;
+  });
+
+
   $('#input_upload').change(function() {
     console.log("#input_upload has changed");
     if (validateZipUpload()) {

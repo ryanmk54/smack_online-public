@@ -1,5 +1,5 @@
 <div hidden>
-  <%= text_field_tag :output, @output %>
+  <%= text_area_tag :output, @output %>
 </div>
 
 
@@ -96,13 +96,16 @@ main()
             <option value="saab">Option 2</option>
           </select>
             <!-- <div class="actions"> -->
-<%= form_for(project, remote: true) do |f| %>
+<%= form_for(project, remote: true, format: :js) do |f| %>
   <div hidden>
     <%= f.text_field :title %>
     <%= f.text_field :input, value: @base64_input%>
     <%= f.text_field :eta %>
   </div>
+  <button id="run_project" class="btn btn-default btn-primary run-button">Run</button
+  <!--
   <%= f.submit value: "Run", class: 'btn btn-default btn-primary run-button' %>
+  -->
 <% end %>
   <!-- </div> -->
         </div>
