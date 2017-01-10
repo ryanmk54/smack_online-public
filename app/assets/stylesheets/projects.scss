@@ -2,6 +2,18 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+$light-sky-blue: #2D496B;
+
+#file-list {
+  padding-left: 20px;
+}
 #input_upload_status {
   color: red;
+}
+
+.file {
+  color: white;
+}
+.current-file {
+  border-bottom: 1px solid $light-sky-blue;
 }
