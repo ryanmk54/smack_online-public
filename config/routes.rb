@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'analytics/usage'
+
   root 'projects#new'
   resources(:projects, except: [:index, :destroy]) do
     member do

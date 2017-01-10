@@ -41,6 +41,8 @@ GEM
     arel (7.1.4)
     builder (3.2.2)
     byebug (9.0.6)
+    chart-js-rails (0.1.1)
+      railties (> 3.1)
     coderay (1.1.1)
     concurrent-ruby (1.0.2)
     debug_inspector (0.0.2)
@@ -74,6 +76,8 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.9.1)
+    momentjs-rails (2.15.1)
+      railties (>= 3.1)
     multi_json (1.12.1)
     mysql2 (0.4.5)
     netrc (0.11.0)
@@ -166,9 +170,11 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
+  chart-js-rails
   jbuilder (~> 2.5)
   jquery-rails
   listen (~> 3.0.5)
+  momentjs-rails
   mysql2 (>= 0.3.18, < 0.5)
   pry-rails
   puma (~> 3.0)

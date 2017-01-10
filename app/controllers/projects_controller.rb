@@ -1,5 +1,5 @@
 class ProjectsController < ApplicationController
-  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
+  #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
   before_action :set_project, only: [:show, :edit, :update]
 
   # Production SMACK server URL
@@ -91,7 +91,7 @@ class ProjectsController < ApplicationController
         :options => @project[:options],
         :input => base64Input
     }.to_json, {content_type: :json, accept: :json})
-
+    
     # Set the project's eta to the SMACK server's predicted processing time
     return JSON.parse(response.body)['eta']
   end

@@ -1,4 +1,9 @@
 class Project < ApplicationRecord
+
+    def created_at
+      self[:created_at].strftime("%D")
+    end
+
   def input
     if self.id == nil
       return nil
