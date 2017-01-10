@@ -1,7 +1,7 @@
 class Project < ApplicationRecord
 
     def created_at
-      self[:created_at].strftime("%m/%d")
+      self[:created_at].strftime("%D")
     end
 
   def input

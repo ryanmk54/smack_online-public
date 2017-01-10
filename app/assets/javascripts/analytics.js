@@ -70,9 +70,12 @@ function renderTimeGraph(dataArray, span, unit){
         else if(unit == "month")
         {
             var month = moment().subtract(i, 'months').month() + 1;
+            var year = moment().subtract(i, 'months').year().toString().substring(2);
             if (month < 10)
                 month = "0" + month;
-            formattedLabel = month;
+            if (year < 10)
+                year = "0" + year;
+            formattedLabel = month + "/" + year;
         }
         labelArray.push(formattedLabel)
         KVArray[formattedLabel] = 0;
@@ -83,9 +86,11 @@ function renderTimeGraph(dataArray, span, unit){
     for (var i = 0; i < dataArray.length; i++) {
         var key;
         if(unit == "day")
-            key = dataArray[i].created_at;
-        else if(unit == "month")
-            key = dataArray[i].created_at.substring(0,2);
+            key = dataArray[i].created_at.substring(0, 5);
+        else if(unit == "month") {
+            key = dataArray[i].created_at.substring(0, 2);
+            key += "/" + dataArray[i].created_at.substring(6);
+        }
         if ((key in KVArray))
             KVArray[key] += 1;
     }
