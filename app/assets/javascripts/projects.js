@@ -81,8 +81,12 @@ function loadZipFromFileUpload() {
 }
 
 
+/**
+ * @description Populates the file list and adds events listeners
+ */
 function loadIDE(zip) {
   console.log("loading IDE");
+
   // Empty the files list in case the editor
   // has already been loaded once before
   emptyFileList();
@@ -94,10 +98,10 @@ function loadIDE(zip) {
       addFileToFileList(zip, relativePath);
 
       // Set the input editor to the first file that isn't a folder
-      if (firstFile.length == 0 && !firstFile.endsWith('/')) { 
+      if (firstFile.length == 0 && !relativePath.endsWith('/')) { 
         firstFile = relativePath; 
 
-        setInputEditorFromFile(zip, firstFile);
+        setCurrentFile(zip, firstFile);
       }
     }, function error(e) {
       throw("converting file to text failed");
@@ -137,7 +141,7 @@ function addFileToFileList(zip, filename) {
   fileElement.id = filename;
   fileElement.className = "file";
   fileElement.appendChild(document.createTextNode(filename));
-  fileElement.onclick = function() { setInputEditorFromFile(zip, filename) };
+  fileElement.onclick = function() { setCurrentFile(zip, filename); };
   fileListElement.appendChild(fileElement);
 }
 
@@ -152,20 +156,34 @@ function emptyFileList() {
   }
 }
 
+
 // Unzips the file out of zip and 
 // sets the contents of the editor 
 // to the contents of the file
-function setInputEditorFromFile(zip, filename) {
+function setCurrentFile(zip, filename) {
   // don't change the editor if they click on a folder
   if (filename.endsWith('/')) {
     return;
   }
 
+  // remove the styling from the old current file
+  if (currentFile != "") {
+    let curFileElement = document.getElementById(currentFile);
+    if (curFileElement != null) {
+      curFileElement.classList.remove("current-file");
+    }
+  }
+
+  currentFile = filename;
+
+  // add styling to the new current file
+  let currentFileElement = document.getElementById(currentFile);
+  currentFileElement.classList.add("current-file");
+
   // input editor variable is called editor
   zip.file(filename).async("string")
     .then(function success(content) {
       // use the content
-      currentFile = filename;
       editor.setValue(content);
     }, function error(e) {
       throw(e);
