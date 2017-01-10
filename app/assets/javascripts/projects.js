@@ -1,18 +1,25 @@
 // IFFE to prevent pollution of the global namespace
-(function(){
+//(function(){
 
 const outputElementId = 'output';
 const zipUploadElementId = 'input_upload';
 const base64InputElementId = 'project_input';
 const fileListElementId = 'file-list';
+const runProjectElementId = 'run_project';
 
 var currentFile = "";
+var runProjectFn = function() {
+  throw "There isn't a project loaded";
+}
 
 
 $().ready(function(){
+  // Initialize DOM elements
+  let base64Input = document.getElementById(base64InputElementId);
+  let zipInput = document.getElementById(zipUploadElementId);
+  let runProject = document.getElementById(runProjectElementId);
 
   // Load input editor 
-  let base64Input = document.getElementById(base64InputElementId);
   if (base64Input.value != '') {
     loadZipFromBase64Input()
       .then(function success(zip) {
@@ -21,46 +28,35 @@ $().ready(function(){
         throw("unable to load zip from base 64 input");
       });
   }
-
+  else if (zipInput.files.length > 0) {
+    tryLoadZipFromUpload();
+  }
 
   // Load output editor
   let output = document.getElementById(outputElementId);
-  if (output.value != '') {
-    editor2.setValue(output.value);
-  }
-
+  editor2.setValue(output.value);
 
   // handle the run button click
-  $('#run_project').on('click', function() {
-    editor2.setValue('Processing...');
-
-    // zip up the files and ask rails to submit it
-    zip.generateAsync({type: "base64"})
-      .then(function (content) {
-        var base64Input = document.getElementById(base64InputElementId);
-        base64Input.value = content;
-        $.rails.handleRemote($('form'));
-      });
-    return false;
-  });
-
+  $(runProject).on('click', function() {runProjectFn()});
 
   // handle the zip file upload button
-  $('#input_upload').change(function() {
-    if (isZipUploadValid()) {
-      // if the zip is valid, clear any previous errors
-      clearZipError();
-
-      loadZipFromFileUpload()
-        .then(function success(zip) {
-          loadIDE(zip);
-        }, function error(e) {
-          throw("unable to load zip from file upload");
-        });
-    }
-  });
+  $(zipInput).change(tryLoadZipFromUpload);
 });
 
+
+function tryLoadZipFromUpload() {
+  if (isZipUploadValid()) {
+    // if the zip is valid, clear any previous errors
+    clearZipError();
+
+    loadZipFromFileUpload()
+      .then(function success(zip) {
+        loadIDE(zip);
+      }, function error(e) {
+        throw("unable to load zip from file upload");
+      });
+  }
+}
 
 
 /**
@@ -86,17 +82,46 @@ function loadZipFromFileUpload() {
 
 
 function loadIDE(zip) {
+  console.log("loading IDE");
   // Empty the files list in case the editor
   // has already been loaded once before
   emptyFileList();
 
   // Load each file as a string and add it to the file list
+  let firstFile = "";
   zip.forEach(function (relativePath, file) {
     file.async("string").then(function success(content) {
       addFileToFileList(zip, relativePath);
+
+      // Set the input editor to the first file that isn't a folder
+      if (firstFile.length == 0 && !firstFile.endsWith('/')) { 
+        firstFile = relativePath; 
+
+        setInputEditorFromFile(zip, firstFile);
+      }
     }, function error(e) {
       throw("converting file to text failed");
     });
+  });
+
+
+  runProjectFn = function() {
+    console.log("running project");
+    editor2.setValue('Processing...');
+
+    // zip up the files and ask rails to submit it
+    zip.generateAsync({type: "base64"})
+      .then(function (content) {
+        var base64Input = document.getElementById(base64InputElementId);
+        base64Input.value = content;
+        $.rails.handleRemote($('form'));
+      });
+    return false;
+  };
+
+  // Update the zip file every time the editor loses focus
+  editor.on('blur', function() {
+    zip.file(currentFile, editor.getValue());
   });
 }
 
@@ -112,7 +137,7 @@ function addFileToFileList(zip, filename) {
   fileElement.id = filename;
   fileElement.className = "file";
   fileElement.appendChild(document.createTextNode(filename));
-  fileElement.onclick = function() { updateInputEditor(zip, filename) };
+  fileElement.onclick = function() { setInputEditorFromFile(zip, filename) };
   fileListElement.appendChild(fileElement);
 }
 
@@ -127,18 +152,13 @@ function emptyFileList() {
   }
 }
 
-
 // Unzips the file out of zip and 
 // sets the contents of the editor 
 // to the contents of the file
-function updateInputEditor(zip, filename) {
-  // TODO don't change the editor value if they click on a folder
-  // currently an error is output to the console if they click a folder
-  // TODO save the file in the zip as soon as the editor loses focus
-  //
-  // updates the zip with the contents of the editor
-  if (currentFile != "") {
-    zip.file(currentFile, editor.getValue());
+function setInputEditorFromFile(zip, filename) {
+  // don't change the editor if they click on a folder
+  if (filename.endsWith('/')) {
+    return;
   }
 
   // input editor variable is called editor
@@ -193,4 +213,4 @@ function isZipUploadValid() {
   return true;
 }
 
-})();
+//})();
