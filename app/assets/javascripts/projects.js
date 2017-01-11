@@ -133,13 +133,26 @@ function loadIDE(zip) {
 }
 
 
-/*
 function createFilePathsObject(filePaths) {
   data = [];
 
+  let prefix = "";
   let dataIndex = -1;
     // the index where children should be added
   filePaths.forEach(function(filePath) {
+
+    if (filepath.includes(prefix)) {
+      // continue down the path
+      
+      // if (filepath - prefix) contains a /
+      // set the label up to the last / and add it to the prefix
+    }
+    else {
+      // reset the prefix and start over
+    }
+
+    /*
+     * This part is old. I am not using it for now
     // first filePath is either a file or folder
     // if it ends in a / it is a folder
     // else a file
@@ -150,12 +163,12 @@ function createFilePathsObject(filePaths) {
 
       label = filePath.split('/')
     }
+    */
     
   });
 
   return data;
 }
-*/
 
 
 /**
