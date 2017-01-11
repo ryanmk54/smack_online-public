@@ -92,21 +92,24 @@ function loadIDE(zip) {
   emptyFileList();
 
   // Load each file as a string and add it to the file list
+  let filePaths = [];
   let firstFile = "";
   zip.forEach(function (relativePath, file) {
-    file.async("string").then(function success(content) {
-      addFileToFileList(zip, relativePath);
+    filePaths.push(relativePath);
 
-      // Set the input editor to the first file that isn't a folder
-      if (firstFile.length == 0 && !relativePath.endsWith('/')) { 
-        firstFile = relativePath; 
+    addFileToFileList(zip, relativePath);
 
-        setCurrentFile(zip, firstFile);
-      }
-    }, function error(e) {
-      throw("converting file to text failed");
-    });
+    // Set the input editor to the first file that isn't a folder
+    if (firstFile.length == 0 && !relativePath.endsWith('/')) { 
+      firstFile = relativePath; 
+      setCurrentFile(zip, firstFile);
+    }
   });
+
+  filePaths;
+  //let data = createFilePathsObject(filePaths);
+  //debugger;
+
 
 
   runProjectFn = function() {
@@ -128,6 +131,31 @@ function loadIDE(zip) {
     zip.file(currentFile, editor.getValue());
   });
 }
+
+
+/*
+function createFilePathsObject(filePaths) {
+  data = [];
+
+  let dataIndex = -1;
+    // the index where children should be added
+  filePaths.forEach(function(filePath) {
+    // first filePath is either a file or folder
+    // if it ends in a / it is a folder
+    // else a file
+    if (filePath.endsWith('/') {
+      filePathParts = filePath.split('/');
+      numParts filePathParts.length;
+      label = 
+
+      label = filePath.split('/')
+    }
+    
+  });
+
+  return data;
+}
+*/
 
 
 /**
