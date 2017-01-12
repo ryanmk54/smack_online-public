@@ -27,7 +27,8 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.save
         format.html { redirect_to edit_project_path(@project)}
-        format.js { render :edit  }
+        format.js   { render :edit  }
+        format.json { render json: @project, only: [:eta, :output] }
       else
         format.html { render :new }
       end
@@ -54,7 +55,8 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.update(project_params)
         format.html { redirect_to edit_project_path(@project)}
-        format.js { render :edit }
+        format.js   { render :edit }
+        format.json { render json: @project, only: [:eta, :output] }
       else
         format.html { render :edit } # If the save fails, show the user the edit window again.
       end
