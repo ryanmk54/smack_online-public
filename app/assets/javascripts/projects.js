@@ -41,7 +41,29 @@ $().ready(function(){
 
   // handle the zip file upload button
   $(zipInput).change(tryLoadZipFromUpload);
+
+  let projectFormSelectors = 'form.new_project, form.edit_project';
+  $(projectFormSelectors).on('ajax:success', projectUpdateSuccess);
+  // TODO account for if it is a failure. We would need to send it again
 });
+
+
+function projectUpdateSuccess(event, data, status, xhr) {
+  if (data.output == null) {
+    // TODO check eta
+    // and resend a GET after eta
+    // TODO make sure this accounts for if a request fails
+    let url = event.target.action;
+    $.post({
+      url: url,
+    }).success(projectUpdateSuccess);
+  }
+  else {
+    // set output to data.output
+    editor2.setValue(data.output);
+  }
+  console.log(data);
+}
 
 
 function tryLoadZipFromUpload() {
