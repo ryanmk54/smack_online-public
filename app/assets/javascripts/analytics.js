@@ -97,8 +97,12 @@ function renderTimeGraph(dataArray, span, unit){
 
     // This is necessary to 'sort' the KVArray
     var valueArray = [];
-    for (var i = 0; i < labelArray.length; i++)
+    var colorArray = [];
+    for (var i = 0; i < labelArray.length; i++) {
         valueArray.push(KVArray[labelArray[i]]);
+        colorArray[i] = "rgb(" + Math.floor((Math.random() * 255)) + "," + Math.floor((Math.random() * 255))
+            + "," + Math.floor((Math.random() * 255)) + ")";
+    }
 
     var canvas = document.getElementById("myChart");
     var ctx = canvas.getContext("2d");
@@ -116,7 +120,8 @@ function renderTimeGraph(dataArray, span, unit){
             datasets: [{
                 label: '# of projects created per day',
                 data: valueArray,
-                borderWidth: 1
+                borderWidth: 1,
+                backgroundColor: colorArray
             }]
         }
     });

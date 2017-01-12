@@ -19,9 +19,8 @@ class ProjectsController < ApplicationController
     @project.save # Need to save before send_service_input in order to know the project id
 
     @project.input = params[:project][:input] # Save the input
+    @project[:user_ip] =  request.remote_ip
     @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
-
-    puts @project.output
 
     # Save the new project to the database and redirect the user to 'edit'
     respond_to do |format|
@@ -39,6 +38,7 @@ class ProjectsController < ApplicationController
   def edit
     @base64_input = @project.input
     @output = @project.output
+    puts @project.user_ip, "!!!!!!!!!!!!!!!!!!!!!!!!!!!inedit"
   end
 
   # PATCH/PUT /projects/1
