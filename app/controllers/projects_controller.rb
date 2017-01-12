@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
   #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
-  before_action :set_project, only: [:show, :edit, :update]
+  before_action :set_project, only: [:show, :edit, :update, :receive_service_output]
 
   # Production SMACK server URL
   SERVICE_REQUEST_URL = 'ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started'
@@ -17,7 +17,6 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.save # Need to save before send_service_input in order to know the project id
-
     @project.input = params[:project][:input] # Save the input
     @project[:user_ip] =  request.remote_ip
     @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
@@ -27,6 +26,7 @@ class ProjectsController < ApplicationController
       if @project.save
         format.html { redirect_to edit_project_path(@project)}
         format.js { render :edit  }
+        format.json { render json: @project, only: [:eta, :output] }
       else
         format.html { render :new }
       end
@@ -38,7 +38,6 @@ class ProjectsController < ApplicationController
   def edit
     @base64_input = @project.input
     @output = @project.output
-    puts @project.user_ip, "!!!!!!!!!!!!!!!!!!!!!!!!!!!inedit"
   end
 
   # PATCH/PUT /projects/1
@@ -55,6 +54,7 @@ class ProjectsController < ApplicationController
       if @project.update(project_params)
         format.html { redirect_to edit_project_path(@project)}
         format.js { render :edit }
+        format.json { render json: @project, only: [:eta, :output] }
       else
         format.html { render :edit } # If the save fails, show the user the edit window again.
       end
@@ -74,7 +74,6 @@ class ProjectsController < ApplicationController
   # Saves the output to the file_system
   def receive_service_output
     # Get params and associate :output with the project with id :id
-    @project = Project.find(params[:id])
     @project.output = params[:output]
   end
 
