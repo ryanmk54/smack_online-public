@@ -20,3 +20,7 @@ config/secrets.yml
 
 # Ignore Byebug command history file.
 .byebug_history
+
+# Ignore all project files
+public/system/projects/input/*
+public/system/projects/output/*
