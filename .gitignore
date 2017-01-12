@@ -22,5 +22,4 @@ config/secrets.yml
 .byebug_history
 
 # Ignore all project files
-public/system/projects/input/*
-public/system/projects/output/*
+public/system/*

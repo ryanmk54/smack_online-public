@@ -2,12 +2,7 @@
   <%= text_area_tag :output, @output %>
 </div>
 
-
-<!-- End form for submission -->
-
 <!-- Start page body -->
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
  <!-- Body -->
 <div class="height100 row container-fluid">
@@ -63,27 +58,14 @@
         <!-- Left -->
         <div class="editor-container col-xs-6 col-sm-6 col-md-6 col-lg-6">
           <div id="editor1">
-            <!--
-<pre>/* Hello World program */
-
-#include<stdio.h>
-
-main()
-{
-    printf("Hello World");
-
-}</pre>
--->
-        </div>
+          </div>
         </div>
 
         <!-- Right -->
         <div class="editor-container col-xs-6 col-sm-6 col-md-6 col-lg-6">
-        
           <div id="editor2">
-		<pre></pre>
+          </div>
         </div>
-	</div>
       </div>
 
       <!-- Bottom -->
@@ -95,21 +77,17 @@ main()
             <option value="volvo">Option 1</option>
             <option value="saab">Option 2</option>
           </select>
-            <!-- <div class="actions"> -->
-<%= form_for(project, remote: true, format: :js) do |f| %>
-  <div hidden>
-    <%= f.text_field :title %>
-    <%= f.text_field :input, value: @base64_input%>
-    <%= f.text_field :eta %>
-  </div>
-  <button id="run_project" class="btn btn-default btn-primary run-button">Run</button
-  <!--
-  <%= f.submit value: "Run", class: 'btn btn-default btn-primary run-button' %>
-  -->
-<% end %>
-  <!-- </div> -->
+
+          <%= form_for(project, remote: true, format: :json) do |f| %>
+            <div hidden>
+              <%= f.text_field :title %>
+              <%= f.text_field :input, value: @base64_input%>
+              <%= f.text_field :eta %>
+            </div>
+          <% end %>
+          <button id="run_project" class="btn btn-default btn-primary run-button">Run</button>
         </div>
-        
+
         <!-- Bottom Right -->
         <div class="lgray col-xs-6 col-sm-6 col-md-6 col-lg-6 height100">
         </div>

@@ -19,6 +19,10 @@ html
   z-index: 10000000000000;
 }
 
+form {
+    display: inline;
+}
+
 .options-select
 {
   height: 35px;
