@@ -62,6 +62,22 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
   #
 
+  ActionMailer::Base.smtp_settings = {
+    address:   "smtp.gmail.com",
+    port:      587,
+    authentication: "plain",
+    enable_starttls_auto: true,
+    user_name:  "capstone.smackers@gmail.com",
+    password:  "cjmr4:30",
+  }
+  production_url = 'http://ec2-52-53-158-223.us-west-1.compute.amazonaws.com:3000/' 
+  config.action_mailer.default_url_options = { host: production_url}
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.default charset: 'utf-8'
+
+
   # Default url so devise will work
   config.action_mailer.default_url_options = { host: 'http://ec2-52-53-158-223.us-west-1.compute.amazonaws.com:3000/', port:3000 }
 
