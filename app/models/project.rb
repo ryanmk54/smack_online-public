@@ -1,8 +1,8 @@
 class Project < ApplicationRecord
 
-    def created_at
-      self[:created_at].strftime("%D")
-    end
+  def created_at
+    self[:created_at].strftime("%D")
+  end
 
   def input
     if self.id == nil
@@ -10,7 +10,6 @@ class Project < ApplicationRecord
     end
 
     input_path = Rails.root.join('public', 'system', 'projects', 'input', self.id.to_s)
-
     if(File.file?(input_path))
       file = File.open(input_path)
       input = file.read

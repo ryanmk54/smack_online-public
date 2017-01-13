@@ -55,3 +55,4 @@ gem 'rest-client'
 
 gem 'chart-js-rails'
 gem 'momentjs-rails'
+gem 'plotlyjs-rails'

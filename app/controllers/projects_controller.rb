@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
   #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
-  before_action :set_project, only: [:show, :edit, :update]
+  before_action :set_project, only: [:show, :edit, :update, :receive_service_output]
 
   # Production SMACK server URL
   SERVICE_REQUEST_URL = 'ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started'
@@ -19,16 +19,15 @@ class ProjectsController < ApplicationController
     @project.save # Need to save before send_service_input in order to know the project id
 
     @project.input = params[:project][:input] # Save the input
+    @project[:user_ip] = request.remote_ip
     @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
-
-    puts @project.output
 
     # Save the new project to the database and redirect the user to 'edit'
     respond_to do |format|
       if @project.save
         format.html { redirect_to edit_project_path(@project)}
-        format.js   { render :edit  }
-        format.json { render json: @project, only: [:eta, :output] }
+        format.js { render :edit  }
+        format.json { render json: @project, only: [:eta, :output, :id] }
       else
         format.html { render :new }
       end
@@ -55,8 +54,8 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.update(project_params)
         format.html { redirect_to edit_project_path(@project)}
-        format.js   { render :edit }
-        format.json { render json: @project, only: [:eta, :output] }
+        format.js { render :edit }
+        format.json { render json: @project, only: [:eta, :output, :id] }
       else
         format.html { render :edit } # If the save fails, show the user the edit window again.
       end
@@ -67,7 +66,7 @@ class ProjectsController < ApplicationController
   # until there is output associated with the open project.
   def show
     respond_to do |format|
-      format.json
+      format.json { render json: @project, only: [:eta, :output, :id] }
     end
   end
 
@@ -76,8 +75,9 @@ class ProjectsController < ApplicationController
   # Saves the output to the file_system
   def receive_service_output
     # Get params and associate :output with the project with id :id
-    @project = Project.find(params[:id])
     @project.output = params[:output]
+    @project[:eta] = 0;
+    @project.save;
   end
 
   private
@@ -93,7 +93,6 @@ class ProjectsController < ApplicationController
         :options => @project[:options],
         :input => base64Input
     }.to_json, {content_type: :json, accept: :json})
-    
     # Set the project's eta to the SMACK server's predicted processing time
     return JSON.parse(response.body)['eta']
   end

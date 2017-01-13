@@ -14,6 +14,7 @@ const fileListElementId = 'file-list';
 const runProjectElementId = 'run_project';
 
 var currentFile = "";
+var timer;
 var runProjectFn = function() {
   throw "There isn't a project loaded";
 }
@@ -55,22 +56,27 @@ $().ready(function(){
 
 
 function projectUpdateSuccess(event, data, status, xhr) {
-  if (data.output == null) {
-    // TODO check eta
-    // and resend a GET after eta
-    // TODO make sure this accounts for if a request fails
-    let url = event.target.action;
-    $.post({
-      url: url,
-    }).success(projectUpdateSuccess);
-  }
-  else {
-    // set output to data.output
-    editor2.setValue(data.output);
-  }
-  console.log(data);
+  timer = setInterval(function() {ajaxCall(data.id)}, data.eta)
 }
 
+function ajaxCall(id)
+{
+    $.ajax({
+        type: "GET",
+        data: {
+            format: 'json'
+        },
+        dataType: "json",
+        url: "/projects/" + id ,
+        success: function(data){
+            console.log(data.eta);
+            if(data.eta == 0) {
+                editor2.setValue(data.output);
+                clearInterval(timer);
+            }
+        }
+    });
+}
 
 function tryLoadZipFromUpload() {
   if (isZipUploadValid()) {
