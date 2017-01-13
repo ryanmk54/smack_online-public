@@ -1,5 +1,20 @@
+require 'smtp_tls'
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
+
+  Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)
+    ActionMailer::Base.delivery_method = :smtp
+      config.action_mailer.perform_deliveries = true
+      config.action_mailer.default charset: 'utf-8'
+        ActionMailer::Base.smtp_settings = {
+          address:   "smtp.gmail.com",
+          port:      587,
+          username:  "capstone.smackers@gmail.com",
+          password:  "cjmr4:30",
+          authentication: "plain",
+          enable_starttls_auto: true
+        }
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -30,6 +45,9 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
 
   config.action_mailer.perform_caching = false
+
+  # Default url so devise will work
+  config.action_mailer.default_url_options = { host: 'localhost', port:3000 }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
