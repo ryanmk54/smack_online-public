@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20170112235915) do
     t.integer  "eta"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "user_ip"
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

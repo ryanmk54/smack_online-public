@@ -8,6 +8,7 @@ const fileListElementId = 'file-list';
 const runProjectElementId = 'run_project';
 
 var currentFile = "";
+var timer;
 var runProjectFn = function() {
   throw "There isn't a project loaded";
 }
@@ -41,8 +42,35 @@ $().ready(function(){
 
   // handle the zip file upload button
   $(zipInput).change(tryLoadZipFromUpload);
+
+  let projectFormSelectors = 'form.new_project, form.edit_project';
+  $(projectFormSelectors).on('ajax:success', projectUpdateSuccess);
+  // TODO account for if it is a failure. We would need to send it again
 });
 
+
+function projectUpdateSuccess(event, data, status, xhr) {
+  timer = setInterval(function() {ajaxCall(data.id)}, data.eta)
+}
+
+function ajaxCall(id)
+{
+    $.ajax({
+        type: "GET",
+        data: {
+            format: 'json'
+        },
+        dataType: "json",
+        url: "/projects/" + id ,
+        success: function(data){
+            console.log(data.eta);
+            if(data.eta == 0) {
+                editor2.setValue(data.output);
+                clearInterval(timer);
+            }
+        }
+    });
+}
 
 function tryLoadZipFromUpload() {
   if (isZipUploadValid()) {
