@@ -1,5 +1,8 @@
 class AnalyticsController < ApplicationController
 
+  PROJECT_CSV_PATH = Rails.root.join('public', 'assets', 'ProjectLocations.csv')
+  USER_CSV_PATH = Rails.root.join('public', 'assets', 'UserLocations.csv')
+
   def usage
     projects = Project.all
 
@@ -8,5 +11,13 @@ class AnalyticsController < ApplicationController
       format.js
       format.json {render json: projects, :only => [:created_at]};
     end
+  end
+
+  def project_location_csv
+    send_file(PROJECT_CSV_PATH, :type => 'text/csv; charset=utf-8')
+  end
+
+  def user_location_csv
+    send_file(PROJECT_CSV_PATH, :type => 'text/csv; charset=utf-8')
   end
 end

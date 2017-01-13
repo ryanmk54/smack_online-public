@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   get 'analytics/usage'
 
+  get 'analytics/project_location_csv'
+
   resources(:projects, except: [:index, :destroy]) do
     member do
       post 'receive_service_output'

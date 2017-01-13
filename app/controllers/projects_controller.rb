@@ -1,9 +1,12 @@
+require 'csv'
+
 class ProjectsController < ApplicationController
   #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
   before_action :set_project, only: [:show, :edit, :update, :receive_service_output]
 
   # Production SMACK server URL
   SERVICE_REQUEST_URL = 'ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started'
+  PROJECT_CSV_PATH = Rails.root.join('public', 'assets', 'ProjectLocations.csv')
 
   # GET /projects/new
   # Displays the initial code editor to the user.
@@ -20,6 +23,7 @@ class ProjectsController < ApplicationController
 
     @project.input = params[:project][:input] # Save the input
     @project[:user_ip] = request.remote_ip
+    @project[:city] = request.location.city
     @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
 
     # Save the new project to the database and redirect the user to 'edit'
@@ -32,6 +36,8 @@ class ProjectsController < ApplicationController
         format.html { render :new }
       end
     end
+
+    updateCSV
   end
 
   # GET /projects/1/edit
@@ -105,5 +111,27 @@ class ProjectsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def project_params
     params.require(:project).permit(:title, :output, :eta)
+  end
+
+  def updateCSV
+    rowExists = false;
+    #city = 'Houston '.strip #@project.city
+    city = request.location.city.strip
+    csv = CSV.read(PROJECT_CSV_PATH, headers:true);
+    csv.each do |row|
+      if(row[0] == city)
+        row[1] = row[1].to_i + 1;
+        rowExists = true;
+      end
+    end
+
+    CSV.open(PROJECT_CSV_PATH, 'wb', write_headers:true, :headers=>['name','pop','lat','lon']) do |file|
+      csv.each do |row|
+        file << row
+      end
+      if !rowExists
+        file << [city, 1, request.location.latitude, request.location.longitude]
+      end
+    end
   end
 end
