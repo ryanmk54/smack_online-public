@@ -12,8 +12,5 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require ace/ace
 //= require bootstrap.min
 //= require bootstrap-select
-//= require jszip
-//= require_tree .
