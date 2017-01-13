@@ -20,13 +20,14 @@ class ProjectsController < ApplicationController
     @project.input = params[:project][:input] # Save the input
     @project[:user_ip] =  request.remote_ip
     @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
+    @project[:eta] = 500;
 
     # Save the new project to the database and redirect the user to 'edit'
     respond_to do |format|
       if @project.save
         format.html { redirect_to edit_project_path(@project)}
         format.js { render :edit  }
-        format.json { render json: @project, only: [:eta, :output] }
+        format.json { render json: @project, only: [:eta, :output, :id] }
       else
         format.html { render :new }
       end
@@ -53,12 +54,8 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.update(project_params)
         format.html { redirect_to edit_project_path(@project)}
-<<<<<<< HEAD
         format.js { render :edit }
-=======
-        format.js   { render :edit }
->>>>>>> rk
-        format.json { render json: @project, only: [:eta, :output] }
+        format.json { render json: @project, only: [:eta, :output, :id] }
       else
         format.html { render :edit } # If the save fails, show the user the edit window again.
       end
@@ -69,7 +66,7 @@ class ProjectsController < ApplicationController
   # until there is output associated with the open project.
   def show
     respond_to do |format|
-      format.json
+      format.json { render json: @project, only: [:eta, :output, :id] }
     end
   end
 
@@ -79,6 +76,8 @@ class ProjectsController < ApplicationController
   def receive_service_output
     # Get params and associate :output with the project with id :id
     @project.output = params[:output]
+    @project[:eta] = 0;
+    @project.save;
   end
 
   private
