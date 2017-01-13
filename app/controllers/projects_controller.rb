@@ -17,10 +17,10 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.save # Need to save before send_service_input in order to know the project id
+
     @project.input = params[:project][:input] # Save the input
-    @project[:user_ip] =  request.remote_ip
+    @project[:user_ip] = request.remote_ip
     @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
-    @project[:eta] = 500;
 
     # Save the new project to the database and redirect the user to 'edit'
     respond_to do |format|
@@ -93,7 +93,6 @@ class ProjectsController < ApplicationController
         :options => @project[:options],
         :input => base64Input
     }.to_json, {content_type: :json, accept: :json})
-    
     # Set the project's eta to the SMACK server's predicted processing time
     return JSON.parse(response.body)['eta']
   end
