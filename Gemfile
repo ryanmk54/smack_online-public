@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-# Bower gems
+gem 'devise'
+
 gem 'rb-readline'
 gem 'pry-rails'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
