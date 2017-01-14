@@ -106,8 +106,7 @@ function renderTimeGraph(dataArray, span, unit){
     var colorArray = [];
     for (var i = 0; i < labelArray.length; i++) {
         valueArray.push(KVArray[labelArray[i]]);
-        colorArray[i] = "rgb(" + Math.floor((Math.random() * 255)) + "," + Math.floor((Math.random() * 255))
-            + "," + Math.floor((Math.random() * 255)) + ")";
+        colorArray[i] = "rgb(" + randRGBVal() + "," + randRGBVal() + "," + randRGBVal() + ")";
     }
 
     var canvas = document.getElementById("myChart");
@@ -146,7 +145,7 @@ function resetCanvasForGeo()
 
 function pollAndDisplayGeo()
 {
-    Plotly.d3.csv('http://0.0.0.0:3000/analytics/project_location_csv', function(err, rows){
+    Plotly.d3.csv('/analytics/project_location_csv', function(err, rows){
 
         function unpack(rows, key) {
             return rows.map(function(row) { return row[key]; });
@@ -203,4 +202,9 @@ function pollAndDisplayGeo()
 
         Plotly.plot(document.getElementById('parent'), data, layout, {showLink: false});
     });
+}
+
+function randRGBVal()
+{
+    return Math.floor((Math.random() * 255));
 }
