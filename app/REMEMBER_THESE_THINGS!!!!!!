@@ -6,3 +6,9 @@ Needs to be changed back for security reasons.
 
 After create and after update, am now redirecting to edit_project path rather than to project
 
+You can copy Devise views (for customization) to your app by running:
+rails g devise:views
+
+Receive_service_output is not static, want to find a way to make it
+static as not to depend on the initial 'create' connection
+

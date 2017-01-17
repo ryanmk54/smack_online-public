@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-# Bower gems
+gem 'devise'
+
 gem 'rb-readline'
 gem 'pry-rails'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -54,3 +55,5 @@ gem 'rest-client'
 
 gem 'chart-js-rails'
 gem 'momentjs-rails'
+gem 'plotlyjs-rails'
+gem 'geocoder'

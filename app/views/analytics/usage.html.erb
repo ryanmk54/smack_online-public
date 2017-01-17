@@ -1,5 +1,6 @@
 <!-- Top -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<!-- Will need to include this once all js isn't included -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>> -->
 <div class="tool-selection-container row">
   <div class="centered lgray height100">
     <select id='numberPicker' class="tool-select selectpicker">
@@ -12,11 +13,12 @@
     <select id='unitPicker' class="tool-select selectpicker">
       <option value="day">Day(s)</option>
       <option value="month">Month(s)</option>
+      <option value="geo">Geo</option>
     </select>
   </div>
 </div>
 
-<div style="height: 2000px; width: 1000px">
+<div id='parent' style="height: 500px; width: 1000px">
   <div id="graphContainer">
     <canvas id="myChart"></canvas>
   </div>

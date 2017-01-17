@@ -3,6 +3,7 @@
 
 //= require moment
 //= require Chart
+//= require plotly
 
 $().ready(function() {
 
@@ -31,18 +32,23 @@ $().ready(function() {
 function pollDataAndDisplayGraph(span, unit) {
     // Polls the web server for all 'project' objects
     // (JSON) and passes them to 'renderTimeGraph()'
-    $.ajax({
-        type: "GET",
-        data: {
-            format: 'json'
-        },
-        dataType: "json",
-        url: "/analytics/usage",
+    if(unit == 'geo')
+    {
+        pollAndDisplayGeo();
+    }
+    else
+        $.ajax({
+            type: "GET",
+            data: {
+                format: 'json'
+            },
+            dataType: "json",
+            url: "/analytics/usage",
 
-        success: function(data){
-            renderTimeGraph(data, span, unit)
-        }
-    });
+            success: function(data){
+                renderTimeGraph(data, span, unit)
+            }
+        });
 }
 
 /*
@@ -97,8 +103,11 @@ function renderTimeGraph(dataArray, span, unit){
 
     // This is necessary to 'sort' the KVArray
     var valueArray = [];
-    for (var i = 0; i < labelArray.length; i++)
+    var colorArray = [];
+    for (var i = 0; i < labelArray.length; i++) {
         valueArray.push(KVArray[labelArray[i]]);
+        colorArray[i] = "rgb(" + randRGBVal() + "," + randRGBVal() + "," + randRGBVal() + ")";
+    }
 
     var canvas = document.getElementById("myChart");
     var ctx = canvas.getContext("2d");
@@ -116,7 +125,8 @@ function renderTimeGraph(dataArray, span, unit){
             datasets: [{
                 label: '# of projects created per day',
                 data: valueArray,
-                borderWidth: 1
+                borderWidth: 1,
+                backgroundColor: colorArray
             }]
         }
     });
@@ -124,6 +134,77 @@ function renderTimeGraph(dataArray, span, unit){
 
 function resetCanvas()
 {
-    $('#myChart').remove(); // this is my <canvas> element
+    $('#graphContainer').html("");
     $('#graphContainer').append('<canvas id="myChart"><canvas>');
+}
+
+function resetCanvasForGeo()
+{
+    $('#myChart').remove(); // this is my <canvas> element
+}
+
+function pollAndDisplayGeo()
+{
+    Plotly.d3.csv('/analytics/project_location_csv', function(err, rows){
+
+        function unpack(rows, key) {
+            return rows.map(function(row) { return row[key]; });
+        }
+
+        var cityName = unpack(rows, 'name'),
+            cityPop = unpack(rows, 'pop'),
+            cityLat = unpack(rows, 'lat'),
+            cityLon = unpack(rows, 'lon'),
+            color = [,"rgb(255,65,54)","rgb(133,20,75)","rgb(255,133,27)","lightgrey"],
+            citySize = [],
+            hoverText = [],
+            scale = 1;
+
+        for ( var i = 0 ; i < cityPop.length; i++) {
+            var currentSize = cityPop[i] / scale;
+            var currentText = cityName[i] + " # Projects: " + cityPop[i];
+            citySize.push(currentSize);
+            hoverText.push(currentText);
+        }
+
+        var data = [{
+            type: 'scattergeo',
+            locationmode: 'USA-states',
+            lat: cityLat,
+            lon: cityLon,
+            hoverinfo: 'text',
+            text: hoverText,
+            marker: {
+                size: citySize,
+                line: {
+                    color: 'black',
+                    width: 2
+                },
+            }
+        }];
+
+        var layout = {
+            title: '2014 US City Populations',
+            showlegend: false,
+            geo: {
+                scope: 'usa',
+                projection: {
+                    type: 'albers usa'
+                },
+                showland: true,
+                landcolor: 'rgb(217, 217, 217)',
+                subunitwidth: 1,
+                countrywidth: 1,
+                subunitcolor: 'rgb(255,255,255)',
+                countrycolor: 'rgb(255,255,255)'
+            },
+        };
+
+        Plotly.plot(document.getElementById('parent'), data, layout, {showLink: false});
+    });
+}
+
+function randRGBVal()
+{
+    return Math.floor((Math.random() * 255));
 }

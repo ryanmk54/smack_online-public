@@ -1,7 +1,13 @@
 Rails.application.routes.draw do
+  devise_for :users
+  # root is the homepage
+  # root is the page devise goes to after logging in
+  root 'projects#new'
+
   get 'analytics/usage'
 
-  root 'projects#new'
+  get 'analytics/project_location_csv'
+
   resources(:projects, except: [:index, :destroy]) do
     member do
       post 'receive_service_output'

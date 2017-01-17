@@ -1,3 +1,9 @@
+// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
+// about supported directives.
+//
+//
+//= require jszip
+
 // IFFE to prevent pollution of the global namespace
 //(function(){
 
@@ -8,6 +14,7 @@ const fileListElementId = 'file-list';
 const runProjectElementId = 'run_project';
 
 var currentFile = "";
+var timer;
 var runProjectFn = function() {
   throw "There isn't a project loaded";
 }
@@ -37,12 +44,79 @@ $().ready(function(){
   editor2.setValue(output.value);
 
   // handle the run button click
-  $(runProject).on('click', function() {runProjectFn()});
+  $(runProject).on('click', function() {
+    // try to run the projet
+    // if the project is unable to run, there probably isn't a zip file loaded
+    try {
+      runProjectFn()
+    }
+    catch(err) {
+      let zip = new JSZip();
+      zip.file("main.c", editor.getValue());
+      loadIDE(zip);
+      generateBase64AndSubmitForm(zip);
+    }
+  });
 
   // handle the zip file upload button
   $(zipInput).change(tryLoadZipFromUpload);
+
+  let projectFormSelectors = 'form.new_project, form.edit_project';
+  $(projectFormSelectors).on('ajax:success', projectUpdateSuccess);
+  // TODO account for if it is a failure. We would need to send it again
 });
 
+
+function handleEditor2ChangeSelection(zip) {
+  let cursorPos = editor2.getSelection().getCursor();
+  let contentInRow = editor2.getSession().getLine(cursorPos.row);
+  contentInRow = contentInRow.trim();
+
+  let matchStrings = [
+    /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*)\((\d*),(\d*)\)/,
+    /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*):(\d*):(\d*)/
+  ];
+
+  matchStrings.forEach(function(matchString) {
+    let match = contentInRow.match(matchString);
+    if (match) {
+      let fileName = match[1];
+      let rowNum = match[2];
+      let colNum = match[3];
+
+      rowNum -= 1;
+        // rows are zero based
+
+      setCurrentFile(zip, fileName, function() {
+        editor.navigateTo(rowNum, colNum);
+      });
+    }
+  });
+}
+
+
+function projectUpdateSuccess(event, data, status, xhr) {
+  timer = setInterval(function() {ajaxCall(data.id)}, data.eta)
+}
+
+function ajaxCall(id)
+{
+    $.ajax({
+        type: "GET",
+        data: {
+            format: 'json'
+        },
+        dataType: "json",
+        url: "/projects/" + id ,
+        success: function(data){
+            console.log(data.eta);
+            if(data.eta == 0) {
+                editor2.setValue(data.output);
+                clearInterval(timer);
+            }
+        }
+    });
+}
 
 function tryLoadZipFromUpload() {
   if (isZipUploadValid()) {
@@ -116,13 +190,7 @@ function loadIDE(zip) {
     console.log("running project");
     editor2.setValue('Processing...');
 
-    // zip up the files and ask rails to submit it
-    zip.generateAsync({type: "base64"})
-      .then(function (content) {
-        var base64Input = document.getElementById(base64InputElementId);
-        base64Input.value = content;
-        $.rails.handleRemote($('form'));
-      });
+    generateBase64AndSubmitForm(zip);
     return false;
   };
 
@@ -130,6 +198,26 @@ function loadIDE(zip) {
   editor.on('blur', function() {
     zip.file(currentFile, editor.getValue());
   });
+
+  // handle clicking on editor2
+  editor2.on("changeSelection", function() {
+    handleEditor2ChangeSelection(zip)
+  });
+}
+
+
+/**
+ * Generates the base64 for the given zip and
+ * submits the pages form
+ */
+function generateBase64AndSubmitForm(zip) {
+  // zip up the files and ask rails to submit it
+  zip.generateAsync({type: "base64"})
+    .then(function (content) {
+      var base64Input = document.getElementById(base64InputElementId);
+      base64Input.value = content;
+      $.rails.handleRemote($('form'));
+    });
 }
 
 
@@ -201,7 +289,7 @@ function emptyFileList() {
 // Unzips the file out of zip and 
 // sets the contents of the editor 
 // to the contents of the file
-function setCurrentFile(zip, filename) {
+function setCurrentFile(zip, filename, callback) {
   // don't change the editor if they click on a folder
   if (filename.endsWith('/')) {
     return;
@@ -226,6 +314,9 @@ function setCurrentFile(zip, filename) {
     .then(function success(content) {
       // use the content
       editor.setValue(content);
+      if (callback) {
+        callback();
+      }
     }, function error(e) {
       throw(e);
     });

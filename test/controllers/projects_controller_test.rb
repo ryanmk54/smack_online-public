@@ -5,44 +5,54 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     @project = projects(:one)
   end
 
-  test "should get index" do
-    get projects_url
-    assert_response :success
+  base64_input = 'UEsDBAoAAAAAAOtdiUmcjwsfywYAAMsGAAAIAAAAc2ltcGxlLmMvLyBleGFtcGxlcy9zaW1wbGUvc2ltcGxlLmMKI2luY2x1ZGUgInNtYWNrLmgiCiNpbmNsdWRlIDxzdGRsaWIuaD4KCiNkZWZpbmUgVFJVRSAxCiNkZWZpbmUgRkFMU0UgMAojZGVmaW5lIE1BWF9MSU1JVCAxMDAwCgovLyBCYW5rIEFjY291bnQgRXhhbXBsZQoKLy8gQWNjb3VudCBzdHJ1Y3R1cmUKdHlwZWRlZiBzdHJ1Y3QgewogIGludCBiYWxhbmNlOwogIGludCBsaW1pdDsKfSBBQ0NPVU5ULCAqUEFDQ09VTlQ7CgovLyBDcmVhdGUgYW5kIGluaXRpYWxpemUgYWNjb3VudApQQUNDT1VOVCBjcmVhdGUoaW50IGxpbWl0KSB7CiAgaWYgKGxpbWl0IDw9IDAgfHwgbGltaXQgPiBNQVhfTElNSVQpIHJldHVybiAwOwogIFBBQ0NPVU5UIGFjYyA9IChQQUNDT1VOVCkgbWFsbG9jKHNpemVvZihBQ0NPVU5UKSk7CiAgYWNjLT5iYWxhbmNlID0gMDsKICBhY2MtPmxpbWl0ID0gbGltaXQ7CiAgcmV0dXJuIGFjYzsKfQoKLy8gR2V0IGFjY291bnQgYmFsYW5jZQppbnQgZ2V0X2JhbGFuY2UoUEFDQ09VTlQgYWNjKSB7CiAgcmV0dXJuIGFjYy0+YmFsYW5jZTsKfQoKLy8gRGVwb3NpdCBmdW5kcyBpZiBub3QgZXhjZWVkaW5nIHRoZSBhY2NvdW50IGxpbWl0CmludCBkZXBvc2l0KFBBQ0NPVU5UIGFjYywgaW50IG4pIHsKICBpZiAobiA8PSAwKSByZXR1cm4gRkFMU0U7CiAgaWYgKGFjYy0+YmFsYW5jZSA+IGFjYy0+bGltaXQgLSBuKSB7CiAgICByZXR1cm4gRkFMU0U7CiAgfQogIGFjYy0+YmFsYW5jZSA9IGFjYy0+YmFsYW5jZSArIG47CiAgcmV0dXJuIFRSVUU7Cn0KCi8vIFdpdGhkcmF3IGlmIHRoZXJlIGlzIGVub3VnaCBmdW5kcyBpbiB0aGUgYWNjb3VudAppbnQgd2l0aGRyYXcoUEFDQ09VTlQgYWNjLCBpbnQgbikgewogIGlm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'
+  base64_input_for_update = 'UEsDBAoAAAAAAK61LEpVJQd6IQAAACEAAAAIAAAAc2ltcGxlLmMKaW50IG1haW4odm9pZCkgewogIHJldHVybiAwOwp9CgpQSwMECgAAAAAA8F2JSQAAAAAAAAAAAAAAAAkAAABfX01BQ09TWC9QSwMECgAAAAAArrUsStPfmSfUAQAA1AEAABMAAABfX01BQ09TWC8uX3NpbXBsZS5jAAUWBwACAABNYWMgT1MgWCAgICAgICAgAAIAAAAJAAAAMgAAAQAAAAACAAAB4oCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQVRUUgAAAAAAAAHigIABEAAAANKAAAAAAAAAAAAAAAAAAAADAAABEAAAAA8AABdjb20uYXBwbGUuVGV4dEVuY29kaW5nAAAAAAABHwAAACoAACRjb20uYXBwbGUubWV0YWRhdGE6X2tNREl0ZW1Vc2VyVGFncwAAAAABSQAAAAEAADdjb20uYXBwbGUubWV0YWRhdGE6a01ETGFiZWxfaWN3ZHhnemRkMmk1b2h6cmpiaDZnYXJpYXUAAAB1dGYtODsxMzQyMTc5ODRicGxpc3QwMAAIAAAAAAAAAQEAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAnyqKCnAAYGAUYGAgfvv70ACHIAAwU3Fu+/vR8FBkhT77+9XMSvAAduFBHonoZhKiHFuem0pwIQEM2WLN+uAyoz77+9354MUu+/vQVJKAMHTCnIrUgO77+9BgYHJwJ/BhceBcy9PGdXNmLph5MFAzZc47GfdgRjJDtEQGABZz5jyo1/HwDmqZkCDAcuUEsBAhQACgAAAAAArrUsSlUlB3ohAAAAIQAAAAgAAAAAAAAAAAAAAAAAAAAAAHNpbXBsZS5jUEsBAhQACgAAAAAA8F2JSQAAAAAAAAAAAAAAAAkAAAAAAAAAAAAQAAAARwAAAF9fTUFDT1NYL1BLAQIUAAoAAAAAAK61LErT35kn1AEAANQBAAATAAAAAAAAAAAAAAAAAG4AAABfX01BQ09TWC8uX3NpbXBsZS5jUEsFBgAAAAADAAMArgAAAHMCAAAAAA=='
+
+  test 'should create project' do
+    assert_difference('Project.count') do
+      post projects_url, params: { project: { input: base64_input } }
+    end
+    assert_equal(Project.last.input, base64_input)
+    assert_redirected_to edit_project_url(Project.last)
   end
 
-  test "should get new" do
+  test 'should update project' do
+    patch project_url(@project), params: { project: { input: base64_input_for_update } }
+    assert_equal(@project.input, base64_input_for_update)
+    assert_redirected_to edit_project_url(@project)
+  end
+
+  test 'should_create_output_file' do
+    post receive_service_output_project_url(@project.id), params: {id: @project.id, output: 'this_is_output'}
+    assert_equal(@project.output, 'this_is_output')
+  end
+
+  test 'should get new' do
     get new_project_url
     assert_response :success
   end
 
-  test "should create project" do
-    assert_difference('Project.count') do
-      post projects_url, params: { project: { eta: @project.eta, output: @project.output, title: @project.title } }
-    end
-
-    assert_redirected_to project_url(Project.last)
-  end
-
-  test "should show project" do
-    get project_url(@project)
-    assert_response :success
-  end
-
-  test "should get edit" do
+  test 'should get edit' do
     get edit_project_url(@project)
     assert_response :success
   end
 
-  test "should update project" do
-    patch project_url(@project), params: { project: { eta: @project.eta, output: @project.output, title: @project.title } }
-    assert_redirected_to project_url(@project)
-  end
+  #test "should destroy project" do
+  #  assert_difference('Project.count', -1) do
+  #    delete project_url(@project)
+  #  end
 
-  test "should destroy project" do
-    assert_difference('Project.count', -1) do
-      delete project_url(@project)
-    end
+  #  assert_redirected_to projects_url
+  #end
 
-    assert_redirected_to projects_url
-  end
+  #test "should get index" do
+  #  get projects_url
+  #  assert_response :success
+  #end
+
+
+  #test "should show project" do
+  #  get project_url(@project)
+  #  assert_response :success
+  #end
 end
