@@ -44,7 +44,19 @@ $().ready(function(){
   editor2.setValue(output.value);
 
   // handle the run button click
-  $(runProject).on('click', function() {runProjectFn()});
+  $(runProject).on('click', function() {
+    // try to run the projet
+    // if the project is unable to run, there probably isn't a zip file loaded
+    try {
+      runProjectFn()
+    }
+    catch(err) {
+      let zip = new JSZip();
+      zip.file("main.c", editor.getValue());
+      loadIDE(zip);
+      generateBase64AndSubmitForm(zip);
+    }
+  });
 
   // handle the zip file upload button
   $(zipInput).change(tryLoadZipFromUpload);
@@ -147,13 +159,7 @@ function loadIDE(zip) {
     console.log("running project");
     editor2.setValue('Processing...');
 
-    // zip up the files and ask rails to submit it
-    zip.generateAsync({type: "base64"})
-      .then(function (content) {
-        var base64Input = document.getElementById(base64InputElementId);
-        base64Input.value = content;
-        $.rails.handleRemote($('form'));
-      });
+    generateBase64AndSubmitForm(zip);
     return false;
   };
 
@@ -161,6 +167,21 @@ function loadIDE(zip) {
   editor.on('blur', function() {
     zip.file(currentFile, editor.getValue());
   });
+}
+
+
+/**
+ * Generates the base64 for the given zip and
+ * submits the pages form
+ */
+function generateBase64AndSubmitForm(zip) {
+  // zip up the files and ask rails to submit it
+  zip.generateAsync({type: "base64"})
+    .then(function (content) {
+      var base64Input = document.getElementById(base64InputElementId);
+      base64Input.value = content;
+      $.rails.handleRemote($('form'));
+    });
 }
 
 
