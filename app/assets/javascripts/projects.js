@@ -3,6 +3,7 @@
 //
 //
 //= require jszip
+//= require tree.jquery
 
 // IFFE to prevent pollution of the global namespace
 //(function(){
@@ -166,10 +167,35 @@ function loadIDE(zip) {
   emptyFileList();
 
   // Load each file as a string and add it to the file list
-  let filePaths = [];
+  let data = [];
+  let dataPosStack = [data];
+  let dirPrefix = "";
+
   let firstFile = "";
   zip.forEach(function (relativePath, file) {
-    filePaths.push(relativePath);
+    let curNode = {
+      name: file.name,
+      relativePath: relativePath,
+      dir: file.dir
+    }
+    if (file.dir && !relativePath.startsWith(dirPrefix)) {
+      dataPosStack.pop();
+        // pop dirPosStack
+    }
+
+    // add curNode to dataPosStack
+    let dataPos = dataPosStack[dataPosStack.length - 1];
+    dataPos.push(curNode);
+
+    if (file.dir && relativePath.startsWith(dirPrefix)) {
+      curNode.children = [];
+        // add children to curNode
+      dataPosStack.push(curNode.children);
+        // add children to dirPosStack
+      dirPrefix = relativePath;
+    }
+
+
 
     addFileToFileList(zip, relativePath);
 
@@ -180,9 +206,21 @@ function loadIDE(zip) {
     }
   });
 
-  filePaths;
-  //let data = createFilePathsObject(filePaths);
-  //debugger;
+  let $jqtree = $("#jqtree");
+  $jqtree.tree({
+    data: data,
+    onCreateLi: function(node, $li) {
+      $li.find('.jqtree-title').data("relativePath", node.relativePath);
+    }
+  });
+  $jqtree.on('click', '.jqtree-title', function(e) {
+    console.log(e);
+    console.log($(e.target).data("relativePath"));
+
+    if (!$(e.target).data('dir')) {
+      setCurrentFile(zip, $(e.target).data('relativePath'));
+    }
+  });
 
 
 

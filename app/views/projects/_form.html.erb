@@ -28,13 +28,17 @@
       <!-- Files -->
       <div id="file-list-container" class="height100 file-list-container row">
         <div id="file-list" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 gray height100">
-          <!-- Start form for submission -->
-<div class="field white-color">
-  <%= label_tag :input_upload, "Upload Project" %>
-  <%= file_field_tag :input_upload, accept: ".zip, application/zip", class: 'white-color' %>
-  <span id="input_upload_status"></span>
-</div>
+
+        <div class="field white-color">
+          <%= label_tag :input_upload, "Upload Project" %>
+          <%= file_field_tag :input_upload, accept: ".zip, application/zip", class: 'white-color' %>
+          <span id="input_upload_status"></span>
         </div>
+
+        </div>
+      </div>
+
+      <div id="jqtree">
       </div>
     </div>
 
