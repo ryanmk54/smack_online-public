@@ -64,35 +64,34 @@ $().ready(function(){
   let projectFormSelectors = 'form.new_project, form.edit_project';
   $(projectFormSelectors).on('ajax:success', projectUpdateSuccess);
   // TODO account for if it is a failure. We would need to send it again
-  //
-
-  // handle clicking on editor2
-  editor2.on("changeSelection", handleEditor2ChangeSelection);
 });
 
 
-function handleEditor2ChangeSelection() {
+function handleEditor2ChangeSelection(zip) {
   let cursorPos = editor2.getSelection().getCursor();
   let contentInRow = editor2.getSession().getLine(cursorPos.row);
   contentInRow = contentInRow.trim();
-  let pathString = "/home/ubuntu/src/smack_server/public/system/projects/";
-  if (!contentInRow.includes(pathString)) {
-    return;
-  }
-  contentInRow = contentInRow.replace(pathString, "");
-  let idRegexp = /(\d)*/;
-  contentInRow = contentInRow.replace(idRegexp, "");
-  contentInRow = contentInRow.slice(1);
-  let indexOfLParen = contentInRow.indexOf("(");
-  let fileName = contentInRow.slice(0, indexOfLParen);
-  let indexOfComma = contentInRow.indexOf(",");
-  let rowNum = parseInt(contentInRow.slice(indexOfLParen+1, indexOfComma));
-  let indexOfRParen = contentInRow.indexOf(")");
-  let colNum = parseInt(contentInRow.slice(indexOfComma+1, indexOfRParen));
-  rowNum -= 1;
-    // rows are zero based
 
-  editor.navigateTo(rowNum, colNum);
+  let matchStrings = [
+    /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*)\((\d*),(\d*)\)/,
+    /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*):(\d*):(\d*)/
+  ];
+
+  matchStrings.forEach(function(matchString) {
+    let match = contentInRow.match(matchString);
+    if (match) {
+      let fileName = match[1];
+      let rowNum = match[2];
+      let colNum = match[3];
+
+      rowNum -= 1;
+        // rows are zero based
+
+      setCurrentFile(zip, fileName, function() {
+        editor.navigateTo(rowNum, colNum);
+      });
+    }
+  });
 }
 
 
@@ -196,6 +195,11 @@ function loadIDE(zip) {
   editor.on('blur', function() {
     zip.file(currentFile, editor.getValue());
   });
+
+  // handle clicking on editor2
+  editor2.on("changeSelection", function() {
+    handleEditor2ChangeSelection(zip)
+  });
 }
 
 
@@ -244,7 +248,7 @@ function emptyFileList() {
 // Unzips the file out of zip and 
 // sets the contents of the editor 
 // to the contents of the file
-function setCurrentFile(zip, filename) {
+function setCurrentFile(zip, filename, callback) {
   // don't change the editor if they click on a folder
   if (filename.endsWith('/')) {
     return;
@@ -269,6 +273,9 @@ function setCurrentFile(zip, filename) {
     .then(function success(content) {
       // use the content
       editor.setValue(content);
+      if (callback) {
+        callback();
+      }
     }, function error(e) {
       throw(e);
     });
