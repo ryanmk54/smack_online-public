@@ -64,7 +64,36 @@ $().ready(function(){
   let projectFormSelectors = 'form.new_project, form.edit_project';
   $(projectFormSelectors).on('ajax:success', projectUpdateSuccess);
   // TODO account for if it is a failure. We would need to send it again
+  //
+
+  // handle clicking on editor2
+  editor2.on("changeSelection", handleEditor2ChangeSelection);
 });
+
+
+function handleEditor2ChangeSelection() {
+  let cursorPos = editor2.getSelection().getCursor();
+  let contentInRow = editor2.getSession().getLine(cursorPos.row);
+  contentInRow = contentInRow.trim();
+  let pathString = "/home/ubuntu/src/smack_server/public/system/projects/";
+  if (!contentInRow.includes(pathString)) {
+    return;
+  }
+  contentInRow = contentInRow.replace(pathString, "");
+  let idRegexp = /(\d)*/;
+  contentInRow = contentInRow.replace(idRegexp, "");
+  contentInRow = contentInRow.slice(1);
+  let indexOfLParen = contentInRow.indexOf("(");
+  let fileName = contentInRow.slice(0, indexOfLParen);
+  let indexOfComma = contentInRow.indexOf(",");
+  let rowNum = parseInt(contentInRow.slice(indexOfLParen+1, indexOfComma));
+  let indexOfRParen = contentInRow.indexOf(")");
+  let colNum = parseInt(contentInRow.slice(indexOfComma+1, indexOfRParen));
+  rowNum -= 1;
+    // rows are zero based
+
+  editor.navigateTo(rowNum, colNum);
+}
 
 
 function projectUpdateSuccess(event, data, status, xhr) {
