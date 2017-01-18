@@ -8,13 +8,22 @@
 // IFFE to prevent pollution of the global namespace
 //(function(){
 
-const outputElementId = 'output';
-const zipUploadElementId = 'input_upload';
-const base64InputElementId = 'project_input';
-const fileListElementId = 'file-list';
-const runProjectElementId = 'run_project';
+const id = {
+  base64Input: 'project_input',
+  base64Output: 'output',
+  zipUpload: 'input_upload',
+  fileList: 'file-list',
+  runProject: 'run_project'
+}
 
-var currentFile = "";
+
+/* Invariant: These variables are defined 
+ * as soon as the ready function is called
+ */
+var $jqtree;
+var zip;
+var currentFile;
+
 var timer;
 var runProjectFn = function() {
   throw "There isn't a project loaded";
@@ -22,16 +31,18 @@ var runProjectFn = function() {
 
 
 $().ready(function(){
-  // Initialize DOM elements
-  let base64Input = document.getElementById(base64InputElementId);
-  let zipInput = document.getElementById(zipUploadElementId);
-  let runProject = document.getElementById(runProjectElementId);
+  "use strict";
+
+  initJqTree();
 
   // Load input editor 
+  let base64Input = document.getElementById(id.base64Input);
+  let zipInput = document.getElementById(id.zipUpload);
+  zip = new JSZip();
   if (base64Input.value != '') {
-    loadZipFromBase64Input()
+      zip.loadAsync(base64Input, {base64: true})
       .then(function success(zip) {
-        loadIDE(zip);
+        loadIDE();
       }, function error(e) {
         throw("unable to load zip from base 64 input");
       });
@@ -41,21 +52,22 @@ $().ready(function(){
   }
 
   // Load output editor
-  let output = document.getElementById(outputElementId);
+  let output = document.getElementById(id.base64Output);
   editor2.setValue(output.value);
 
   // handle the run button click
+  let runProject = document.getElementById(id.runProject);
   $(runProject).on('click', function() {
     // try to run the projet
     // if the project is unable to run, there probably isn't a zip file loaded
-    try {
-      runProjectFn()
-    }
-    catch(err) {
+    if (runProjectFn == undefined) {
       let zip = new JSZip();
       zip.file("main.c", editor.getValue());
       loadIDE(zip);
       generateBase64AndSubmitForm(zip);
+    }
+    else {
+      runProjectFn()
     }
   });
 
@@ -65,10 +77,32 @@ $().ready(function(){
   let projectFormSelectors = 'form.new_project, form.edit_project';
   $(projectFormSelectors).on('ajax:success', projectUpdateSuccess);
   // TODO account for if it is a failure. We would need to send it again
+  //
 });
 
 
-function handleEditor2ChangeSelection(zip) {
+function initJqTree() {
+  $jqtree = $('#file-list');
+  $jqtree.tree({
+    data: {},
+    onCreateLi: function(node, $li) {
+      $li.find('.jqtree-title').attr('id', node.relativePath);
+      $li.find('.jqtree-title').data("relativePath", node.relativePath);
+    }
+  });
+
+  $jqtree.on('click', '.jqtree-title', function(e) {
+    console.log(e);
+    console.log($(e.target).data("relativePath"));
+
+    if (!$(e.target).data('dir')) {
+      setCurrentFile( $(e.target).data('relativePath') );
+    }
+  });
+}
+
+
+function handleEditor2ChangeSelection() {
   let cursorPos = editor2.getSelection().getCursor();
   let contentInRow = editor2.getSession().getLine(cursorPos.row);
   contentInRow = contentInRow.trim();
@@ -88,7 +122,7 @@ function handleEditor2ChangeSelection(zip) {
       rowNum -= 1;
         // rows are zero based
 
-      setCurrentFile(zip, fileName, function() {
+      setCurrentFile(fileName, function() {
         editor.navigateTo(rowNum, colNum);
       });
     }
@@ -126,22 +160,11 @@ function tryLoadZipFromUpload() {
 
     loadZipFromFileUpload()
       .then(function success(zip) {
-        loadIDE(zip);
+        loadIDE();
       }, function error(e) {
         throw("unable to load zip from file upload");
       });
   }
-}
-
-
-/**
- * @description Loads a zip object from the base64 input sent by the server
- *
- * @see https://stuk.github.io/jszip/documentation/api_jszip/load_async_object.html
- */
-function loadZipFromBase64Input() {
-  var base64Input = document.getElementById(base64InputElementId).value;
-  return JSZip.loadAsync(base64Input, {base64: true});
 }
 
 
@@ -151,20 +174,17 @@ function loadZipFromBase64Input() {
  * @see https://stuk.github.io/jszip/documentation/api_jszip/load_async_object.html
  */
 function loadZipFromFileUpload() {
-  var zipInputElement = document.getElementById(zipUploadElementId);
-  return JSZip.loadAsync(zipInputElement.files[0]);
+  var zipInputElement = document.getElementById(id.zipUpload);
+  zip = new JSZip();
+  return zip.loadAsync(zipInputElement.files[0]);
 }
 
 
 /**
  * @description Populates the file list and adds events listeners
  */
-function loadIDE(zip) {
+function loadIDE() {
   console.log("loading IDE");
-
-  // Empty the files list in case the editor
-  // has already been loaded once before
-  emptyFileList();
 
   // Load each file as a string and add it to the file list
   let data = [];
@@ -195,40 +215,20 @@ function loadIDE(zip) {
       dirPrefix = relativePath;
     }
 
-
-
-    addFileToFileList(zip, relativePath);
-
     // Set the input editor to the first file that isn't a folder
     if (firstFile.length == 0 && !relativePath.endsWith('/')) { 
       firstFile = relativePath; 
-      setCurrentFile(zip, firstFile);
     }
   });
 
-  let $jqtree = $("#jqtree");
-  $jqtree.tree({
-    data: data,
-    onCreateLi: function(node, $li) {
-      $li.find('.jqtree-title').data("relativePath", node.relativePath);
-    }
-  });
-  $jqtree.on('click', '.jqtree-title', function(e) {
-    console.log(e);
-    console.log($(e.target).data("relativePath"));
-
-    if (!$(e.target).data('dir')) {
-      setCurrentFile(zip, $(e.target).data('relativePath'));
-    }
-  });
-
-
+  $jqtree.tree('loadData', data);
+  setCurrentFile(firstFile);
 
   runProjectFn = function() {
     console.log("running project");
     editor2.setValue('Processing...');
 
-    generateBase64AndSubmitForm(zip);
+    generateBase64AndSubmitForm();
     return false;
   };
 
@@ -248,11 +248,11 @@ function loadIDE(zip) {
  * Generates the base64 for the given zip and
  * submits the pages form
  */
-function generateBase64AndSubmitForm(zip) {
+function generateBase64AndSubmitForm() {
   // zip up the files and ask rails to submit it
   zip.generateAsync({type: "base64"})
     .then(function (content) {
-      var base64Input = document.getElementById(base64InputElementId);
+      var base64Input = document.getElementById(id.base64Input);
       base64Input.value = content;
       $.rails.handleRemote($('form'));
     });
@@ -297,37 +297,10 @@ function createFilePathsObject(filePaths) {
 }
 
 
-/**
- * Creates a div element
- * based on the given filename
- * and appends it to the file list
- */
-function addFileToFileList(zip, filename) {
-  var fileListElement = document.getElementById(fileListElementId);
-  var fileElement = document.createElement("div");
-  fileElement.id = filename;
-  fileElement.className = "file";
-  fileElement.appendChild(document.createTextNode(filename));
-  fileElement.onclick = function() { setCurrentFile(zip, filename); };
-  fileListElement.appendChild(fileElement);
-}
-
-
-/**
- * Deletes all file divs from the file list element
- */
-function emptyFileList() {
-  var fileDivs = document.getElementsByClassName("file");
-  for (let i = fileDivs.length - 1; i >= 0; --i) {
-    fileDivs[i].remove();
-  }
-}
-
-
 // Unzips the file out of zip and 
 // sets the contents of the editor 
 // to the contents of the file
-function setCurrentFile(zip, filename, callback) {
+function setCurrentFile(filename, callback) {
   // don't change the editor if they click on a folder
   if (filename.endsWith('/')) {
     return;
@@ -377,7 +350,7 @@ function outputZipError(errorMessage) {
 
 
 function isZipUploadValid() {
-  var zipUpload = document.getElementById(zipUploadElementId);
+  var zipUpload = document.getElementById(id.zipUpload);
 
   // Verify only one file was uploaded
   if (zipUpload.files.length != 1) {
