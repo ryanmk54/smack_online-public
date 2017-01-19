@@ -5,7 +5,7 @@
 <!-- Start page body -->
 
  <!-- Body -->
-<div class="height100 row container-fluid">
+<div class="main-container row container-fluid">
 
   <!-- Header -->
   <div class="header-container row">
@@ -14,10 +14,10 @@
   </div>
 
   <!-- Center -->
-  <div class="center-container row">
+  <div class="height100 center-container row">
 
     <!-- Sidebar -->
-    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 height100">
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 height100 gray">
 
       <!-- Project Selection -->
 <!--       <div class="project-selection-container row">
@@ -26,16 +26,18 @@
       </div> -->
 
       <!-- Files -->
-      <div id="file-list-container" class="height100 file-list-container row">
-        <div id="file-list" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 gray height100">
-          <!-- Start form for submission -->
-<div class="field white-color">
-  <%= label_tag :input_upload, "Upload Project" %>
-  <%= file_field_tag :input_upload, accept: ".zip, application/zip", class: 'white-color' %>
-  <span id="input_upload_status"></span>
-</div>
+      <div id="upload-project-container">
+        <div class="field white-color">
+          <%= label_tag :input_upload, "Upload Project" %>
+          <%= file_field_tag :input_upload, accept: ".zip, application/zip", 
+                             class: 'white-color' %>
+          <span id="input_upload_status"></span>
         </div>
       </div>
+
+      <div id="file-list">
+      </div>
+
     </div>
 
     <!-- Main -->
@@ -98,17 +100,4 @@
 
 <!-- End page body -->
 
-<!-- Start scripts -->
-
 <script src="/assets/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-<script>
-    var editor = ace.edit("editor1");
-    editor.setTheme("ace/theme/clouds");
-    editor.session.setMode("ace/mode/c_cpp");
-
-    var editor2 = ace.edit("editor2");
-    editor2.setTheme("ace/theme/twilight");
-    editor2.session.setMode("ace/mode/c_cpp");
-</script>
-
-<!-- End scripts -->
