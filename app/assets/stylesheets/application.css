@@ -13,3 +13,13 @@
  *= require_tree .
  *= require_self
  */
+
+ .navbar {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.sign-in-dropdown-menu
+{
+	height: 175px;
+}
