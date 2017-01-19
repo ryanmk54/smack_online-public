@@ -23,6 +23,8 @@ const id = {
 var $jqtree;
 var zip;
 var currentFile;
+var editor;
+var editor2;
 
 var timer;
 var runProjectFn = function() {
@@ -33,6 +35,7 @@ var runProjectFn = function() {
 $().ready(function(){
   "use strict";
 
+  initAceEditors();
   initJqTree();
 
   // Load input editor 
@@ -81,23 +84,39 @@ $().ready(function(){
 });
 
 
+function initAceEditors() {
+  editor = ace.edit("editor1");
+  editor.$blockScrolling = Infinity;
+  editor.setTheme("ace/theme/clouds");
+  editor.session.setMode("ace/mode/c_cpp");
+
+  editor2 = ace.edit("editor2");
+  editor2.$blockScrolling = Infinity;
+  editor2.setTheme("ace/theme/twilight");
+  editor2.session.setMode("ace/mode/c_cpp");
+  editor2.setReadOnly(true);
+}
+
+
 function initJqTree() {
   $jqtree = $('#file-list');
   $jqtree.tree({
     data: {},
+    autoOpen: 1,
+    selectable: false,
+    useContextMenu: false,
     onCreateLi: function(node, $li) {
-      $li.find('.jqtree-title').attr('id', node.relativePath);
-      $li.find('.jqtree-title').data("relativePath", node.relativePath);
+      //$li.attr('id', node.relativePath);
+      $li.find('.jqtree_common').attr('id', node.relativePath);
+      //$li.find('.jqtree-title').data("relativePath", node.relativePath);
     }
   });
 
-  $jqtree.on('click', '.jqtree-title', function(e) {
-    console.log(e);
-    console.log($(e.target).data("relativePath"));
+  $jqtree.on('click', 'li .jqtree_common:not(.jqtree-folder)', function(e) {
+    //console.log(e);
+    //console.log($(e.target).data("relativePath"));
 
-    if (!$(e.target).data('dir')) {
-      setCurrentFile( $(e.target).data('relativePath') );
-    }
+    setCurrentFile( $(e.target).attr('id') );
   });
 }
 
@@ -189,7 +208,7 @@ function loadIDE() {
   // Load each file as a string and add it to the file list
   let data = [];
   let dataPosStack = [data];
-  let dirPrefix = "";
+  let dirPrefixStack  = [""];
 
   let firstFile = "";
   zip.forEach(function (relativePath, file) {
@@ -198,21 +217,28 @@ function loadIDE() {
       relativePath: relativePath,
       dir: file.dir
     }
-    if (file.dir && !relativePath.startsWith(dirPrefix)) {
+    let lastDirPrefix = dirPrefixStack[dirPrefixStack.length - 1];
+    if (file.dir && !relativePath.startsWith(lastDirPrefix)) {
       dataPosStack.pop();
+      dirPrefixStack.pop();
         // pop dirPosStack
+      lastDirPrefix = dirPrefixStack[dirPrefixStack.length - 1];
+        // update lastDirPrefix
+    }
+    if (relativePath.startsWith(lastDirPrefix)) {
+      curNode.name = curNode.name.replace(lastDirPrefix, "");
     }
 
     // add curNode to dataPosStack
     let dataPos = dataPosStack[dataPosStack.length - 1];
     dataPos.push(curNode);
 
-    if (file.dir && relativePath.startsWith(dirPrefix)) {
+    if (file.dir && relativePath.startsWith(lastDirPrefix)) {
       curNode.children = [];
         // add children to curNode
       dataPosStack.push(curNode.children);
         // add children to dirPosStack
-      dirPrefix = relativePath;
+      dirPrefixStack.push(relativePath);
     }
 
     // Set the input editor to the first file that isn't a folder
@@ -325,6 +351,7 @@ function setCurrentFile(filename, callback) {
     .then(function success(content) {
       // use the content
       editor.setValue(content);
+      editor.navigateTo(0, 0);
       if (callback) {
         callback();
       }

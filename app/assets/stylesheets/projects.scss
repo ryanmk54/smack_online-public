@@ -7,15 +7,47 @@
 $light-sky-blue: #2D496B;
 
 #file-list {
-  padding-left: 20px;
+  margin-right: -15px;
+}
+#file-list ul.jqtree-tree .jqtree-title,
+#file-list ul.jqtree-tree .jqtree-toggler {
+  color: #eee;
+}
+/*
+ul.jqtree-tree li:not(.jqtree-folder) .jqtree-element {
+  display: flex;
+  align-items: center;
+  
+}
+li.jqtree_common:not(.jqtree-folder) div:before {
+  content: image-url("nested.png");
+  width: 15px;
+  height: 15px;
+  margin-left: 11px;
+  color: #eee;
+}
+#file-list ul.jqtree-tree .jqtree-title {
+  margin-left: 0px;
+}
+*/
+.current-file,
+ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover {
+  background: $light-sky-blue;
+  border-radius: 0px 0px 0px 6px;
+  padding-top: 4px;
+  padding-bottom: 2px;
+}
+@keyframes file {
+  from { padding: 0; }
+  to {
+    padding-top: 4px;
+    padding-bottom: 2px;
+  }
+}
+ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover {
+  animation-name: file;
+  animation-duration: 200ms;
 }
 #input_upload_status {
   color: red;
-}
-
-.file {
-  color: white;
-}
-.current-file {
-  border-bottom: 1px solid $light-sky-blue;
 }
