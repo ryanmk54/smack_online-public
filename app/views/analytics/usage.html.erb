@@ -1,25 +1,39 @@
 <!-- Top -->
 <!-- Will need to include this once all js isn't included -->
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>> -->
-<div class="tool-selection-container row">
-  <div class="centered lgray height100">
-    <select id='numberPicker' class="tool-select selectpicker">
-      <option value="5">5</option>
-      <option value="10" selected="selected">10</option>
-      <option value="20">20</option>
-      <option value="30">30</option>
-      <option value="60">60</option>
-    </select>
-    <select id='unitPicker' class="tool-select selectpicker">
-      <option value="day">Day(s)</option>
-      <option value="month">Month(s)</option>
-      <option value="geo">Geo</option>
-    </select>
+<div class="container-fluid ">
+  <div class="row lightskyblue height100">
+      <select id='numberPicker' class="tool-select selectpicker">
+        <option value="5">5</option>
+        <option value="10" selected="selected">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="60">60</option>
+      </select>
+      <select id='unitPicker' class="tool-select selectpicker">
+        <option value="day">Day(s)</option>
+        <option value="month">Month(s)</option>
+        <option value="geo">Geo</option>
+      </select>
   </div>
-</div>
 
-<div id='parent' style="height: 500px; width: 1000px">
-  <div id="graphContainer">
-    <canvas id="myChart"></canvas>
+  <div class="row">
+    <div class="col-md-1 lgray">
+    <ul><li>hi</li><li>bye</li></ul>
+    </div>
+
+    <div class="col-md-9">
+      <div id='parent' style="height: 500px; width: 100%">
+        <div id="graphContainer" style="height: 500px; width: 100%">
+          <canvas id="myChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-2 black">
+      <h3 id="projectListHeader"></h3>
+      <ul id="projectList"> </ul>
+    </div>
   </div>
+
 </div>
