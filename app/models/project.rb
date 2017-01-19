@@ -1,8 +1,12 @@
 class Project < ApplicationRecord
 
-    def created_at
-      self[:created_at].strftime("%D")
-    end
+
+  has_many :project_user
+
+
+  def created_at
+    self[:created_at].strftime("%D")
+  end
 
   def input
     if self.id == nil

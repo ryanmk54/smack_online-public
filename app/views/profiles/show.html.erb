@@ -1,0 +1,101 @@
+
+<p id="notice"><%= notice %></p>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<style type="text/css">
+
+  .card {
+    margin-top: 50px;
+    margin-left: 15px;
+    padding: 15px 15px 15px 15px;
+  }
+</style>
+
+<script type="text/javascript">
+  function show_private_projects() {
+    Document.getElementsById('public_projects').style.visibility = 'hiddden';
+    Document.getElementById('private_projects').style.visibility= 'visible';
+  };
+  function show_public_projects() {
+    Document.getElementsById('private_projects').style.visibility = 'hiddden';
+    Document.getElementById('public_projects').style.visibility= 'visible';
+  };
+  function show_all_projects() {
+    Document.getElementsById('private_projects').style.visibility = 'hidden';
+    Document.getElementById('public_projects').style.visibility= 'hidden';
+  };
+
+</script>
+
+
+
+<div class="row">
+
+  <-- Profile Card -->
+  <div class="col-sm-2">
+    <div class="card" style="width: 20rem; box-shadow: 0 0 10px black;">
+      <img class= "card-img-top" src=http://www.zvonimir.info/wp-content/uploads/2012/08/zvonimir_rakamaric.jpg alt="Avatar" style="width:100%;opacity:0.85">
+      <div class="card-block">
+        <h2 class="card-title">
+          <%= @user.name %>
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <-- Project Preview Menu -->
+  <div class="col-sm-2">
+    <div class="card" style="width: 20rem;">
+      <ul class="list-group">
+        <li class="list-group-item">My Projects</li>
+        <li class="list-group-item">Shared Projects</li>
+        <li class="list-group-item">New Project</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+  <!--<&#45;&#45; Private Projects &ndash;&gt;-->
+  <!--<div id="private_projects">-->
+    <!--<--% @user.private_projects.each do |project| %>-->
+        <!--<div class="col-xs-6 col-md-4" >-->
+          <!--<div class="thumbnail">-->
+            <!--<img src="..." alt="..." style="height: 180px; width: 100%;">-->
+            <!--<div class="caption">-->
+              <!--<h3>  <--% project.title %> </h3>-->
+              <!--<div class="btn btn-primary">Open</div>-->
+              <!--<div class="btn btn-primary">Delete</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+  <!--</div>-->
+
+  <!--<&#45;&#45; Private Projects &ndash;&gt;-->
+  <!--<div id="public_projects">-->
+    <!--<--% @user.public_projects.each do |project| %>-->
+        <!--<div class="col-xs-6 col-md-4" >-->
+          <!--<div class="thumbnail">-->
+            <!--<img src="..." alt="..." style="height: 180px; width: 100%;">-->
+            <!--<div class="caption">-->
+              <!--<h3>  <--% project.title %> </h3>-->
+              <!--<div class="btn btn-primary">Open</div>-->
+              <!--<div class="btn btn-primary">Delete</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+
+  <!--<&#45;&#45; Private Projects &ndash;&gt;-->
+  <!--<div id="all_projects">-->
+    <!--<--% @user.all_projects.each do |project| %>-->
+        <!--<div class="col-xs-6 col-md-4" >-->
+          <!--<div class="thumbnail">-->
+            <!--<img src="..." alt="..." style="height: 180px; width: 100%;">-->
+            <!--<div class="caption">-->
+              <!--<h3>  <--% project.title %> </h3>-->
+              <!--<div class="btn btn-primary">Open</div>-->
+              <!--<div class="btn btn-primary">Delete</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->

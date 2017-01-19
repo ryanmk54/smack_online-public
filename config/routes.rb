@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   get 'analytics/usage'
 
+  get 'users/:id', to: 'profiles#show'
+
   resources(:projects, except: [:index, :destroy]) do
     member do
       post 'receive_service_output'
