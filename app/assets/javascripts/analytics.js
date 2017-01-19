@@ -22,6 +22,7 @@ $().ready(function() {
     // Set action for the number drop-down
     $("#numberPicker").change(function updateGraph()
     {
+        resetProjectList();
         resetCanvas();
         getDataFromServerAndDisplayGraph();
     });
@@ -29,6 +30,7 @@ $().ready(function() {
     // Set action for the unit drop-down
     $("#unitPicker").change(function updateGraph()
     {
+        resetProjectList();
         resetCanvas();
         getDataFromServerAndDisplayGraph();
     });
@@ -162,6 +164,7 @@ function displayTimeGraph(dataArray){
 
 function onBarGraphClick(evt)
 {
+    resetProjectList();
     var element = chart.getElementAtEvent(evt)
     var label = timeChartConfiguration.data.labels[element[0]._index];
     $("#projectListHeader").html("Projects made on/in " + label);
@@ -238,11 +241,15 @@ function setTimeChartConfiguration(labelArray, valueArray, colorArray, unit)
  */
 function resetCanvas()
 {
+    $('#parent').html("");
+    $('#parent').append('<div id="graphContainer" style="height: 500px; width: 100%"><div>')
+    $('#graphContainer').append('<canvas id="myChart"><canvas>');
+}
+
+function resetProjectList()
+{
     $("#projectList").html("");
     $('#projectListHeader').html("");
-    $('#parent').html("");
-    $('#parent').append('<div id="graphContainer" style="height: 500px; width: 1000px"><div>')
-    $('#graphContainer').append('<canvas id="myChart"><canvas>');
 }
 
 /*
