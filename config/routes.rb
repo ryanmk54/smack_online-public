@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   root 'projects#new'
 
   get 'analytics/usage'
-
   get 'analytics/project_location_csv'
+  get 'analytics/project_runtimes'
 
   resources(:projects, except: [:index, :destroy]) do
     member do

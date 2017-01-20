@@ -289,7 +289,9 @@ function unpack(rows, key) {
     return rows.map(function(row) { return row[key]; });
 }
 
-function displayRuntimesGraph()
+function displayRuntimesGraph(data)
 {
+    currentGraphDataArray = data;
+    alert(currentGraphDataArray.length);
     alert("hey");
 }
