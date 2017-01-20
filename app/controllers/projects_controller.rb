@@ -82,12 +82,6 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.json { render json: @project, only: [:eta, :output, :id] }
     end
-
-    # This line is used for testing until the view is sending base64 directly over
-    params[:project][:code] = Base64.strict_encode64(params[:project][:code].read)
-
-    save_base64_input_to_file_system
-    send_service_input
   end
 
   # POST /projects/receive_service_output
@@ -95,10 +89,9 @@ class ProjectsController < ApplicationController
   # Saves the output to the file_system
   def receive_service_output
     # Get params and associate :output with the project with id :id
-    project = Project.find(params[:id])
-    project[:eta] = 0
-    project[:output] = params[:output]
-    project.save
+    @project.output = params[:output]
+    @project[:eta] = 0;
+    @project.save;
   end
 
   private
