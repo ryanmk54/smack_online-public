@@ -19,7 +19,7 @@ $().ready(function() {
     // Set initial graph and menu value to DEFAULT_SPAN
     var unit = $('#unitPicker').val();
     if(unit == 'month' || unit == 'day')
-        getProjectsFromServer(displayTimeGraph);
+        getProjectsFromServer(displayTimeGraph, '/analytics/usage');
 
     // Set action for the number drop-down
     $("#numberPicker").change(function updateGraph()
@@ -28,7 +28,7 @@ $().ready(function() {
         resetCanvas();
         var unit = $('#unitPicker').val();
         if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayTimeGraph);
+            getProjectsFromServer(displayTimeGraph, '/analytics/usage');
     });
 
     // Set action for the unit drop-down
@@ -38,7 +38,7 @@ $().ready(function() {
         resetCanvas();
         var unit = $('#unitPicker').val();
         if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayTimeGraph);
+            getProjectsFromServer(displayTimeGraph, '/analytics/usage');
     });
 
     // Set action for the unit drop-down
@@ -49,7 +49,18 @@ $().ready(function() {
         resetCanvas();
         var unit = $('#unitPicker').val();
         if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayTimeGraph);
+            getProjectsFromServer(displayTimeGraph, '/analytics/usage');
+    });
+
+    // Set action for the unit drop-down
+    $("#runtimeListItem").click(function updateGraph()
+    {
+        $('.selectpicker').selectpicker('show');
+        resetProjectList();
+        resetCanvas();
+        var unit = $('#unitPicker').val();
+        if(unit == 'month' || unit == 'day')
+            getProjectsFromServer(displayRuntimesGraph, '/analytics/project_runtimes');
     });
 
     // Set action for the unit drop-down
@@ -62,15 +73,7 @@ $().ready(function() {
     });
 });
 
-/*
- * Polls the web server for all 'projects' and displays
- * the resulting graph.
- */
-function getDataFromServerAndDisplayGraph() {
-
-}
-
-function getProjectsFromServer(callback, span, unit)
+function getProjectsFromServer(callback, url)
 {
     $.ajax({
         type: "GET",
@@ -78,10 +81,10 @@ function getProjectsFromServer(callback, span, unit)
             format: 'json'
         },
         dataType: "json",
-        url: "/analytics/usage",
+        url: url,
 
         success: function(data){
-            callback(data, span, unit)
+            callback(data)
         }
     });
 }
@@ -284,4 +287,9 @@ function randRGBVal()
 
 function unpack(rows, key) {
     return rows.map(function(row) { return row[key]; });
+}
+
+function displayRuntimesGraph()
+{
+    alert("hey");
 }

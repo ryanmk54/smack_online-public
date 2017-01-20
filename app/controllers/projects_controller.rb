@@ -22,8 +22,6 @@ class ProjectsController < ApplicationController
     @project.save # Need to save before send_service_input in order to know the project id
 
     @project.input = params[:project][:input] # Save the input
-    @project[:user_ip] = request.remote_ip
-    @project[:city] = request.location.city
     @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
 
     # Save the new project to the database and redirect the user to 'edit'
@@ -82,6 +80,7 @@ class ProjectsController < ApplicationController
   def receive_service_output
     # Get params and associate :output with the project with id :id
     @project.output = params[:output]
+    @project[:runtime] = params[:time_elapsed]
     @project[:eta] = 0;
     @project.save;
   end
@@ -115,7 +114,7 @@ class ProjectsController < ApplicationController
 
   def updateCSV
     rowExists = false;
-    #city = 'Houston '.strip #@project.city
+    #city = 'Houston '.strip #@project.
     city = request.location.city.strip
     csv = CSV.read(PROJECT_CSV_PATH, headers:true);
     csv.each do |row|
