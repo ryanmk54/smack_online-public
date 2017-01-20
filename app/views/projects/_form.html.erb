@@ -13,8 +13,8 @@
     <!-- Sidebar -->
     <div id="sidebar" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 height100 gray">
 
-      <%= form_for :project do |f| %>
-      <%= f.text_field :title, placeholder: 'Title'  %>
+      <%= form_for :project, remote: true, html: {id: 'project-title-form'} do |f| %>
+      <%= f.text_field :title, placeholder: 'Title', class: 'form-control' %>
       <% end %>
 
       <!-- Files -->
@@ -72,7 +72,8 @@
             <option value="saab">Option 2</option>
           </select>
 
-          <%= form_for(project, remote: true, format: :json) do |f| %>
+          <%= form_for(project, remote: true, format: :json, 
+                       html: {id: "run-project-form"}) do |f| %>
             <div hidden>
               <%= f.text_field :title %>
               <%= f.text_field :input, value: @base64_input%>
