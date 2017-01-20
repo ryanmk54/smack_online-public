@@ -8,6 +8,8 @@ html
 body
 {
   overflow: hidden;
+  height: 100%;
+  width: 100%;
 }
 
 .main-container
@@ -314,3 +316,88 @@ textarea {
 .form-inline .has-feedback .form-control-feedback {
   top: 0;
 }
+
+.tool-selection-container
+{
+  height: 12.5%;
+}
+
+.center-container
+{
+  height: 90%;
+}
+
+.header-container
+{
+  height: 10%;
+}
+
+.hidden-overflow
+{
+  overflow: hidden;
+}
+
+.tool
+{
+  height: 10%px;
+}
+
+.headx
+{
+  height: 5%;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 50%;
+  /* Set the fixed height of the footer here */
+  height: 100px;
+  background-color: #f5f5f5;
+}
+
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f88888;
+  z-index:10000;
+}
+
+.button2
+{
+  width: 10px;
+  height: 10%;
+  float: right;
+}
+
+.selection
+{
+  height: 5%;
+}
+
+.centered
+{
+  position: relative;
+  padding-left: 2%;
+}
+
+.myProject
+{
+  height: 10%;
+  background-color: #83a39b;
+}
+
+.right{
+  background-color: #84ed8b;
+  min-height: 100%;
+  height: 100%;
+
+}
+
+.middle
+{
+  height: 75%;
+}
+
