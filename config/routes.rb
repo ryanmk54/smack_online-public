@@ -4,13 +4,16 @@ Rails.application.routes.draw do
   # root is the page devise goes to after logging in
   root 'projects#new'
 
-  get 'analytics/usage'
+  get 'analytics/usage', to: 'analytics#usage'
+
+  get 'users/:id', to: 'profiles#show'
+
   get 'analytics/project_location_csv'
   get 'analytics/project_runtimes'
 
   resources(:projects, except: [:index, :destroy]) do
     member do
-      post 'receive_service_output'
+      post 'receive_service_output', to: 'projects#receive_service_output'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

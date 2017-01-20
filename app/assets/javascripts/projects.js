@@ -2,6 +2,7 @@
 // about supported directives.
 //
 //
+//= require bootstrap-select
 //= require jszip
 //= require tree.jquery
 
@@ -81,6 +82,10 @@ $().ready(function(){
   $(projectFormSelectors).on('ajax:success', projectUpdateSuccess);
   // TODO account for if it is a failure. We would need to send it again
   //
+
+  $("#project_title").on('blur', function(evt) {
+    $.rails.handleRemote($('#project-title-form'));
+  });
 });
 
 
@@ -280,7 +285,7 @@ function generateBase64AndSubmitForm() {
     .then(function (content) {
       var base64Input = document.getElementById(id.base64Input);
       base64Input.value = content;
-      $.rails.handleRemote($('form'));
+      $.rails.handleRemote($('#run-project-form'));
     });
 }
 

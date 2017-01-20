@@ -23,6 +23,13 @@ ActiveRecord::Schema.define(version: 20170120175019) do
     t.integer  "runtime"
   end
 
+  create_table "projects_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "project_id", null: false
+    t.integer "user_id",    null: false
+    t.index ["project_id", "user_id"], name: "index_projects_users_on_project_id_and_user_id", using: :btree
+    t.index ["user_id", "project_id"], name: "index_projects_users_on_user_id_and_project_id", using: :btree
+  end
+
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
