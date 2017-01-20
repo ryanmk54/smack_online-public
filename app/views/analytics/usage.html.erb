@@ -13,16 +13,18 @@
       <select id='unitPicker' class="tool-select selectpicker">
         <option value="day">Day(s)</option>
         <option value="month">Month(s)</option>
-        <option value="geo">Geo</option>
       </select>
   </div>
 
   <div class="row">
-    <div class="col-md-1 lgray">
-    <ul><li>hi</li><li>bye</li></ul>
+    <div class="col-md-2">
+      <ul class="list-group">
+        <li class="list-group-item" id="timespanListItem">Timespan Usage</li>
+        <li class="list-group-item" id="geographicListItem">Geographic Usage</li>
+      </ul>
     </div>
 
-    <div class="col-md-9">
+    <div class="col-md-8">
       <div id='parent' style="height: 500px; width: 100%">
         <div id="graphContainer" style="height: 500px; width: 100%">
           <canvas id="myChart"></canvas>
@@ -37,3 +39,5 @@
   </div>
 
 </div>
+
+<div id="myId" class="hidden">Foobar</div>
