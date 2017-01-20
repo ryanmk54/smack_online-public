@@ -1,5 +1,7 @@
 class Project < ApplicationRecord
 
+  has_and_belongs_to_many :users
+
   def created_at
     self[:created_at].strftime("%D")
   end

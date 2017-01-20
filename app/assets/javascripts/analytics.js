@@ -1,6 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+//= require bootstrap-select
 //= require moment
 //= require Chart
 //= require plotly
@@ -17,14 +18,18 @@ $().ready(function() {
     $("#numberPicker").val(DEFAULT_SPAN);
 
     // Set initial graph and menu value to DEFAULT_SPAN
-    getDataFromServerAndDisplayGraph();
+    var unit = $('#unitPicker').val();
+    if(unit == 'month' || unit == 'day')
+        getProjectsFromServer(displayTimeGraph, '/analytics/usage');
 
     // Set action for the number drop-down
     $("#numberPicker").change(function updateGraph()
     {
         resetProjectList();
         resetCanvas();
-        getDataFromServerAndDisplayGraph();
+        var unit = $('#unitPicker').val();
+        if(unit == 'month' || unit == 'day')
+            getProjectsFromServer(displayTimeGraph, '/analytics/usage');
     });
 
     // Set action for the unit drop-down
@@ -32,23 +37,44 @@ $().ready(function() {
     {
         resetProjectList();
         resetCanvas();
-        getDataFromServerAndDisplayGraph();
+        var unit = $('#unitPicker').val();
+        if(unit == 'month' || unit == 'day')
+            getProjectsFromServer(displayTimeGraph, '/analytics/usage');
+    });
+
+    // Set action for the unit drop-down
+    $("#timespanListItem").click(function updateGraph()
+    {
+        $('.selectpicker').selectpicker('show');
+        resetProjectList();
+        resetCanvas();
+        var unit = $('#unitPicker').val();
+        if(unit == 'month' || unit == 'day')
+            getProjectsFromServer(displayTimeGraph, '/analytics/usage');
+    });
+
+    // Set action for the unit drop-down
+    $("#runtimeListItem").click(function updateGraph()
+    {
+        $('.selectpicker').selectpicker('show');
+        resetProjectList();
+        resetCanvas();
+        var unit = $('#unitPicker').val();
+        if(unit == 'month' || unit == 'day')
+            getProjectsFromServer(displayRuntimesGraph, '/analytics/project_runtimes');
+    });
+
+    // Set action for the unit drop-down
+    $("#geographicListItem").click(function updateGraph()
+    {
+        $('.selectpicker').selectpicker('hide');
+        resetProjectList();
+        resetCanvas();
+        getAndUnpackGeoCSV(displayGeograph);
     });
 });
 
-/*
- * Polls the web server for all 'projects' and displays
- * the resulting graph.
- */
-function getDataFromServerAndDisplayGraph() {
-    var unit = $('#unitPicker').val();
-    if(unit == 'month' || unit == 'day')
-        getProjectsFromServer(displayTimeGraph);
-    else if(unit == 'geo')
-        getAndUnpackGeoCSV(displayGeograph);
-}
-
-function getProjectsFromServer(callback, span, unit)
+function getProjectsFromServer(callback, url)
 {
     $.ajax({
         type: "GET",
@@ -56,10 +82,10 @@ function getProjectsFromServer(callback, span, unit)
             format: 'json'
         },
         dataType: "json",
-        url: "/analytics/usage",
+        url: url,
 
         success: function(data){
-            callback(data, span, unit)
+            callback(data)
         }
     });
 }
@@ -262,4 +288,11 @@ function randRGBVal()
 
 function unpack(rows, key) {
     return rows.map(function(row) { return row[key]; });
+}
+
+function displayRuntimesGraph(data)
+{
+    currentGraphDataArray = data;
+    alert(currentGraphDataArray.length);
+    alert("hey");
 }

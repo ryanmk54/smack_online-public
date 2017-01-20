@@ -2,6 +2,7 @@
 // about supported directives.
 //
 //
+//= require bootstrap-select
 //= require jszip
 //= require tree.jquery
 

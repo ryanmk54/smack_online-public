@@ -5,11 +5,19 @@ class AnalyticsController < ApplicationController
 
   def usage
     projects = Project.all
-
     respond_to do |format|
       format.html
       format.js
-      format.json {render json: projects, :only => [:created_at, :id]};
+      format.json {render json: projects, :only => [:created_at, :id]}
+    end
+  end
+
+  def project_runtimes
+    projects = Project.where('runtime is NOT NULL and runtime != ""')
+    respond_to do |format|
+      format.html
+      format.js
+      format.json {render json: projects, :only => [:runtime, :id]}
     end
   end
 

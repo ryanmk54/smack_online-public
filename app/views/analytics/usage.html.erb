@@ -1,9 +1,33 @@
-<!-- Top -->
-<!-- Will need to include this once all js isn't included -->
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>> -->
-<div class="container-fluid ">
-  <div class="row lightskyblue height100">
-      <select id='numberPicker' class="tool-select selectpicker">
+<div hidden>
+  <%= text_area_tag :output, @output %>
+</div>
+
+<!-- Start page body -->
+
+ <!-- Body -->
+<div class="main-container row container-fluid">
+
+  <!-- Center -->
+  <div class="center-container row">
+
+    <!-- Sidebar -->
+    <div id="analytics-sidebar" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 gray">
+
+      <ul class="list-group">
+        <li class="list-group-item" id="timespanListItem">Timespan Usage</li>
+        <li class="list-group-item" id="runtimeListItem">Project Runtimes</li>
+        <li class="list-group-item" id="geographicListItem">Geographic Usage</li>
+      </ul>
+
+    </div>
+
+    <!-- Main -->
+    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 height100">
+
+      <!-- Top -->
+      <div class="tool-selection-container row lightskyblue">
+        <div class="centered lightskyblue height100">
+          <select id='numberPicker' class="tool-select selectpicker">
         <option value="5">5</option>
         <option value="10" selected="selected">10</option>
         <option value="20">20</option>
@@ -13,27 +37,29 @@
       <select id='unitPicker' class="tool-select selectpicker">
         <option value="day">Day(s)</option>
         <option value="month">Month(s)</option>
-        <option value="geo">Geo</option>
       </select>
-  </div>
-
-  <div class="row">
-    <div class="col-md-1 lgray">
-    <ul><li>hi</li><li>bye</li></ul>
-    </div>
-
-    <div class="col-md-9">
-      <div id='parent' style="height: 500px; width: 100%">
-        <div id="graphContainer" style="height: 500px; width: 100%">
-          <canvas id="myChart"></canvas>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-2 black">
-      <h3 id="projectListHeader"></h3>
-      <ul id="projectList"> </ul>
-    </div>
-  </div>
 
-</div>
+      <!-- Middle -->
+      <div class="height100 analytics-middle lgray row">
+
+        <!-- Left -->
+        <div class="analytics-middle-continer col-xs-10 col-sm-10 col-md-10 col-lg-10">
+          <div id='parent' style="height: 100%; width: 100%">
+            <div id="graphContainer" style="height: 100%; width: 100%">
+              <canvas id="myChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right -->
+        <div class="gray analytics-middle-continer col-xs-2 col-sm-2 col-md-2 col-lg-2">
+          <h3 id="projectListHeader"></h3>
+          <ul id="projectList"> </ul>
+        </div>
+
+      </div>
+
+<div>
