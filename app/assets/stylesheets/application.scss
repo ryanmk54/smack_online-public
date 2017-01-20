@@ -13,6 +13,8 @@
  *= require bootstrap.min
  *= require_self
  */
+@import 'variables';
+@import 'utilities';
 
 .flash.alert {
   margin: 0;

@@ -24,5 +24,8 @@ config/secrets.yml
 # Ignore all project files
 public/system/*
 
+# Ignore the Project Locations csv
+public/assets/ProjectLocations.csv
+
 # ignore RubyMine files
 .idea/*
