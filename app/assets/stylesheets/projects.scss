@@ -2,9 +2,9 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 //
+//= require editor
 //= require jqtree
-
-$light-sky-blue: #2D496B;
+@import 'variables';
 
 #sidebar {
   padding-right: 0;
@@ -57,4 +57,7 @@ ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover
 }
 
 #project_title {
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: 0;
 }
