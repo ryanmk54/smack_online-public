@@ -17,14 +17,18 @@ $().ready(function() {
     $("#numberPicker").val(DEFAULT_SPAN);
 
     // Set initial graph and menu value to DEFAULT_SPAN
-    getDataFromServerAndDisplayGraph();
+    var unit = $('#unitPicker').val();
+    if(unit == 'month' || unit == 'day')
+        getProjectsFromServer(displayTimeGraph);
 
     // Set action for the number drop-down
     $("#numberPicker").change(function updateGraph()
     {
         resetProjectList();
         resetCanvas();
-        getDataFromServerAndDisplayGraph();
+        var unit = $('#unitPicker').val();
+        if(unit == 'month' || unit == 'day')
+            getProjectsFromServer(displayTimeGraph);
     });
 
     // Set action for the unit drop-down
@@ -32,7 +36,29 @@ $().ready(function() {
     {
         resetProjectList();
         resetCanvas();
-        getDataFromServerAndDisplayGraph();
+        var unit = $('#unitPicker').val();
+        if(unit == 'month' || unit == 'day')
+            getProjectsFromServer(displayTimeGraph);
+    });
+
+    // Set action for the unit drop-down
+    $("#timespanListItem").click(function updateGraph()
+    {
+        $('.selectpicker').selectpicker('show');
+        resetProjectList();
+        resetCanvas();
+        var unit = $('#unitPicker').val();
+        if(unit == 'month' || unit == 'day')
+            getProjectsFromServer(displayTimeGraph);
+    });
+
+    // Set action for the unit drop-down
+    $("#geographicListItem").click(function updateGraph()
+    {
+        $('.selectpicker').selectpicker('hide');
+        resetProjectList();
+        resetCanvas();
+        getAndUnpackGeoCSV(displayGeograph);
     });
 });
 
@@ -41,11 +67,7 @@ $().ready(function() {
  * the resulting graph.
  */
 function getDataFromServerAndDisplayGraph() {
-    var unit = $('#unitPicker').val();
-    if(unit == 'month' || unit == 'day')
-        getProjectsFromServer(displayTimeGraph);
-    else if(unit == 'geo')
-        getAndUnpackGeoCSV(displayGeograph);
+
 }
 
 function getProjectsFromServer(callback, span, unit)
