@@ -6,6 +6,10 @@
 
 $light-sky-blue: #2D496B;
 
+#sidebar {
+  padding-right: 0;
+}
+
 #file-list {
   margin-right: -15px;
 }
@@ -50,4 +54,7 @@ ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover
 }
 #input_upload_status {
   color: red;
+}
+
+#project_title {
 }

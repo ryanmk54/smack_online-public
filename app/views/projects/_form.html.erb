@@ -11,13 +11,11 @@
   <div class="height100 center-container row">
 
     <!-- Sidebar -->
-    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 height100 gray">
+    <div id="sidebar" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 height100 gray">
 
-      <!-- Project Selection -->
-<!--       <div class="project-selection-container row">
-        <div class="blue col-xs-12 col-sm-12 col-md-12 col-lg-12 height100">
-        </div>
-      </div> -->
+      <%= form_for :project do |f| %>
+      <%= f.text_field :title, placeholder: 'Title'  %>
+      <% end %>
 
       <!-- Files -->
       <div id="upload-project-container">
