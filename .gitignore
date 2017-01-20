@@ -23,3 +23,6 @@ config/secrets.yml
 
 # Ignore all project files
 public/system/*
+
+# ignore RubyMine files
+.idea/*
