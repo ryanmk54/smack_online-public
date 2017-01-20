@@ -1,6 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+//= require bootstrap-select
 //= require moment
 //= require Chart
 //= require plotly
@@ -324,3 +325,4 @@ function displayRuntimeGraph(dataArray)
     setUsageChartConfiguration(labelArray, valueArray, colorArray, unit);
     chart = new Chart(ctx, usageChartConfiguration);
 }
+ 
