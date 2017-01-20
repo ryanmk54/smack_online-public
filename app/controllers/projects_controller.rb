@@ -1,9 +1,25 @@
 class ProjectsController < ApplicationController
-  #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
-  before_action :set_project, only: [:show, :edit, :update]
+
+  # #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
+  # before_action :set_project, only: [:show, :edit, :update]
 
   # Production SMACK server URL
   SERVICE_REQUEST_URL = 'ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started'
+
+  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
+  before_action :set_project, only: [:show, :edit, :update]
+
+  #SERVICE_REQUEST_URL = "http://httpbin.org/post"
+  SERVICE_REQUEST_URL = "ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started"
+
+  # GET /projects/1
+  # GET /projects/1.json
+  def show
+    respond_to do |format|
+      format.json
+    end
+  end
+
 
   # GET /projects/new
   # Displays the initial code editor to the user.
@@ -34,11 +50,19 @@ class ProjectsController < ApplicationController
     end
   end
 
+
   # GET /projects/1/edit
   # Displays an already existing project to the user.
   def edit
     @base64_input = @project.input
     @output = @project.output
+
+    # This line is used for testing until the view is sending base64 directly over
+    params[:project][:code] = Base64.strict_encode64(params[:project][:code].read)
+
+    save_base64_input_to_file_system
+    send_service_input
+
   end
 
   # PATCH/PUT /projects/1
@@ -67,6 +91,11 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.json
     end
+    # This line is used for testing until the view is sending base64 directly over
+    params[:project][:code] = Base64.strict_encode64(params[:project][:code].read)
+
+    save_base64_input_to_file_system
+    send_service_input
   end
 
   # POST /projects/receive_service_output
@@ -76,6 +105,10 @@ class ProjectsController < ApplicationController
     # Get params and associate :output with the project with id :id
     @project = Project.find(params[:id])
     @project.output = params[:output]
+    project = Project.find(params[:id])
+    project[:eta] = 0
+    project[:output] = params[:output]
+    project.save
   end
 
   private
