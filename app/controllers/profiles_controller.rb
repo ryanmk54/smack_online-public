@@ -2,7 +2,7 @@ class ProfilesController < ApplicationController
 
   # GET /users/#
   def show
-    @user = User.where(id: params[:id])
+    @user = User.find(params[:id])
     puts params[:id]
     puts @user.name
     render :show
