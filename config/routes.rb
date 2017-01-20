@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   # root is the page devise goes to after logging in
   root 'projects#new'
 
-  get 'analytics/usage'
+  get 'analytics/usage', to: 'analytics#usage'
+
+  get 'users/:id', to: 'profiles#show'
 
   get 'analytics/project_location_csv'
 
