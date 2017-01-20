@@ -10,7 +10,7 @@
 DEFAULT_SPAN = 20;
 
 var chart;
-var usageChartConfiguration = {};
+var chartConfiguration = {};
 var currentChartDataArray = [];
 
 $().ready(function() {
@@ -18,11 +18,9 @@ $().ready(function() {
     $("#numberPicker").val(DEFAULT_SPAN);
 
     // Set initial graph and menu value to DEFAULT_SPAN
-    //var unit = $('#unitPicker').val();
-    //if(unit == 'month' || unit == 'day')
-        //getProjectsFromServer(displayUsageChart, '/analytics/usage');
-
-    getProjectsFromServer(displayRuntimeGraph, '/analytics/project_runtimes');
+    var unit = $('#unitPicker').val();
+    if(unit == 'month' || unit == 'day')
+        getProjectsFromServer(displayUsageChart, '/analytics/usage');
 
     // Set action for the number drop-down
     $("#numberPicker").change(function()
@@ -186,15 +184,15 @@ function displayUsageChart(dataArray){
 
     var canvas = document.getElementById("myChart");
     var ctx = canvas.getContext("2d");
-    setUsageChartConfiguration(labelArray, valueArray, colorArray, unit);
-    chart = new Chart(ctx, usageChartConfiguration);
+    setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit);
+    chart = new Chart(ctx, chartConfiguration);
 }
 
 function onBarGraphClick(evt)
 {
     resetProjectList();
     var element = chart.getElementAtEvent(evt)
-    var label = usageChartConfiguration.data.labels[element[0]._index];
+    var label = chartConfiguration.data.labels[element[0]._index];
     $("#projectListHeader").html("Projects made on/in " + label);
     for(var i = 0; i < currentChartDataArray.length; i++) {
         var projId = currentChartDataArray[i].id;
@@ -243,9 +241,9 @@ function generateMonthYearLabel(monthsPrevious) {
 }
 
 
-function setUsageChartConfiguration(labelArray, valueArray, colorArray, unit)
+function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
 {
-    usageChartConfiguration = {
+    chartConfiguration = {
         type: 'bar',
         options: {
             responsive: true,
@@ -256,6 +254,27 @@ function setUsageChartConfiguration(labelArray, valueArray, colorArray, unit)
             labels: labelArray,
             datasets: [{
                 label: '# of projects created per ' + unit,
+                data: valueArray,
+                borderWidth: 1,
+                backgroundColor: colorArray
+            }]
+        }
+    }
+}
+
+function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
+{
+    chartConfiguration = {
+        type: 'bar',
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            onClick: onBarGraphClick
+        },
+        data: {
+            labels: labelArray,
+            datasets: [{
+                label: 'hello',
                 data: valueArray,
                 borderWidth: 1,
                 backgroundColor: colorArray
@@ -295,17 +314,19 @@ function unpack(rows, key) {
 function displayRuntimeGraph(dataArray)
 {
     currentChartDataArray = dataArray;
+    alert(dataArray.length)
     var KVArray = []; // 'Key-Value Array'
     var labelArray = [];
 
     // Count the number of data occurrences for each label
     // and populate the key-value array accordingly
-    for (var i = 0; i < dataArray.length; i++)
+    for (var i = 0; i < dataArray.length; i++) {
         var key = dataArray[i].runtime
         if ((key in KVArray))
             KVArray[key] += 1;
         else
-            KVArray[key] = 0;
+            KVArray[key] = 1;
+    }
 
     var max = Math.max.apply(null, Object.keys(KVArray));
     for (var i = 0; i <= max; i++)
@@ -316,13 +337,19 @@ function displayRuntimeGraph(dataArray)
     var valueArray = [];
     var colorArray = [];
     for (var i = 0; i < labelArray.length; i++) {
-        valueArray.push(KVArray[labelArray[i]]);
+        var value = KVArray[labelArray[i]];
+        if(value != undefined)
+            valueArray.push(KVArray[labelArray[i]]);
+        else valueArray.push(0)
         colorArray[i] = "rgb(" + randRGBVal() + "," + randRGBVal() + "," + randRGBVal() + ")";
     }
+    alert(labelArray);
+    alert(colorArray);
+    alert(valueArray);
 
     var canvas = document.getElementById("myChart");
     var ctx = canvas.getContext("2d");
-    setUsageChartConfiguration(labelArray, valueArray, colorArray, unit);
-    chart = new Chart(ctx, usageChartConfiguration);
+    setChartConfigurationForRuntime(labelArray, valueArray, colorArray);
+    chart = new Chart(ctx, chartConfiguration);
 }
- 
+
