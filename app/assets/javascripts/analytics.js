@@ -198,7 +198,7 @@ function onUsageGraphBarClick(evt)
         var projId = currentChartDataArray[i].id;
         // For day units
         if (currentChartDataArray[i].created_at == label)
-            $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+            $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
         else {
             // Check for month units
             var labelMonth = label.substring(0, 2);
