@@ -56,7 +56,7 @@ $().ready(function() {
     // Set action for the unit drop-down
     $("#runtimeListItem").click(function()
     {
-        $('.selectpicker').selectpicker('show');
+        $('.selectpicker').selectpicker('hide');
         resetProjectList();
         resetCanvas();
         var unit = $('#unitPicker').val();
@@ -188,7 +188,7 @@ function displayUsageChart(dataArray){
     chart = new Chart(ctx, chartConfiguration);
 }
 
-function onBarGraphClick(evt)
+function onUsageGraphBarClick(evt)
 {
     resetProjectList();
     var element = chart.getElementAtEvent(evt)
@@ -210,6 +210,20 @@ function onBarGraphClick(evt)
         }
     }
 }
+
+function onRuntimeGraphBarClick(evt)
+{
+    resetProjectList();
+    var element = chart.getElementAtEvent(evt)
+    var label = chartConfiguration.data.labels[element[0]._index];
+    $("#projectListHeader").html("Projects with a Runtime of " + label + " Seconds");
+    for(var i = 0; i < currentChartDataArray.length; i++) {
+        var projId = currentChartDataArray[i].id;
+        if (currentChartDataArray[i].runtime == label)
+            $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+    }
+}
+
 
 /*
  * Generate a month/day/year string, e.g 03/17/94
@@ -248,7 +262,21 @@ function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            onClick: onBarGraphClick
+            onClick: onUsageGraphBarClick,
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Dates'
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: '# of Projects'
+                    }
+                }]
+            }
         },
         data: {
             labels: labelArray,
@@ -269,7 +297,21 @@ function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            onClick: onBarGraphClick
+            onClick: onRuntimeGraphBarClick,
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Runtime (Seconds)'
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: '# of Projects'
+                    }
+                }]
+            }
         },
         data: {
             labels: labelArray,
@@ -314,7 +356,6 @@ function unpack(rows, key) {
 function displayRuntimeGraph(dataArray)
 {
     currentChartDataArray = dataArray;
-    alert(dataArray.length)
     var KVArray = []; // 'Key-Value Array'
     var labelArray = [];
 
@@ -343,9 +384,6 @@ function displayRuntimeGraph(dataArray)
         else valueArray.push(0)
         colorArray[i] = "rgb(" + randRGBVal() + "," + randRGBVal() + "," + randRGBVal() + ")";
     }
-    alert(labelArray);
-    alert(colorArray);
-    alert(valueArray);
 
     var canvas = document.getElementById("myChart");
     var ctx = canvas.getContext("2d");

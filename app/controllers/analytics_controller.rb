@@ -13,7 +13,7 @@ class AnalyticsController < ApplicationController
   end
 
   def project_runtimes
-    projects = Project.where('runtime is NOT NULL and runtime != ""')
+    projects = Project.where('runtime = 0 or runtime != ""')
     respond_to do |format|
       format.html
       format.js
