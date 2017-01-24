@@ -7,6 +7,10 @@
   height: 100%; padding:0; margin:0; z-index: 1;
 }
 
+.scrollable-menu {
+  overflow-x: hidden;
+}
+
 #analytics-sidebar
 {
   height: 112.5%;
