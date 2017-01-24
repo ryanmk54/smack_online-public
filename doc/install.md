@@ -90,4 +90,4 @@ Run `bundle install`
 
 
 ## Start the web server
-Run `rails server` to start the web server. Run `rails server --help` to see options to set the port or ip address the server will run on.
+Run `rails server --binding 0.0.0.0` to start the web server. Run `rails server --help` to see options to set the port or ip address the server will run on.
