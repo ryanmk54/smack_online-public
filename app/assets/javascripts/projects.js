@@ -44,7 +44,7 @@ $().ready(function(){
   let zipInput = document.getElementById(id.zipUpload);
   zip = new JSZip();
   if (base64Input.value != '') {
-      zip.loadAsync(base64Input, {base64: true})
+      zip.loadAsync(base64Input.value, {base64: true})
       .then(function success(zip) {
         loadIDE();
       }, function error(e) {
