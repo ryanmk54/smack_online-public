@@ -206,7 +206,7 @@ function onUsageGraphBarClick(evt)
             var labelYear = label.substring(3);
             var dataYear = currentChartDataArray[i].created_at.toString().substring(6);
             if(labelMonth == dataMonth && labelYear == dataYear)
-                $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+                $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
         }
     }
 }
@@ -220,7 +220,7 @@ function onRuntimeGraphBarClick(evt)
     for(var i = 0; i < currentChartDataArray.length; i++) {
         var projId = currentChartDataArray[i].id;
         if (currentChartDataArray[i].runtime == label)
-            $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+            $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
     }
 }
 
