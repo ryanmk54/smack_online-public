@@ -9,10 +9,6 @@
 */
 @import 'variables';
 
-#sidebar {
-  padding-right: 0;
-}
-
 #file-list {
   margin-right: -15px;
 }
@@ -59,8 +55,49 @@ ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover
   color: red;
 }
 
+#top-row,
+#options-and-run-row {
+  padding: 4px;
+}
+#options-and-run-row {
+  height: 44px;
+
+  div {
+    padding-left:  4px;
+    padding-right: 4px;
+  }
+}
+#top-row > div:first-child {
+  padding-right: 4px;
+}
+#top-row > div:nth-of-type(2) {
+  padding-left: 4px;
+
+  div {
+    padding-left:  8px;
+    padding-right: 8px;
+  }
+
+  .bootstrap-select {
+    display: block;
+  }
+}
+.tool-select-button
+{
+  width: 90px;
+}
+
+#editors-row {
+  height: calc(100% - 88px);
+}
+#sidebar {
+  padding: 8px;
+}
+/*
 #project_title {
   width: 100%;
   margin-bottom: 20px;
   border-radius: 0;
+  height: 44px;
 }
+*/

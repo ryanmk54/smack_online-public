@@ -20,6 +20,10 @@ class User < ApplicationRecord
     # TODO
   end
 
+  # def currently_running_projects
+  #   self.projects.
+  # end
+
 
 
 
