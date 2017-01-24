@@ -6,9 +6,6 @@
 //= require jszip
 //= require tree.jquery
 
-// IFFE to prevent pollution of the global namespace
-//(function(){
-
 const id = {
   base64Input: 'project_input',
   base64Output: 'output',
@@ -26,6 +23,8 @@ var zip;
 var currentFile;
 var editor;
 var editor2;
+
+var lastTitle;
 
 var timer;
 var runProjectFn = function() {
@@ -83,10 +82,20 @@ $().ready(function(){
   // TODO account for if it is a failure. We would need to send it again
   //
 
+  watchProjectTitleForm();
+});
+
+
+function watchProjectTitleForm() {
+  lastTitle = $('#project-title-form #project_title')[0].value;
   $("#project_title").on('blur', function(evt) {
+    if (evt.target.value == lastTitle){
+      return;
+    }
+    lastTitle = evt.target.value;
     $.rails.handleRemote($('#project-title-form'));
   });
-});
+}
 
 
 function initAceEditors() {
@@ -405,5 +414,3 @@ function isZipUploadValid() {
 
   return true;
 }
-
-//})();
