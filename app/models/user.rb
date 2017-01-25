@@ -20,13 +20,4 @@ class User < ApplicationRecord
     # TODO
   end
 
-
-
-
-
-
-
 end
-
-
-
