@@ -27,6 +27,16 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert_equal(@project.output, 'this_is_output')
   end
 
+  # Begin: test project urls load successfully
+  test 'should get root' do
+    get root_path
+    assert_response :success
+  end
+
+  test 'root goes to project#new' do
+    assert_routing '/', controller: 'projects', action: 'new'
+  end
+
   test 'should get new' do
     get new_project_url
     assert_response :success
@@ -36,6 +46,7 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     get edit_project_url(@project)
     assert_response :success
   end
+  # End: test project urls load successfully
 
   #test "should destroy project" do
   #  assert_difference('Project.count', -1) do
