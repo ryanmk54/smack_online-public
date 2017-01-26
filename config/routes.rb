@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   get 'analytics/usage', to: 'analytics#usage'
 
-  get 'users/:id', to: 'profiles#show'
+  get 'profile', to: 'profiles#show'
 
   get 'analytics/project_location_csv'
   get 'analytics/project_runtimes'

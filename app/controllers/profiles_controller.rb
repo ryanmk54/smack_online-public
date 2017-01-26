@@ -1,10 +1,8 @@
 class ProfilesController < ApplicationController
 
-  # GET /users/#
+  # GET /profiles/show
   def show
-    @user = User.find(params[:id])
-    puts params[:id]
-    puts @user.name
+    @user = User.find(current_user.id)
     render :show
   end
 

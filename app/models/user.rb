@@ -8,9 +8,10 @@ class User < ApplicationRecord
 
   # has_many :project_users
   # has_many :projects, through: :project_users
+
   has_and_belongs_to_many :projects
 
-  attr_accessor :id, :email, :name
+  # attr_accessor :id, :email, :name
 
   def private_projects
     self.projects
