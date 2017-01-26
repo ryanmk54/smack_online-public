@@ -1,9 +1,3 @@
-<div hidden>
-  <%= text_area_tag :output, @output %>
-</div>
-
-<!-- Start page body -->
-
  <!-- Body -->
 <div class="main-container row container-fluid">
 
@@ -14,7 +8,7 @@
     <div id="analytics-sidebar" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 gray">
 
       <ul class="list-group">
-        <li class="list-group-item" id="timespanListItem">Timespan Usage</li>
+        <li class="list-group-item" id="usageListItem">Timespan Usage</li>
         <li class="list-group-item" id="runtimeListItem">Project Runtimes</li>
         <li class="list-group-item" id="geographicListItem">Geographic Usage</li>
       </ul>
@@ -25,19 +19,19 @@
     <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 height100">
 
       <!-- Top -->
-      <div class="tool-selection-container row lightskyblue">
+      <div class="tool-selection-container row">
         <div class="centered lightskyblue height100">
           <select id='numberPicker' class="tool-select selectpicker">
-        <option value="5">5</option>
-        <option value="10" selected="selected">10</option>
-        <option value="20">20</option>
-        <option value="30">30</option>
-        <option value="60">60</option>
-      </select>
-      <select id='unitPicker' class="tool-select selectpicker">
-        <option value="day">Day(s)</option>
-        <option value="month">Month(s)</option>
-      </select>
+            <option value="5">5</option>
+            <option value="10" selected="selected">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="60">60</option>
+          </select>
+          <select id='unitPicker' class="tool-select selectpicker">
+            <option value="day">Day(s)</option>
+            <option value="month">Month(s)</option>
+          </select>
         </div>
       </div>
 
@@ -46,8 +40,8 @@
       <div class="height100 analytics-middle lgray row">
 
         <!-- Left -->
-        <div class="analytics-middle-continer col-xs-10 col-sm-10 col-md-10 col-lg-10">
-          <div id='parent' style="height: 100%; width: 100%">
+        <div class="analytics-middle-container col-xs-10 col-sm-10 col-md-10 col-lg-10">
+          <div id='parent' style="height: 500px; width: 100%">
             <div id="graphContainer" style="height: 100%; width: 100%">
               <canvas id="myChart"></canvas>
             </div>
@@ -55,11 +49,13 @@
         </div>
 
         <!-- Right -->
-        <div class="gray analytics-middle-continer col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        <div class="gray analytics-middle-container col-xs-2 col-sm-2 col-md-2 col-lg-2 height100">
           <h3 id="projectListHeader"></h3>
-          <ul id="projectList"> </ul>
+          <ul id="projectList" class="scrollable-menu list-group height100"> </ul>
         </div>
 
       </div>
 
-<div>
+    </div>
+  </div>
+</div>
