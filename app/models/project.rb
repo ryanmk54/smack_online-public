@@ -1,4 +1,5 @@
 class Project < ApplicationRecord
+  default_scope { order updated_at: :desc }
 
   has_and_belongs_to_many :users
 
