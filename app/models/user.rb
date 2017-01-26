@@ -10,8 +10,6 @@ class User < ApplicationRecord
   # has_many :projects, through: :project_users
   has_and_belongs_to_many :projects
 
-  attr_accessor :id, :email, :name
-
   def private_projects
     self.projects
   end
@@ -23,13 +21,6 @@ class User < ApplicationRecord
   # def currently_running_projects
   #   self.projects.
   # end
-
-
-
-
-
-
-
 end
 
 
