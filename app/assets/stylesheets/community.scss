@@ -9,10 +9,27 @@
 
 #community-sidebar
 {
-  height: 112.5%;
+  height: 100%;
+}
+
+.community-center-container
+{
+  height: 100%;
+}
+
+#community-content-container
+{
+	padding-left: 15px;
+}
+
+.community-main-container
+{
+  height: 100%;
+  width: calc(100% + 15px);
+  overflow: visible;
 }
 
 .community-middle
 {
-  height: 87.5;
+  height: 100%;
 }
