@@ -2,6 +2,7 @@
 # Installs ruby, rails and all prerequisites
 
 command -v sudo >/dev/null 2>&1 || { echo >&2 "sudo is required"; exit 1; }
+command -v apt-get >/dev/null 2>&1 || { echo >&2 "apt-get is required"; exit 1; }
 command -v wget >/dev/null 2>&1 || { echo >&2 "wget is required"; exit 1; }
 
 if !(command -v ruby-install >/dev/null 2>&1 &&
