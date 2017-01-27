@@ -17,9 +17,10 @@ then
   cd ruby-install-0.6.0/;
   sudo make install;
 
-  # Install ruby 2.3.1
-  ruby-install ruby-2.3.1;
 fi
+
+# Install ruby 2.3.1
+ruby-install ruby-2.3.1;
 
 if !( command -v chruby >/dev/null 2>&1)
 then
@@ -40,6 +41,8 @@ then
   source /usr/local/share/chruby/chruby.sh
   source /usr/local/share/chruby/auto.sh
 fi
+
+chruby ruby-2.3.1
 
 cd "$(dirname "$0")/../"
   # change to the root of the project directory
