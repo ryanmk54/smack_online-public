@@ -19,8 +19,11 @@ then
 
 fi
 
-# Install ruby 2.3.1
-ruby-install ruby-2.3.1;
+# Install ruby 2.3.1 if it isn't already
+if !(test -d ~/.rubies/ruby-2.3.1/)
+then
+  ruby-install ruby-2.3.1;
+fi
 
 if !( command -v chruby >/dev/null 2>&1)
 then
@@ -38,8 +41,8 @@ then
   echo "source /usr/local/share/chruby/auto.sh" >> ~/.bashrc;
     # adds auto-switching to chruby
 
-  source /usr/local/share/chruby/chruby.sh
-  source /usr/local/share/chruby/auto.sh
+  source /usr/local/share/chruby/chruby.sh;
+  source /usr/local/share/chruby/auto.sh;
 fi
 
 chruby ruby-2.3.1
