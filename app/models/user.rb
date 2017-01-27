@@ -31,6 +31,7 @@ class User < ApplicationRecord
 
 
 
+
 end
 
 

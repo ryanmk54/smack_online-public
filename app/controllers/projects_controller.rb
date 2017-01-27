@@ -83,6 +83,12 @@ class ProjectsController < ApplicationController
     end
   end
 
+
+  def destroy
+    Project.find(params[:id]).destroy unless current_user
+    User.find(current_user.id).projects[params[:id]].destroy
+  end
+
   # POST /projects/receive_service_output
   # Called by the SMACK server when a project has finished running.
   # Saves the output to the file_system

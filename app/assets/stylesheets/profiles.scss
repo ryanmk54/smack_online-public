@@ -1,0 +1,55 @@
+body {
+  background-color: lightgrey;
+}
+.card {
+  margin-top: 15px;
+  margin-left: 15%;
+  /*margin-left: 15px;*/
+  padding: 2% 5% 2% 5%;
+
+}
+.card-project {
+  width: 220px;
+  height: 220px;
+}
+.card-project-preview{
+  border-radius: 2px;
+  background-color: white;
+  box-shadow: 1px 1px 1px 1px;
+  display: table;
+}
+.card-project-new{
+  border-radius: 2px;
+  display: table;
+}
+
+.btn-newproject{
+  color: black;
+  background-color: darkgrey;
+  border-width: 1px;
+  border-color: black;
+  box-shadow: 2px 2px 2px #000;
+  display: table-cell;
+}
+
+.btn-play{
+  color: black;
+  background-color: limegreen;
+  border-width: 1px;
+  border-color: black;
+  box-shadow: 2px 2px 2px;
+}
+.btn-remove{
+  color: red;
+  background-color: darkgrey;
+  border-width: 1px;
+  border-color: black;
+  box-shadow: 2px 2px 2px #000;
+}
+.btn-open{
+  color: black;
+  background-color: darkgrey;
+  border-width: 1px;
+  border-color: black;
+  box-shadow: 2px 2px 2px #000;
+}

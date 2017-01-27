@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get 'analytics/project_location_csv'
   get 'analytics/project_runtimes'
 
-  resources(:projects, except: [:index, :destroy]) do
+  resources(:projects,  except: [:index, :destroy]) do
     member do
       post 'receive_service_output', to: 'projects#receive_service_output'
     end
