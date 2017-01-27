@@ -17,6 +17,10 @@ body
   width: 100%;
 }
 
+.navbar {
+  height: 52px;
+}
+
 .tool-select
 {
   height: 35px;
@@ -50,12 +54,6 @@ form {
   top: 50%;
   transform: translateY(-50%);
 }
-
-.editor-container
-{
-  height: 100%; padding:0; margin:0; z-index: 1;
-}
-
 
 .bottom-container
 {
