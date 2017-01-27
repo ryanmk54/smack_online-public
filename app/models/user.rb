@@ -10,7 +10,7 @@ class User < ApplicationRecord
   # has_many :projects, through: :project_users
 
   has_and_belongs_to_many :projects
-  
+
   def private_projects
     self.projects
   end
