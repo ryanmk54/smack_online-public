@@ -49,6 +49,6 @@ chruby ruby-2.3.1
 
 cd "$(dirname "$0")/../"
   # change to the root of the project directory
-
+gem install bundler
 bundle install
 exit
