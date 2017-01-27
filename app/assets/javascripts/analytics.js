@@ -46,6 +46,8 @@ $().ready(function() {
     $("#usageListItem").click(function()
     {
         $('.selectpicker').selectpicker('show');
+        $(this).siblings().removeClass('active');
+        $(this).addClass('active');
         resetProjectList();
         resetCanvas();
         var unit = $('#unitPicker').val();
@@ -57,6 +59,8 @@ $().ready(function() {
     $("#runtimeListItem").click(function()
     {
         $('.selectpicker').selectpicker('hide');
+        $(this).siblings().removeClass('active');
+        $(this).addClass('active');
         resetProjectList();
         resetCanvas();
         var unit = $('#unitPicker').val();
@@ -68,6 +72,8 @@ $().ready(function() {
     $("#geographicListItem").click(function()
     {
         $('.selectpicker').selectpicker('hide');
+        $(this).siblings().removeClass('active');
+        $(this).addClass('active');
         resetProjectList();
         resetCanvas();
         getAndUnpackGeoCSV(displayGeochart);
@@ -134,7 +140,7 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
         },
     };
 
-    Plotly.plot(document.getElementById('graphContainer'), data, layout);
+    Plotly.newPlot(document.getElementById('graphContainer'), data, layout);
 }
 
 /*
@@ -331,7 +337,7 @@ function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
 function resetCanvas()
 {
     $('#parent').html("");
-    $('#parent').append('<div id="graphContainer" style="height: 500px; width: 100%"><div>')
+    $('#parent').append('<div id="graphContainer" class="height100"><div>')
     $('#graphContainer').append('<canvas id="myChart"><canvas>');
 }
 

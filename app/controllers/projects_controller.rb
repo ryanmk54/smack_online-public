@@ -120,10 +120,12 @@ class ProjectsController < ApplicationController
     params.require(:project).permit(:title, :output, :eta)
   end
 
+  # TODO: Needs to go to model
   def updateCSV
-    rowExists = false;
-    #city = 'Houston '.strip #@project.
     city = request.location.city.strip
+    @project.city = city;
+    @project.save
+    rowExists = false;
     csv = CSV.read(PROJECT_CSV_PATH, headers:true);
     csv.each do |row|
       if(row[0] == city)
