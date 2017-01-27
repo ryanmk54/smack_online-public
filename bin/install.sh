@@ -36,9 +36,13 @@ then
     # add the chruby command to the path
   echo "source /usr/local/share/chruby/auto.sh" >> ~/.bashrc;
     # adds auto-switching to chruby
+
+  source /usr/local/share/chruby/chruby.sh
+  source /usr/local/share/chruby/auto.sh
 fi
 
 cd "$(dirname "$0")/../"
   # change to the root of the project directory
+
 bundle install
 exit
