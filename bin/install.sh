@@ -10,6 +10,7 @@ command -v make >/dev/null 2>&1 || { sudo apt-get install make; };
 if !(command -v ruby-install >/dev/null 2>&1)
 then
   # Change to a temporary directory so stuff isn't cluttered
+  pushd .
   cd /tmp
   # Install ruby-install
   wget -O ruby-install-0.6.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz;
@@ -17,6 +18,7 @@ then
   cd ruby-install-0.6.0/;
   sudo make install;
 
+  popd
 fi
 
 # Install ruby 2.3.1 if it isn't already
@@ -28,6 +30,7 @@ fi
 if !( command -v chruby >/dev/null 2>&1)
 then
   # Change to a temporary directory so stuff isn't cluttered
+  pushd .
   cd /tmp
 
   # Install chruby
@@ -43,6 +46,7 @@ then
 
   source /usr/local/share/chruby/chruby.sh;
   source /usr/local/share/chruby/auto.sh;
+  popd
 fi
 
 chruby ruby-2.3.1
