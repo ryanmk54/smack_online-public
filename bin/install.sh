@@ -60,7 +60,7 @@ chruby ruby-2.3.1
 
 cd "$(dirname "$0")/../"
   # change to the root of the project directory
-gem install bundler
+gem which bundler >/dev/null 2>&1 || { gem install bundler; }
 bundle install
 
 echo "Either restart your shell or run:"
