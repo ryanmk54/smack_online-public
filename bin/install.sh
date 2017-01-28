@@ -62,4 +62,8 @@ cd "$(dirname "$0")/../"
   # change to the root of the project directory
 gem install bundler
 bundle install
+
+echo "Either restart your shell or run:"
+echo "source /usr/local/share/chruby/chruby.sh"
+echo "chruby ruby-2.3.1"
 exit
