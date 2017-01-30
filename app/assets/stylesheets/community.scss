@@ -1,0 +1,35 @@
+// Place all the styles related to the community controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.community-middle-continer
+{
+  height: 100%; padding:0; margin:0; z-index: 1;
+}
+
+#community-sidebar
+{
+  height: 100%;
+}
+
+.community-center-container
+{
+  height: 100%;
+}
+
+#community-content-container
+{
+	padding-left: 15px;
+}
+
+.community-main-container
+{
+  height: 100%;
+  width: calc(100% + 15px);
+  overflow: visible;
+}
+
+.community-middle
+{
+  height: 100%;
+}

@@ -19,7 +19,12 @@ class ProjectsController < ApplicationController
   # GET /projects/new
   # Displays the initial code editor to the user.
   def new
-    @project = Project.new
+	
+    if current_user == nil
+       @project = Project.new()
+       return
+    end  
+    @project = current_user.projects.create()
   end
 
   # POST /projects.json

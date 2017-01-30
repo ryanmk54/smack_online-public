@@ -1,0 +1,146 @@
+<div hidden>
+  <%= text_area_tag :output, @output %>
+</div>
+
+<!-- Start page body -->
+
+ <!-- Body -->
+<div class="community-main-container row container-fluid height100">
+
+  <!-- Center -->
+  <div class="height100 community-center-container row">
+
+    <!-- Main -->
+    <div id="community-main-container" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 height100 lgray">
+
+      <div id="community-content-container">
+      <h1>Top Users</h1>
+      <hr />
+
+      <section class="row text-center placeholders">
+            <div class="col-6 col-sm-3 placeholder">
+              <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+              <h4>Christopher Bowcutt</h4>
+              <div class="text-muted">Christopher Bowcutt</div>
+            </div>
+            <div class="col-6 col-sm-3 placeholder">
+              <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+              <h4>Ryan Kingston</h4>
+              <span class="text-muted">Ryan Kingston</span>
+            </div>
+            <div class="col-6 col-sm-3 placeholder">
+              <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+              <h4>Matthew Mendez</h4>
+              <span class="text-muted">Matthew Mendez</span>
+            </div>
+            <div class="col-6 col-sm-3 placeholder">
+              <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+              <h4>Jake Sebright</h4>
+              <span class="text-muted">Jake Sebright</span>
+            </div>
+          </section>
+
+          <h2>Top Projects</h2>
+          <hr />
+
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
+                  <th>City</th>
+                  <th>Runtime</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><%= get_top_projects[0].id %></td>
+                  <td><%= get_top_projects[0].title %></td>
+                  <td><%= get_top_projects[0].created_at %></td>
+                  <td><%= get_top_projects[0].updated_at %></td>
+                  <td><%= get_top_projects[0].city %></td>
+                  <td><%= get_top_projects[0].runtime %></td>
+                </tr>
+               <tr>
+                  <td><%= get_top_projects[1].id %></td>
+                  <td><%= get_top_projects[1].title %></td>
+                  <td><%= get_top_projects[1].created_at %></td>
+                  <td><%= get_top_projects[1].updated_at %></td>
+                  <td><%= get_top_projects[1].city %></td>
+                  <td><%= get_top_projects[1].runtime %></td>
+                </tr>
+                <tr>
+                  <td><%= get_top_projects[2].id %></td>
+                  <td><%= get_top_projects[2].title %></td>
+                  <td><%= get_top_projects[2].created_at %></td>
+                  <td><%= get_top_projects[2].updated_at %></td>
+                  <td><%= get_top_projects[2].city %></td>
+                  <td><%= get_top_projects[2].runtime %></td>
+                </tr>
+               <tr>
+                  <td><%= get_top_projects[3].id %></td>
+                  <td><%= get_top_projects[3].title %></td>
+                  <td><%= get_top_projects[3].created_at %></td>
+                  <td><%= get_top_projects[3].updated_at %></td>
+                  <td><%= get_top_projects[3].city %></td>
+                  <td><%= get_top_projects[3].runtime %></td>
+                </tr>
+                <tr>
+                  <td><%= get_top_projects[4].id %></td>
+                  <td><%= get_top_projects[4].title %></td>
+                  <td><%= get_top_projects[4].created_at %></td>
+                  <td><%= get_top_projects[4].updated_at %></td>
+                  <td><%= get_top_projects[4].city %></td>
+                  <td><%= get_top_projects[4].runtime %></td>
+                </tr>
+               <tr>
+                  <td><%= get_top_projects[5].id %></td>
+                  <td><%= get_top_projects[5].title %></td>
+                  <td><%= get_top_projects[5].created_at %></td>
+                  <td><%= get_top_projects[5].updated_at %></td>
+                  <td><%= get_top_projects[5].city %></td>
+                  <td><%= get_top_projects[5].runtime %></td>
+                </tr>
+                <tr>
+                  <td><%= get_top_projects[6].id %></td>
+                  <td><%= get_top_projects[6].title %></td>
+                  <td><%= get_top_projects[6].created_at %></td>
+                  <td><%= get_top_projects[6].updated_at %></td>
+                  <td><%= get_top_projects[6].city %></td>
+                  <td><%= get_top_projects[6].runtime %></td>
+                </tr>
+               <tr>
+                  <td><%= get_top_projects[7].id %></td>
+                  <td><%= get_top_projects[7].title %></td>
+                  <td><%= get_top_projects[7].created_at %></td>
+                  <td><%= get_top_projects[7].updated_at %></td>
+                  <td><%= get_top_projects[7].city %></td>
+                  <td><%= get_top_projects[7].runtime %></td>
+                </tr>
+                <tr>
+                  <td><%= get_top_projects[8].id %></td>
+                  <td><%= get_top_projects[8].title %></td>
+                  <td><%= get_top_projects[8].created_at %></td>
+                  <td><%= get_top_projects[8].updated_at %></td>
+                  <td><%= get_top_projects[8].city %></td>
+                  <td><%= get_top_projects[8].runtime %></td>
+                </tr>
+               <tr>
+                  <td><%= get_top_projects[9].id %></td>
+                  <td><%= get_top_projects[9].title %></td>
+                  <td><%= get_top_projects[9].created_at %></td>
+                  <td><%= get_top_projects[9].updated_at %></td>
+                  <td><%= get_top_projects[9].city %></td>
+                  <td><%= get_top_projects[9].runtime %></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+</div>

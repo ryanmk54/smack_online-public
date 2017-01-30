@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   root 'projects#new'
 
   get 'analytics/usage', to: 'analytics#usage'
+  get 'community/home', to: 'community#home'
 
-  get 'users/:id', to: 'profiles#show'
+  get 'profile', to: 'profiles#show'
 
   get 'analytics/project_location_csv'
   get 'analytics/project_runtimes'

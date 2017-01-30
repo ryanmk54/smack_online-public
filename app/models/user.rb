@@ -8,9 +8,8 @@ class User < ApplicationRecord
 
   # has_many :project_users
   # has_many :projects, through: :project_users
-  has_and_belongs_to_many :projects
 
-  attr_accessor :id, :email, :name
+  has_and_belongs_to_many :projects
 
   def created_at
     self[:created_at].strftime("%D")
@@ -27,14 +26,6 @@ class User < ApplicationRecord
   # def currently_running_projects
   #   self.projects.
   # end
-
-
-
-
-
-
-
 end
-
 
 
