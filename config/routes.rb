@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   get 'analytics/project_location_csv'
   get 'analytics/project_runtimes'
+  get 'analytics/users_created'
 
   resources(:projects, except: [:index, :destroy]) do
     member do

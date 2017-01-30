@@ -12,6 +12,10 @@ class User < ApplicationRecord
 
   attr_accessor :id, :email, :name
 
+  def created_at
+    self[:created_at].strftime("%D")
+  end
+
   def private_projects
     self.projects
   end

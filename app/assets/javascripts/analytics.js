@@ -15,21 +15,21 @@ var currentChartDataArray = [];
 
 $().ready(function() {
 
+    // Set initial graph and menu value to DEFAULT_SPAN
     $("#numberPicker").val(DEFAULT_SPAN);
 
-    // Set initial graph and menu value to DEFAULT_SPAN
-    var unit = $('#unitPicker').val();
-    if(unit == 'month' || unit == 'day')
-        getProjectsFromServer(displayUsageChart, '/analytics/usage');
+    getProjectsFromServer(displayUsageChart, '/analytics/usage');
 
     // Set action for the number drop-down
     $("#numberPicker").change(function()
     {
         resetProjectList();
         resetCanvas();
-        var unit = $('#unitPicker').val();
-        if(unit == 'month' || unit == 'day')
+        var currentlyActiveListItem = document.getElementsByClassName("list-group-item active")[0].id;
+        if(currentlyActiveListItem == 'usageListItem')
             getProjectsFromServer(displayUsageChart, '/analytics/usage');
+        else if(currentlyActiveListItem == 'userCreationListItem')
+            getProjectsFromServer(displayUsageChart, '/analytics/users_created')
     });
 
     // Set action for the unit drop-down
@@ -37,9 +37,12 @@ $().ready(function() {
     {
         resetProjectList();
         resetCanvas();
-        var unit = $('#unitPicker').val();
-        if(unit == 'month' || unit == 'day')
+        getProjectsFromServer(displayUsageChart, '/analytics/usage');
+        var currentlyActiveListItem = document.getElementsByClassName("list-group-item active")[0].id;
+        if(currentlyActiveListItem == 'usageListItem')
             getProjectsFromServer(displayUsageChart, '/analytics/usage');
+        else if(currentlyActiveListItem == 'userCreationListItem')
+            getProjectsFromServer(displayUsageChart, 'analytics/users_created');
     });
 
     // Set action for the unit drop-down
@@ -50,9 +53,7 @@ $().ready(function() {
         $(this).addClass('active');
         resetProjectList();
         resetCanvas();
-        var unit = $('#unitPicker').val();
-        if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayUsageChart, '/analytics/usage');
+        getProjectsFromServer(displayUsageChart, '/analytics/usage');
     });
 
     // Set action for the unit drop-down
@@ -63,9 +64,7 @@ $().ready(function() {
         $(this).addClass('active');
         resetProjectList();
         resetCanvas();
-        var unit = $('#unitPicker').val();
-        if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayRuntimeGraph, '/analytics/project_runtimes');
+        getProjectsFromServer(displayRuntimeGraph, '/analytics/project_runtimes');
     });
 
     // Set action for the unit drop-down
@@ -78,6 +77,17 @@ $().ready(function() {
         resetCanvas();
         getAndUnpackGeoCSV(displayGeochart);
     });
+
+    // Set action for the unit drop-down
+    $("#userCreationListItem").click(function()
+    {
+        $('.selectpicker').selectpicker('show');
+        $(this).siblings().removeClass('active');
+        $(this).addClass('active');
+        resetProjectList();
+        resetCanvas();
+        getProjectsFromServer(displayUsageChart, '/analytics/users_created')
+    });
 });
 
 function getProjectsFromServer(callback, url)
@@ -88,7 +98,7 @@ function getProjectsFromServer(callback, url)
             format: 'json'
         },
         dataType: "json",
-        url: url,
+        url: 'http://0.0.0.0:3000/' + url,
 
         success: function(data){
             callback(data)
@@ -204,7 +214,7 @@ function onUsageGraphBarClick(evt)
         var projId = currentChartDataArray[i].id;
         // For day units
         if (currentChartDataArray[i].created_at == label)
-            $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+            $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
         else {
             // Check for month units
             var labelMonth = label.substring(0, 2);
@@ -212,7 +222,7 @@ function onUsageGraphBarClick(evt)
             var labelYear = label.substring(3);
             var dataYear = currentChartDataArray[i].created_at.toString().substring(6);
             if(labelMonth == dataMonth && labelYear == dataYear)
-                $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+                $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
         }
     }
 }
@@ -226,7 +236,7 @@ function onRuntimeGraphBarClick(evt)
     for(var i = 0; i < currentChartDataArray.length; i++) {
         var projId = currentChartDataArray[i].id;
         if (currentChartDataArray[i].runtime == label)
-            $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+            $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
     }
 }
 

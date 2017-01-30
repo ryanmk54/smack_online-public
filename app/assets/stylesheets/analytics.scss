@@ -4,34 +4,36 @@
 //
 //*= require bootstrap-select.min
 
-.analytics-middle-container
+.analytics-main-container
 {
-  height: 92%;
+  height: 94%;
 }
 
 .top-bar
 {
-  height: 5.5%;
+  padding: 4px;
 }
 
 .scrollable-menu {
   overflow-x: hidden;
 }
 
-.analytics-sidebar
-{
+.analytics-sidebar {
   height: 100%;
 }
 
-.no-padding-right
-{
+.no-padding-right {
   padding-right: 0;
 }
 
-.no-padding-left
-{
+.no-padding-left {
   padding-left: 0;
 }
+
+.no-padding {
+  padding: 0;
+}
+
 
 .right-border{
   border-right: 1px solid #5e5e5e;
@@ -40,23 +42,11 @@
   border-left: 1px solid #5e5e5e;
 }
 
-.vertical-center {
-  float:none;
-  margin:0 auto;
-}
-
-.margin-zero
-{
+.margin-zero {
   margin: 0;
 }
 
-.fit-parent-button
-{
-  width:100%
+.text-center {
+  text-align: center;
 }
 
-.ignore-parent-padding
-{
-  margin-left: -12px;
-  margin-right: -12px;
-}
