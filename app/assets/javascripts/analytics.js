@@ -11,14 +11,16 @@ DEFAULT_SPAN = 20;
 
 var chart;
 var chartConfiguration = {};
-var currentChartDataArray = [];
+var currentProjectChartDataArray = [];
+var currentUserChartDataArray = [];
+var geoCSV;
 
 $().ready(function() {
 
     // Set initial graph and menu value to DEFAULT_SPAN
     $("#numberPicker").val(DEFAULT_SPAN);
 
-    getProjectsFromServer(displayUsageChart, '/analytics/usage');
+    getProjectsFromServerIfNotCached(displayUsageChart);
 
     // Set action for the number drop-down
     $("#numberPicker").change(function()
@@ -27,9 +29,9 @@ $().ready(function() {
         resetCanvas();
         var currentlyActiveListItem = document.getElementsByClassName("list-group-item active")[0].id;
         if(currentlyActiveListItem == 'usageListItem')
-            getProjectsFromServer(displayUsageChart, '/analytics/usage');
+            getProjectsFromServerIfNotCached(displayUsageChart);
         else if(currentlyActiveListItem == 'userCreationListItem')
-            getProjectsFromServer(displayUsageChart, '/analytics/users_created')
+            getUsersFromServerIfNotCached(displayUsageChart)
     });
 
     // Set action for the unit drop-down
@@ -37,87 +39,126 @@ $().ready(function() {
     {
         resetProjectList();
         resetCanvas();
-        getProjectsFromServer(displayUsageChart, '/analytics/usage');
         var currentlyActiveListItem = document.getElementsByClassName("list-group-item active")[0].id;
         if(currentlyActiveListItem == 'usageListItem')
-            getProjectsFromServer(displayUsageChart, '/analytics/usage');
+            getProjectsFromServerIfNotCached(displayUsageChart);
         else if(currentlyActiveListItem == 'userCreationListItem')
-            getProjectsFromServer(displayUsageChart, 'analytics/users_created');
+            getUsersFromServerIfNotCached(displayUsageChart);
     });
 
     // Set action for the unit drop-down
     $("#usageListItem").click(function()
     {
-        $('.selectpicker').selectpicker('show');
-        $(this).siblings().removeClass('active');
-        $(this).addClass('active');
-        resetProjectList();
-        resetCanvas();
-        getProjectsFromServer(displayUsageChart, '/analytics/usage');
+        if(!$(this).hasClass('active')) {
+            $('.selectpicker').selectpicker('show');
+            $(this).siblings().removeClass('active');
+            $(this).addClass('active');
+            resetProjectList();
+            resetCanvas();
+            getProjectsFromServerIfNotCached(displayUsageChart);
+        }
     });
 
     // Set action for the unit drop-down
     $("#runtimeListItem").click(function()
     {
-        $('.selectpicker').selectpicker('hide');
-        $(this).siblings().removeClass('active');
-        $(this).addClass('active');
-        resetProjectList();
-        resetCanvas();
-        getProjectsFromServer(displayRuntimeGraph, '/analytics/project_runtimes');
+        if(!$(this).hasClass('active')) {
+            $('.selectpicker').selectpicker('hide');
+            $(this).siblings().removeClass('active');
+            $(this).addClass('active');
+            resetProjectList();
+            resetCanvas();
+            getProjectsFromServerIfNotCached(displayRuntimeGraph);
+        }
     });
 
     // Set action for the unit drop-down
     $("#geographicListItem").click(function()
     {
-        $('.selectpicker').selectpicker('hide');
-        $(this).siblings().removeClass('active');
-        $(this).addClass('active');
-        resetProjectList();
-        resetCanvas();
-        getAndUnpackGeoCSV(displayGeochart);
+        if(!$(this).hasClass('active')) {
+            $('.selectpicker').selectpicker('hide');
+            $(this).siblings().removeClass('active');
+            $(this).addClass('active');
+            resetProjectList();
+            resetCanvas();
+            if(geoCSV == null)
+                getGeoCSV();
+            else
+                unpackGeoCSVAndDisplayChart(displayGeochart);
+        }
     });
 
     // Set action for the unit drop-down
     $("#userCreationListItem").click(function()
     {
-        $('.selectpicker').selectpicker('show');
-        $(this).siblings().removeClass('active');
-        $(this).addClass('active');
-        resetProjectList();
-        resetCanvas();
-        getProjectsFromServer(displayUsageChart, '/analytics/users_created')
+        if(!$(this).hasClass('active')) {
+            $('.selectpicker').selectpicker('show');
+            $(this).siblings().removeClass('active');
+            $(this).addClass('active');
+            resetProjectList();
+            resetCanvas();
+            getUsersFromServerIfNotCached(displayUsageChart)
+        }
     });
 });
 
-function getProjectsFromServer(callback, url)
+function getProjectsFromServerIfNotCached(callback, url)
 {
-    $.ajax({
-        type: "GET",
-        data: {
-            format: 'json'
-        },
-        dataType: "json",
-        url: 'http://0.0.0.0:3000/' + url,
+    if(currentProjectChartDataArray.length != 0)
+        callback(currentProjectChartDataArray);
+    else
+        $.ajax({
+            type: "GET",
+            data: {
+                format: 'json'
+            },
+            dataType: "json",
+            url: 'http://0.0.0.0:3000/analytics/usage',
 
-        success: function(data){
-            callback(data)
-        }
+            success: function(data){
+                currentProjectChartDataArray = data;
+                callback(data)
+            }
+        });
+}
+
+function getUsersFromServerIfNotCached(callback, url)
+{
+    if(currentUserChartDataArray.length != 0)
+        callback(currentUserChartDataArray);
+    else
+        $.ajax({
+            type: "GET",
+            data: {
+                format: 'json'
+            },
+            dataType: "json",
+            url: 'http://0.0.0.0:3000/analytics/users_created',
+
+            success: function(data){
+                currentUserChartDataArray = data;
+                callback(data)
+            }
+        });
+}
+
+function getGeoCSV()
+{
+    Plotly.d3.csv('/analytics/project_location_csv', function(err, rows) {
+        geoCSV = rows;
+        unpackGeoCSVAndDisplayChart(displayGeochart);
     });
 }
 
-function getAndUnpackGeoCSV(callback)
+function unpackGeoCSVAndDisplayChart(callback)
 {
-    // Get the csv at /analytics/project_location_csv
-    Plotly.d3.csv('/analytics/project_location_csv', function(err, rows) {
-        var locationNames = unpack(rows, 'name'),
-            locationCounts = unpack(rows, 'pop'),
-            latitudes = unpack(rows, 'lat'),
-            longitudes = unpack(rows, 'lon')
+    var locationNames = unpack(geoCSV, 'name'),
+        locationCounts = unpack(geoCSV, 'pop'),
+        latitudes = unpack(geoCSV, 'lat'),
+        longitudes = unpack(geoCSV, 'lon')
 
-        // Pass the CSV data to the callback
-        callback(latitudes, longitudes, locationCounts, locationNames);
-    });
+    // Pass the CSV data to the callback
+    callback(latitudes, longitudes, locationCounts, locationNames);
 }
 
 function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
@@ -162,7 +203,6 @@ function displayUsageChart(dataArray){
     var unit = $('#unitPicker').val();
     var span = $('#numberPicker').val();
 
-    currentChartDataArray = dataArray;
     var KVArray = []; // 'Key-Value Array'
     var labelArray = [];
 
@@ -206,21 +246,26 @@ function displayUsageChart(dataArray){
 
 function onUsageGraphBarClick(evt)
 {
+    var dataArray;
+    if($('#userCreationListItem').hasClass('active'))
+        dataArray = currentUserChartDataArray
+    else
+        dataArray = currentProjectChartDataArray;
     resetProjectList();
     var element = chart.getElementAtEvent(evt)
     var label = chartConfiguration.data.labels[element[0]._index];
     $("#projectListHeader").html("Projects made on/in " + label);
-    for(var i = 0; i < currentChartDataArray.length; i++) {
-        var projId = currentChartDataArray[i].id;
+    for(var i = 0; i < dataArray.length; i++) {
+        var projId = dataArray[i].id;
         // For day units
-        if (currentChartDataArray[i].created_at == label)
+        if (dataArray[i].created_at == label)
             $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
         else {
             // Check for month units
             var labelMonth = label.substring(0, 2);
-            var dataMonth = currentChartDataArray[i].created_at.toString().substring(0, 2);
+            var dataMonth = currentProjectChartDataArray[i].created_at.toString().substring(0, 2);
             var labelYear = label.substring(3);
-            var dataYear = currentChartDataArray[i].created_at.toString().substring(6);
+            var dataYear = currentProjectChartDataArray[i].created_at.toString().substring(6);
             if(labelMonth == dataMonth && labelYear == dataYear)
                 $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
         }
@@ -233,9 +278,9 @@ function onRuntimeGraphBarClick(evt)
     var element = chart.getElementAtEvent(evt)
     var label = chartConfiguration.data.labels[element[0]._index];
     $("#projectListHeader").html("Projects with a Runtime of " + label + " Seconds");
-    for(var i = 0; i < currentChartDataArray.length; i++) {
-        var projId = currentChartDataArray[i].id;
-        if (currentChartDataArray[i].runtime == label)
+    for(var i = 0; i < currentProjectChartDataArray.length; i++) {
+        var projId = currentProjectChartDataArray[i].id;
+        if (currentProjectChartDataArray[i].runtime == label)
             $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
     }
 }
@@ -371,7 +416,6 @@ function unpack(rows, key) {
 
 function displayRuntimeGraph(dataArray)
 {
-    currentChartDataArray = dataArray;
     var KVArray = []; // 'Key-Value Array'
     var labelArray = [];
 
@@ -381,7 +425,7 @@ function displayRuntimeGraph(dataArray)
         var key = dataArray[i].runtime
         if ((key in KVArray))
             KVArray[key] += 1;
-        else
+        else if(key != null)
             KVArray[key] = 1;
     }
 

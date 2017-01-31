@@ -42,6 +42,10 @@ body
   padding: 0;
 }
 
+.scrollable-menu {
+  height: 100%;
+  overflow-x: hidden;
+}
 
 .right-border{
   border-right: 1px solid #5e5e5e;
