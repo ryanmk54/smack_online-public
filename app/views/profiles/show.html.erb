@@ -68,6 +68,10 @@
     border-color: black;
     box-shadow: 2px 2px 2px #000;
   }
+  .img-card-top {
+    width:100%;
+    opacity:0.85;
+  }
 </style>
 
 <div id="new_project_modal" class="modal">
@@ -87,7 +91,9 @@
   <!--profile-->
   <div class="col-sm-2">
     <div id="profilecard" class="card" style="box-shadow: 1px 1px 1px 1px; background-color: white;">
-      <img class= "card-img-top" src=http://www.zvonimir.info/wp-content/uploads/2012/08/zvonimir_rakamaric.jpg alt="Avatar" style="width:100%;opacity:0.85">
+      <!--<img  src="" alt="Avatar" style="width:100%;opacity:0.85">-->
+      <%= image_tag @user.avatar.url(:thumb), :class => 'img-card-top' %>
+      <!--<img class= "card-img-top" src=http://www.zvonimir.info/wp-content/uploads/2012/08/zvonimir_rakamaric.jpg >-->
       <div class="card-block">
         <div class="card-title">
           <strong><%= @user.email %></strong>
