@@ -7,7 +7,7 @@ command -v wget >/dev/null 2>&1 || { echo >&2 "wget is required"; exit 1; }
 command -v make >/dev/null 2>&1 || { sudo apt-get install make; };
   # make is a prereq for ruby-install and chruby
 sudo apt-get update
-sudo apt-get install --assume-yes mariadb-server mariadb-client ruby-mysql libmysqlclient-dev
+sudo apt-get install --assume-yes mariadb-server mariadb-client ruby-mysql libmysqlclient-dev imagemagick
 
 if !(command -v ruby-install >/dev/null 2>&1)
 then
