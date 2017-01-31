@@ -146,11 +146,11 @@ function getGeoCSV()
 {
     Plotly.d3.csv('/analytics/project_location_csv', function(err, rows) {
         geoCSV = rows;
-        unpackGeoCSVAndDisplayChart(displayGeochart);
+        unpackGeoCSVAndDisplayChart();
     });
 }
 
-function unpackGeoCSVAndDisplayChart(callback)
+function unpackGeoCSVAndDisplayChart()
 {
     var locationNames = unpack(geoCSV, 'name'),
         locationCounts = unpack(geoCSV, 'pop'),
@@ -158,7 +158,7 @@ function unpackGeoCSVAndDisplayChart(callback)
         longitudes = unpack(geoCSV, 'lon')
 
     // Pass the CSV data to the callback
-    callback(latitudes, longitudes, locationCounts, locationNames);
+    displayGeochart(latitudes, longitudes, locationCounts, locationNames);
 }
 
 function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
