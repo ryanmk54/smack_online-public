@@ -9,13 +9,16 @@ function open_project(project_id) {
 }
 
 function delete_project(project_id) {
-    $.get("/projects/" + project_id + "/destroy");
-    load_projects();
+    $.ajax({
+        url: '/projects' + project_id,
+        type: 'deletee',
+        success: function(result) {
+            // Do something with the result
+        }
+    });
 }
 
 // id is the user's id
 function load_projects(id) {
     var projects_container = $('#projects');
-    projects_container.
 }
-

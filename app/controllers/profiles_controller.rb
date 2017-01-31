@@ -14,6 +14,5 @@ class ProfilesController < ApplicationController
       json_list.append(project.to_json(:include => [:title, :id] ))
     end
   end
-
 end
 

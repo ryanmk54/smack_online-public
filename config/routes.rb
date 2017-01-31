@@ -7,11 +7,12 @@ Rails.application.routes.draw do
   get 'analytics/usage', to: 'analytics#usage'
 
   get 'profile', to: 'profiles#show'
+  get 'profile/projects', to: 'profiles#load_project_previews'
 
   get 'analytics/project_location_csv'
   get 'analytics/project_runtimes'
 
-  resources(:projects,  except: [:index, :destroy]) do
+  resources(:projects,  except: [:index]) do
     member do
       post 'receive_service_output', to: 'projects#receive_service_output'
     end

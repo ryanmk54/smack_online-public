@@ -19,7 +19,10 @@ class ProjectsController < ApplicationController
   # GET /projects/new
   # Displays the initial code editor to the user.
   def new
-    @project = Project.new unless current_user
+    if current_user == nil
+      @project = Project.new
+      return
+    end
     @project = current_user.projects.create()
   end
 
@@ -83,12 +86,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-
-  def destroy
-    Project.find(params[:id]).destroy unless current_user
-    User.find(current_user.id).projects[params[:id]].destroy
-  end
-
   # POST /projects/receive_service_output
   # Called by the SMACK server when a project has finished running.
   # Saves the output to the file_system
@@ -100,7 +97,24 @@ class ProjectsController < ApplicationController
     @project.save;
   end
 
-  private
+  # DELETE /projects/:id
+  def destroy
+    if current_user == nil
+      Project.find(params[:id].to_i).destroy
+    else
+      user = User.find(current_user.id.to_i)
+      user.projects.destroy(params[:id].to_i)
+    end
+    puts 'deleted'
+    respond_to do |format|
+      format.html { redirect_to projects_url }
+      format.json { head :no_content }
+      format.js   { render :layout => false }
+    end
+  end
+
+
+    private
 
   # Sends post request to verification service.
   # Returns: eta
