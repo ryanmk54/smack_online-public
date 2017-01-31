@@ -1,12 +1,92 @@
 <p id="notice"><%= notice %></p>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+<style type="text/css">
+  body {
+    background-color: lightgrey;
+  }
+  .card {
+    margin-top: 15px;
+    margin-left: 15%;
+    /*margin-left: 15px;*/
+    padding: 2% 5% 2% 5%;
+
+  }
+  .card-project {
+    width: 220px;
+    height: 220px;
+  }
+  .card-project-preview{
+    border-radius: 2px;
+    background-color: white;
+    box-shadow: 1px 1px 1px 1px;
+    display: table;
+  }
+  .card-project-new{
+    border-radius: 2px;
+    display: table;
+  }
+
+  .btn-newproject{
+    color: black;
+    background-color: darkgrey;
+    border-width: 1px;
+    border-color: black;
+    box-shadow: 2px 2px 2px #000;
+    display: table-cell;
+  }
+
+  .btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 50%;
+    border-style: solid black;
+  }
+  .btn-play{
+    color: black;
+    background-color: limegreen;
+    border-width: 1px;
+    border-color: black;
+    box-shadow: 2px 2px 2px;
+  }
+  .btn-remove{
+    color: red;
+    background-color: darkgrey;
+    border-width: 1px;
+    border-color: black;
+    box-shadow: 2px 2px 2px #000;
+  }
+  .btn-open{
+    color: black;
+    background-color: darkgrey;
+    border-width: 1px;
+    border-color: black;
+    box-shadow: 2px 2px 2px #000;
+  }
+  .img-card-top{
+    width:100%;
+    opacity:0.85;
+  }
+</style>
+
+<div id="new_project_modal" class="modal">
+  <div class="modal_dialog">
+    <p>Hello World!</p>
+  </div>
+</div>
+
+
 <div class="row">
 
   <!--profile-->
   <div class="col-sm-2">
     <div id="profilecard" class="card" style="box-shadow: 1px 1px 1px 1px; background-color: white;">
-      <img class= "card-img-top" src=http://www.zvonimir.info/wp-content/uploads/2012/08/zvonimir_rakamaric.jpg alt="Avatar" style="width:100%;opacity:0.85">
+      <%= image_tag @user.avatar.url(:thumb), :class => 'img-card-top' %>
       <div class="card-block">
         <div class="card-title">
           <strong><%= @user.email %></strong>

@@ -1,4 +1,9 @@
 class ApplicationController < ActionController::Base
-  #protect_from_forgery with: :null_session
-  # Add vendor/assets/components to the 'library' path
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+
+  def configure_permitted_parameters
+    added_attrs = [:email, :password, :current_password, :password_confirmation, :avatar]
+    devise_parameter_sanitizer.permit :account_update, keys: added_attrs
+  end
 end
