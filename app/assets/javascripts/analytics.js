@@ -113,7 +113,7 @@ function getProjectsFromServerIfNotCached(callback, url)
                 format: 'json'
             },
             dataType: "json",
-            url: 'http://0.0.0.0:3000/analytics/usage',
+            url: '/analytics/usage',
 
             success: function(data){
                 currentProjectChartDataArray = data;
@@ -133,7 +133,7 @@ function getUsersFromServerIfNotCached(callback, url)
                 format: 'json'
             },
             dataType: "json",
-            url: 'http://0.0.0.0:3000/analytics/users_created',
+            url: '/analytics/users_created',
 
             success: function(data){
                 currentUserChartDataArray = data;
