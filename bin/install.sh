@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 # Installs ruby, rails and all prerequisites
 
+# Check for db env vars
+if [[ -z "${DB_NAME}" || -z "${DB_ROOT_USER}" || -z "${DB_ROOT_PASSWORD}" ]]
+then
+  echo "DB_NAME, DB_ROOT_USER, and DB_ROOT_PASSWORD must be environment variables";
+  exit 1;
+fi
+
 command -v sudo >/dev/null 2>&1 || { echo >&2 "sudo is required"; exit 1; }
 command -v apt-get >/dev/null 2>&1 || { echo >&2 "apt-get is required"; exit 1; }
 command -v wget >/dev/null 2>&1 || { echo >&2 "wget is required"; exit 1; }
+
 sudo apt-get update
 command -v make >/dev/null 2>&1 || { sudo apt-get install make; };
   # make is a prereq for ruby-install and chruby
@@ -48,7 +56,6 @@ then
       # add the chruby command to the path
     echo "source /usr/local/share/chruby/auto.sh" >> ~/.bashrc;
       # adds auto-switching to chruby
-
     popd
   fi
 
