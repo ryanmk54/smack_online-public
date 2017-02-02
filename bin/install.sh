@@ -4,9 +4,9 @@
 command -v sudo >/dev/null 2>&1 || { echo >&2 "sudo is required"; exit 1; }
 command -v apt-get >/dev/null 2>&1 || { echo >&2 "apt-get is required"; exit 1; }
 command -v wget >/dev/null 2>&1 || { echo >&2 "wget is required"; exit 1; }
+sudo apt-get update
 command -v make >/dev/null 2>&1 || { sudo apt-get install make; };
   # make is a prereq for ruby-install and chruby
-sudo apt-get update
 sudo apt-get install --assume-yes mariadb-server mariadb-client ruby-mysql libmysqlclient-dev imagemagick
 
 if !(command -v ruby-install >/dev/null 2>&1)
@@ -62,6 +62,8 @@ cd "$(dirname "$0")/../"
   # change to the root of the project directory
 gem which bundler >/dev/null 2>&1 || { gem install bundler; }
 bundle install
+
+mysql -u $DB_ROOT_USER -p$DB_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $DB_NAME"
 
 echo "Either restart your shell or run:"
 echo "source /usr/local/share/chruby/chruby.sh"
