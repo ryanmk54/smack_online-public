@@ -25,7 +25,7 @@ $().ready(function() {
     // Set action for the number drop-down
     $("#numberPicker").change(function()
     {
-        resetProjectList();
+        resetSidebarList();
         resetCanvas();
         var currentlyActiveListItem = document.getElementsByClassName("list-group-item active")[0].id;
         if(currentlyActiveListItem == 'usageListItem')
@@ -37,7 +37,7 @@ $().ready(function() {
     // Set action for the unit drop-down
     $("#unitPicker").change(function()
     {
-        resetProjectList();
+        resetSidebarList();
         resetCanvas();
         var currentlyActiveListItem = document.getElementsByClassName("list-group-item active")[0].id;
         if(currentlyActiveListItem == 'usageListItem')
@@ -53,7 +53,7 @@ $().ready(function() {
             $('.selectpicker').selectpicker('show');
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
-            resetProjectList();
+            resetSidebarList();
             resetCanvas();
             getProjectsFromServerIfNotCached(displayUsageChart);
         }
@@ -66,7 +66,7 @@ $().ready(function() {
             $('.selectpicker').selectpicker('hide');
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
-            resetProjectList();
+            resetSidebarList();
             resetCanvas();
             getProjectsFromServerIfNotCached(displayRuntimeGraph);
         }
@@ -79,7 +79,7 @@ $().ready(function() {
             $('.selectpicker').selectpicker('hide');
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
-            resetProjectList();
+            resetSidebarList();
             resetCanvas();
             if(geoCSV == null)
                 getGeoCSV();
@@ -95,7 +95,7 @@ $().ready(function() {
             $('.selectpicker').selectpicker('show');
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
-            resetProjectList();
+            resetSidebarList();
             resetCanvas();
             getUsersFromServerIfNotCached(displayUsageChart)
         }
@@ -185,7 +185,6 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
         title: '# of SMACK Projects Made Per United States City',
         showlegend: false,
         geo: {
-            scope: 'usa',
             showland: true,
             landcolor: 'rgb(217, 217, 217)'
         },
@@ -246,42 +245,82 @@ function displayUsageChart(dataArray){
 
 function onUsageGraphBarClick(evt)
 {
-    var dataArray;
-    if($('#userCreationListItem').hasClass('active'))
-        dataArray = currentUserChartDataArray
-    else
-        dataArray = currentProjectChartDataArray;
-    resetProjectList();
+    // Either the user creation graph or project creation graph was clicked
+    var type = $('#userCreationListItem').hasClass('active') ? 'user' : 'project';
+    var dataArray = type == 'user' ? currentUserChartDataArray : currentProjectChartDataArray
+
+    resetSidebarList();
+
+    // Get the label associated with the clicked bar.
     var element = chart.getElementAtEvent(evt)
     var label = chartConfiguration.data.labels[element[0]._index];
-    $("#projectListHeader").html("Projects made on/in " + label);
-    for(var i = 0; i < dataArray.length; i++) {
-        var projId = dataArray[i].id;
-        // For day units
-        if (dataArray[i].created_at == label)
-            $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
-        else {
-            // Check for month units
+
+    // Generate the list header
+    var onOrIn = $('#unitPicker').val() == 'month' ? 'in' : 'on';
+    //TODO: change the names of these html element ids
+    type == 'user' ? $("#projectListHeader").html("Users made " + onOrIn + " " + label)
+        : $("#projectListHeader").html("Projects made " + onOrIn + " " + label);
+
+    // Day and month labels have different formats
+    if($('#unitPicker').val() == 'day')
+        // Loop through the data and list items whose 'created_at' matches the label
+        for(var i = 0; i < dataArray.length; i++) {
+            var id = dataArray[i].id;
+            if (dataArray[i].created_at == label) {
+                if (type == 'project') {
+                    var title = dataArray[i].title;
+                    var listLabel = title == null || title == "" ? id : dataArray[i].title;
+                    $("#projectList").append("<li><a href = '/projects/" + id + "/edit'>" + listLabel + "</a></li>");
+                }
+                else {
+                    var email = dataArray[i].email
+                    var listLabel = email == "" || email == null ? id : dataArray[i].email;
+                    $("#projectList").append("<li><a href = '/users/" + id + "'>" + listLabel + "</a></li>");
+                }
+            }
+        }
+    else
+        // Loop through the data and list items whose 'created_at' formatted
+        // as 'month/year' match the label
+        for(var i = 0; i < dataArray.length; i++) {
             var labelMonth = label.substring(0, 2);
             var dataMonth = currentProjectChartDataArray[i].created_at.toString().substring(0, 2);
             var labelYear = label.substring(3);
             var dataYear = currentProjectChartDataArray[i].created_at.toString().substring(6);
-            if(labelMonth == dataMonth && labelYear == dataYear)
-                $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+            if (labelMonth == dataMonth && labelYear == dataYear) {
+                if (type == 'project') {
+                    var title = dataArray[i].title;
+                    var listLabel = title == null || title == "" ? id : dataArray[i].title;
+                    $("#projectList").append("<li><a href = '/projects/" + id + "/edit'>" + listLabel + "</a></li>");
+                }
+                else {
+                    var email = dataArray[i].email
+                    var listLabel = email == "" || email == null ? id : dataArray[i].email;
+                    $("#projectList").append("<li><a href = '/users/" + id + "'>" + listLabel + "</a></li>");
+                }
+            }
         }
-    }
 }
 
 function onRuntimeGraphBarClick(evt)
 {
-    resetProjectList();
+    resetSidebarList();
+
+    // Get the label associated with the clicked bar.
     var element = chart.getElementAtEvent(evt)
     var label = chartConfiguration.data.labels[element[0]._index];
+
+    // Set the list header
     $("#projectListHeader").html("Projects with a Runtime of " + label + " Seconds");
+
+    // Loop through the data and list all
     for(var i = 0; i < currentProjectChartDataArray.length; i++) {
-        var projId = currentProjectChartDataArray[i].id;
-        if (currentProjectChartDataArray[i].runtime == label)
-            $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+        var id = currentProjectChartDataArray[i].id;
+        if (currentProjectChartDataArray[i].runtime == label) {
+            var title = currentProjectChartDataArray[i].title;
+            var listLabel = title == null || title == "" ? id : title;
+            $("#projectList").append("<li><a href = '/projects/" + id + "/edit'>" + listLabel + "</a></li>");
+        }
     }
 }
 
@@ -396,7 +435,7 @@ function resetCanvas()
     $('#graphContainer').append('<canvas id="myChart"><canvas>');
 }
 
-function resetProjectList()
+function resetSidebarList()
 {
     $("#projectList").html("");
     $('#projectListHeader').html("");
