@@ -10,8 +10,8 @@
 DEFAULT_SPAN = 20;
 
 var chart;
-var timeChartConfiguration = {};
-var currentGraphDataArray = [];
+var chartConfiguration = {};
+var currentChartDataArray = [];
 
 $().ready(function() {
 
@@ -20,57 +20,57 @@ $().ready(function() {
     // Set initial graph and menu value to DEFAULT_SPAN
     var unit = $('#unitPicker').val();
     if(unit == 'month' || unit == 'day')
-        getProjectsFromServer(displayTimeGraph, '/analytics/usage');
+        getProjectsFromServer(displayUsageChart, '/analytics/usage');
 
     // Set action for the number drop-down
-    $("#numberPicker").change(function updateGraph()
+    $("#numberPicker").change(function()
     {
         resetProjectList();
         resetCanvas();
         var unit = $('#unitPicker').val();
         if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayTimeGraph, '/analytics/usage');
+            getProjectsFromServer(displayUsageChart, '/analytics/usage');
     });
 
     // Set action for the unit drop-down
-    $("#unitPicker").change(function updateGraph()
+    $("#unitPicker").change(function()
     {
         resetProjectList();
         resetCanvas();
         var unit = $('#unitPicker').val();
         if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayTimeGraph, '/analytics/usage');
+            getProjectsFromServer(displayUsageChart, '/analytics/usage');
     });
 
     // Set action for the unit drop-down
-    $("#timespanListItem").click(function updateGraph()
-    {
-        $('.selectpicker').selectpicker('show');
-        resetProjectList();
-        resetCanvas();
-        var unit = $('#unitPicker').val();
-        if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayTimeGraph, '/analytics/usage');
-    });
-
-    // Set action for the unit drop-down
-    $("#runtimeListItem").click(function updateGraph()
+    $("#usageListItem").click(function()
     {
         $('.selectpicker').selectpicker('show');
         resetProjectList();
         resetCanvas();
         var unit = $('#unitPicker').val();
         if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayRuntimesGraph, '/analytics/project_runtimes');
+            getProjectsFromServer(displayUsageChart, '/analytics/usage');
     });
 
     // Set action for the unit drop-down
-    $("#geographicListItem").click(function updateGraph()
+    $("#runtimeListItem").click(function()
     {
         $('.selectpicker').selectpicker('hide');
         resetProjectList();
         resetCanvas();
-        getAndUnpackGeoCSV(displayGeograph);
+        var unit = $('#unitPicker').val();
+        if(unit == 'month' || unit == 'day')
+            getProjectsFromServer(displayRuntimeGraph, '/analytics/project_runtimes');
+    });
+
+    // Set action for the unit drop-down
+    $("#geographicListItem").click(function()
+    {
+        $('.selectpicker').selectpicker('hide');
+        resetProjectList();
+        resetCanvas();
+        getAndUnpackGeoCSV(displayGeochart);
     });
 });
 
@@ -104,7 +104,7 @@ function getAndUnpackGeoCSV(callback)
     });
 }
 
-function displayGeograph(latitudes, longitudes, locationCounts, locationNames)
+function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
 {
     //TODO: Scale locationSizes by setting a scale and dividing each size by it
     var locationSizes = [];
@@ -141,12 +141,12 @@ function displayGeograph(latitudes, longitudes, locationCounts, locationNames)
  * Takes data input and displays it according to the given
  * span and unit.
  */
-function displayTimeGraph(dataArray){
+function displayUsageChart(dataArray){
 
     var unit = $('#unitPicker').val();
     var span = $('#numberPicker').val();
 
-    currentGraphDataArray = dataArray;
+    currentChartDataArray = dataArray;
     var KVArray = []; // 'Key-Value Array'
     var labelArray = [];
 
@@ -184,32 +184,46 @@ function displayTimeGraph(dataArray){
 
     var canvas = document.getElementById("myChart");
     var ctx = canvas.getContext("2d");
-    setTimeChartConfiguration(labelArray, valueArray, colorArray, unit);
-    chart = new Chart(ctx, timeChartConfiguration);
+    setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit);
+    chart = new Chart(ctx, chartConfiguration);
 }
 
-function onBarGraphClick(evt)
+function onUsageGraphBarClick(evt)
 {
     resetProjectList();
     var element = chart.getElementAtEvent(evt)
-    var label = timeChartConfiguration.data.labels[element[0]._index];
+    var label = chartConfiguration.data.labels[element[0]._index];
     $("#projectListHeader").html("Projects made on/in " + label);
-    for(var i = 0; i < currentGraphDataArray.length; i++) {
-        var projId = currentGraphDataArray[i].id;
+    for(var i = 0; i < currentChartDataArray.length; i++) {
+        var projId = currentChartDataArray[i].id;
         // For day units
-        if (currentGraphDataArray[i].created_at == label)
-            $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+        if (currentChartDataArray[i].created_at == label)
+            $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
         else {
             // Check for month units
             var labelMonth = label.substring(0, 2);
-            var dataMonth = currentGraphDataArray[i].created_at.toString().substring(0, 2);
+            var dataMonth = currentChartDataArray[i].created_at.toString().substring(0, 2);
             var labelYear = label.substring(3);
-            var dataYear = currentGraphDataArray[i].created_at.toString().substring(6);
+            var dataYear = currentChartDataArray[i].created_at.toString().substring(6);
             if(labelMonth == dataMonth && labelYear == dataYear)
-                $("#projectList").append("<li><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+                $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
         }
     }
 }
+
+function onRuntimeGraphBarClick(evt)
+{
+    resetProjectList();
+    var element = chart.getElementAtEvent(evt)
+    var label = chartConfiguration.data.labels[element[0]._index];
+    $("#projectListHeader").html("Projects with a Runtime of " + label + " Seconds");
+    for(var i = 0; i < currentChartDataArray.length; i++) {
+        var projId = currentChartDataArray[i].id;
+        if (currentChartDataArray[i].runtime == label)
+            $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+    }
+}
+
 
 /*
  * Generate a month/day/year string, e.g 03/17/94
@@ -241,19 +255,68 @@ function generateMonthYearLabel(monthsPrevious) {
 }
 
 
-function setTimeChartConfiguration(labelArray, valueArray, colorArray, unit)
+function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
 {
-    timeChartConfiguration = {
+    chartConfiguration = {
         type: 'bar',
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            onClick: onBarGraphClick
+            onClick: onUsageGraphBarClick,
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Dates'
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: '# of Projects'
+                    }
+                }]
+            }
         },
         data: {
             labels: labelArray,
             datasets: [{
                 label: '# of projects created per ' + unit,
+                data: valueArray,
+                borderWidth: 1,
+                backgroundColor: colorArray
+            }]
+        }
+    }
+}
+
+function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
+{
+    chartConfiguration = {
+        type: 'bar',
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            onClick: onRuntimeGraphBarClick,
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Runtime (Seconds)'
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: '# of Projects'
+                    }
+                }]
+            }
+        },
+        data: {
+            labels: labelArray,
+            datasets: [{
+                label: 'hello',
                 data: valueArray,
                 borderWidth: 1,
                 backgroundColor: colorArray
@@ -290,9 +353,41 @@ function unpack(rows, key) {
     return rows.map(function(row) { return row[key]; });
 }
 
-function displayRuntimesGraph(data)
+function displayRuntimeGraph(dataArray)
 {
-    currentGraphDataArray = data;
-    alert(currentGraphDataArray.length);
-    alert("hey");
+    currentChartDataArray = dataArray;
+    var KVArray = []; // 'Key-Value Array'
+    var labelArray = [];
+
+    // Count the number of data occurrences for each label
+    // and populate the key-value array accordingly
+    for (var i = 0; i < dataArray.length; i++) {
+        var key = dataArray[i].runtime
+        if ((key in KVArray))
+            KVArray[key] += 1;
+        else
+            KVArray[key] = 1;
+    }
+
+    var max = Math.max.apply(null, Object.keys(KVArray));
+    for (var i = 0; i <= max; i++)
+        labelArray.push(i);
+
+    // This is necessary to 'sort' the KVArray
+    // Create random color array while we're at it
+    var valueArray = [];
+    var colorArray = [];
+    for (var i = 0; i < labelArray.length; i++) {
+        var value = KVArray[labelArray[i]];
+        if(value != undefined)
+            valueArray.push(KVArray[labelArray[i]]);
+        else valueArray.push(0)
+        colorArray[i] = "rgb(" + randRGBVal() + "," + randRGBVal() + "," + randRGBVal() + ")";
+    }
+
+    var canvas = document.getElementById("myChart");
+    var ctx = canvas.getContext("2d");
+    setChartConfigurationForRuntime(labelArray, valueArray, colorArray);
+    chart = new Chart(ctx, chartConfiguration);
 }
+

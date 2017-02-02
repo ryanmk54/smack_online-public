@@ -75,4 +75,5 @@ class Project < ApplicationRecord
       file.close
     end
   end
+
 end

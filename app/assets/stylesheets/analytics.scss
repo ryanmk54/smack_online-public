@@ -3,21 +3,14 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 //
 //*= require bootstrap-select.min
+
 .analytics-middle-continer
 {
   height: 100%; padding:0; margin:0; z-index: 1;
 }
 
-html
-{
-  height: 100%;
-  width: 100%;
-}
-
-body
-{
-  height: 100%;
-  width: 100%;
+.scrollable-menu {
+  overflow-x: hidden;
 }
 
 #analytics-sidebar
