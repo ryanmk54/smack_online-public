@@ -284,10 +284,11 @@ function onUsageGraphBarClick(evt)
         // as 'month/year' match the label
         for(var i = 0; i < dataArray.length; i++) {
             var labelMonth = label.substring(0, 2);
-            var dataMonth = currentProjectChartDataArray[i].created_at.toString().substring(0, 2);
+            var dataMonth = dataArray[i].created_at.toString().substring(0, 2);
             var labelYear = label.substring(3);
-            var dataYear = currentProjectChartDataArray[i].created_at.toString().substring(6);
-            if (labelMonth == dataMonth && labelYear == dataYear) {
+            var dataYear = dataArray[i].created_at.toString().substring(6);
+            var id = dataArray[i].id;
+	    if (labelMonth == dataMonth && labelYear == dataYear) {
                 if (type == 'project') {
                     var title = dataArray[i].title;
                     var listLabel = title == null || title == "" ? id : dataArray[i].title;
