@@ -143,13 +143,15 @@ class ProjectsController < ApplicationController
 
   # TODO: Needs to go to model
   def updateCSV
-    city = request.location.city.strip
+    state = request.location.state
+    city = request.location.city
     @project.city = city;
+    @project.state = state;
     @project.save
     rowExists = false;
     csv = CSV.read(PROJECT_CSV_PATH, headers:true);
     csv.each do |row|
-      if(row[0] == city)
+      if(row[0] == state)
         row[1] = row[1].to_i + 1;
         rowExists = true;
       end
@@ -160,7 +162,7 @@ class ProjectsController < ApplicationController
         file << row
       end
       if !rowExists
-        file << [city, 1, request.location.latitude, request.location.longitude]
+        file << [state, 1, request.location.latitude, request.location.longitude]
       end
     end
   end
