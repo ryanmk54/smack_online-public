@@ -4,7 +4,7 @@ class CommunityController < ApplicationController
 	helper_method :get_top_users
 
 	def get_top_projects
-		$projects = Project.order(:created_at).reverse_order.first(10)
+		$projects = Project.order(:created_at).first(10)
 	end
 
 	def get_top_users
