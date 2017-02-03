@@ -8,7 +8,7 @@ class AnalyticsController < ApplicationController
     respond_to do |format|
       format.html
       format.js
-      format.json {render json: projects, :only => [:created_at, :id]}
+      format.json {render json: projects, :only => [:created_at, :title, :runtime, :id]}
     end
   end
 
@@ -18,6 +18,15 @@ class AnalyticsController < ApplicationController
       format.html
       format.js
       format.json {render json: projects, :only => [:runtime, :id]}
+    end
+  end
+
+  def users_created
+    users = User.all
+    respond_to do |format|
+      format.html
+      format.js
+      format.json {render json: users, :only => [:created_at, :email, :id]}
     end
   end
 

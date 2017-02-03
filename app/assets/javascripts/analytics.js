@@ -11,97 +11,154 @@ DEFAULT_SPAN = 20;
 
 var chart;
 var chartConfiguration = {};
-var currentChartDataArray = [];
+var currentProjectChartDataArray = [];
+var currentUserChartDataArray = [];
+var geoCSV;
 
 $().ready(function() {
 
+    // Set initial graph and menu value to DEFAULT_SPAN
     $("#numberPicker").val(DEFAULT_SPAN);
 
-    // Set initial graph and menu value to DEFAULT_SPAN
-    var unit = $('#unitPicker').val();
-    if(unit == 'month' || unit == 'day')
-        getProjectsFromServer(displayUsageChart, '/analytics/usage');
+    getProjectsFromServerIfNotCached(displayUsageChart);
 
     // Set action for the number drop-down
     $("#numberPicker").change(function()
     {
-        resetProjectList();
+        resetSidebarList();
         resetCanvas();
-        var unit = $('#unitPicker').val();
-        if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayUsageChart, '/analytics/usage');
+        var currentlyActiveListItem = document.getElementsByClassName("list-group-item active")[0].id;
+        if(currentlyActiveListItem == 'usageListItem')
+            getProjectsFromServerIfNotCached(displayUsageChart);
+        else if(currentlyActiveListItem == 'userCreationListItem')
+            getUsersFromServerIfNotCached(displayUsageChart)
     });
 
     // Set action for the unit drop-down
     $("#unitPicker").change(function()
     {
-        resetProjectList();
+        resetSidebarList();
         resetCanvas();
-        var unit = $('#unitPicker').val();
-        if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayUsageChart, '/analytics/usage');
+        var currentlyActiveListItem = document.getElementsByClassName("list-group-item active")[0].id;
+        if(currentlyActiveListItem == 'usageListItem')
+            getProjectsFromServerIfNotCached(displayUsageChart);
+        else if(currentlyActiveListItem == 'userCreationListItem')
+            getUsersFromServerIfNotCached(displayUsageChart);
     });
 
     // Set action for the unit drop-down
     $("#usageListItem").click(function()
     {
-        $('.selectpicker').selectpicker('show');
-        resetProjectList();
-        resetCanvas();
-        var unit = $('#unitPicker').val();
-        if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayUsageChart, '/analytics/usage');
+        if(!$(this).hasClass('active')) {
+            $('.selectpicker').selectpicker('show');
+            $(this).siblings().removeClass('active');
+            $(this).addClass('active');
+            resetSidebarList();
+            resetCanvas();
+            getProjectsFromServerIfNotCached(displayUsageChart);
+        }
     });
 
     // Set action for the unit drop-down
     $("#runtimeListItem").click(function()
     {
-        $('.selectpicker').selectpicker('hide');
-        resetProjectList();
-        resetCanvas();
-        var unit = $('#unitPicker').val();
-        if(unit == 'month' || unit == 'day')
-            getProjectsFromServer(displayRuntimeGraph, '/analytics/project_runtimes');
+        if(!$(this).hasClass('active')) {
+            $('.selectpicker').selectpicker('hide');
+            $(this).siblings().removeClass('active');
+            $(this).addClass('active');
+            resetSidebarList();
+            resetCanvas();
+            getProjectsFromServerIfNotCached(displayRuntimeGraph);
+        }
     });
 
     // Set action for the unit drop-down
     $("#geographicListItem").click(function()
     {
-        $('.selectpicker').selectpicker('hide');
-        resetProjectList();
-        resetCanvas();
-        getAndUnpackGeoCSV(displayGeochart);
+        if(!$(this).hasClass('active')) {
+            $('.selectpicker').selectpicker('hide');
+            $(this).siblings().removeClass('active');
+            $(this).addClass('active');
+            resetSidebarList();
+            resetCanvas();
+            if(geoCSV == null)
+                getGeoCSV();
+            else
+                unpackGeoCSVAndDisplayChart(displayGeochart);
+        }
+    });
+
+    // Set action for the unit drop-down
+    $("#userCreationListItem").click(function()
+    {
+        if(!$(this).hasClass('active')) {
+            $('.selectpicker').selectpicker('show');
+            $(this).siblings().removeClass('active');
+            $(this).addClass('active');
+            resetSidebarList();
+            resetCanvas();
+            getUsersFromServerIfNotCached(displayUsageChart)
+        }
     });
 });
 
-function getProjectsFromServer(callback, url)
+function getProjectsFromServerIfNotCached(callback, url)
 {
-    $.ajax({
-        type: "GET",
-        data: {
-            format: 'json'
-        },
-        dataType: "json",
-        url: url,
+    if(currentProjectChartDataArray.length != 0)
+        callback(currentProjectChartDataArray);
+    else
+        $.ajax({
+            type: "GET",
+            data: {
+                format: 'json'
+            },
+            dataType: "json",
+            url: '/analytics/usage',
 
-        success: function(data){
-            callback(data)
-        }
+            success: function(data){
+                currentProjectChartDataArray = data;
+                callback(data)
+            }
+        });
+}
+
+function getUsersFromServerIfNotCached(callback, url)
+{
+    if(currentUserChartDataArray.length != 0)
+        callback(currentUserChartDataArray);
+    else
+        $.ajax({
+            type: "GET",
+            data: {
+                format: 'json'
+            },
+            dataType: "json",
+            url: '/analytics/users_created',
+
+            success: function(data){
+                currentUserChartDataArray = data;
+                callback(data)
+            }
+        });
+}
+
+function getGeoCSV()
+{
+    Plotly.d3.csv('/analytics/project_location_csv', function(err, rows) {
+        geoCSV = rows;
+        unpackGeoCSVAndDisplayChart();
     });
 }
 
-function getAndUnpackGeoCSV(callback)
+function unpackGeoCSVAndDisplayChart()
 {
-    // Get the csv at /analytics/project_location_csv
-    Plotly.d3.csv('/analytics/project_location_csv', function(err, rows) {
-        var locationNames = unpack(rows, 'name'),
-            locationCounts = unpack(rows, 'pop'),
-            latitudes = unpack(rows, 'lat'),
-            longitudes = unpack(rows, 'lon')
+    var locationNames = unpack(geoCSV, 'name'),
+        locationCounts = unpack(geoCSV, 'pop'),
+        latitudes = unpack(geoCSV, 'lat'),
+        longitudes = unpack(geoCSV, 'lon')
 
-        // Pass the CSV data to the callback
-        callback(latitudes, longitudes, locationCounts, locationNames);
-    });
+    // Pass the CSV data to the callback
+    displayGeochart(latitudes, longitudes, locationCounts, locationNames);
 }
 
 function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
@@ -128,13 +185,12 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
         title: '# of SMACK Projects Made Per United States City',
         showlegend: false,
         geo: {
-            scope: 'usa',
             showland: true,
             landcolor: 'rgb(217, 217, 217)'
         },
     };
 
-    Plotly.plot(document.getElementById('graphContainer'), data, layout);
+    Plotly.newPlot(document.getElementById('graphContainer'), data, layout);
 }
 
 /*
@@ -146,7 +202,6 @@ function displayUsageChart(dataArray){
     var unit = $('#unitPicker').val();
     var span = $('#numberPicker').val();
 
-    currentChartDataArray = dataArray;
     var KVArray = []; // 'Key-Value Array'
     var labelArray = [];
 
@@ -190,37 +245,83 @@ function displayUsageChart(dataArray){
 
 function onUsageGraphBarClick(evt)
 {
-    resetProjectList();
+    // Either the user creation graph or project creation graph was clicked
+    var type = $('#userCreationListItem').hasClass('active') ? 'user' : 'project';
+    var dataArray = type == 'user' ? currentUserChartDataArray : currentProjectChartDataArray
+
+    resetSidebarList();
+
+    // Get the label associated with the clicked bar.
     var element = chart.getElementAtEvent(evt)
     var label = chartConfiguration.data.labels[element[0]._index];
-    $("#projectListHeader").html("Projects made on/in " + label);
-    for(var i = 0; i < currentChartDataArray.length; i++) {
-        var projId = currentChartDataArray[i].id;
-        // For day units
-        if (currentChartDataArray[i].created_at == label)
-            $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
-        else {
-            // Check for month units
-            var labelMonth = label.substring(0, 2);
-            var dataMonth = currentChartDataArray[i].created_at.toString().substring(0, 2);
-            var labelYear = label.substring(3);
-            var dataYear = currentChartDataArray[i].created_at.toString().substring(6);
-            if(labelMonth == dataMonth && labelYear == dataYear)
-                $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+
+    // Generate the list header
+    var onOrIn = $('#unitPicker').val() == 'month' ? 'in' : 'on';
+    //TODO: change the names of these html element ids
+    type == 'user' ? $("#projectListHeader").html("Users made " + onOrIn + " " + label)
+        : $("#projectListHeader").html("Projects made " + onOrIn + " " + label);
+
+    // Day and month labels have different formats
+    if($('#unitPicker').val() == 'day')
+        // Loop through the data and list items whose 'created_at' matches the label
+        for(var i = 0; i < dataArray.length; i++) {
+            var id = dataArray[i].id;
+            if (dataArray[i].created_at == label) {
+                if (type == 'project') {
+                    var title = dataArray[i].title;
+                    var listLabel = title == null || title == "" ? id : dataArray[i].title;
+                    $("#projectList").append("<li><a href = '/projects/" + id + "/edit'>" + listLabel + "</a></li>");
+                }
+                else {
+                    var email = dataArray[i].email
+                    var listLabel = email == "" || email == null ? id : dataArray[i].email;
+                    $("#projectList").append("<li><a href = '/users/" + id + "'>" + listLabel + "</a></li>");
+                }
+            }
         }
-    }
+    else
+        // Loop through the data and list items whose 'created_at' formatted
+        // as 'month/year' match the label
+        for(var i = 0; i < dataArray.length; i++) {
+            var labelMonth = label.substring(0, 2);
+            var dataMonth = dataArray[i].created_at.toString().substring(0, 2);
+            var labelYear = label.substring(3);
+            var dataYear = dataArray[i].created_at.toString().substring(6);
+            var id = dataArray[i].id;
+	    if (labelMonth == dataMonth && labelYear == dataYear) {
+                if (type == 'project') {
+                    var title = dataArray[i].title;
+                    var listLabel = title == null || title == "" ? id : dataArray[i].title;
+                    $("#projectList").append("<li><a href = '/projects/" + id + "/edit'>" + listLabel + "</a></li>");
+                }
+                else {
+                    var email = dataArray[i].email
+                    var listLabel = email == "" || email == null ? id : dataArray[i].email;
+                    $("#projectList").append("<li><a href = '/users/" + id + "'>" + listLabel + "</a></li>");
+                }
+            }
+        }
 }
 
 function onRuntimeGraphBarClick(evt)
 {
-    resetProjectList();
+    resetSidebarList();
+
+    // Get the label associated with the clicked bar.
     var element = chart.getElementAtEvent(evt)
     var label = chartConfiguration.data.labels[element[0]._index];
+
+    // Set the list header
     $("#projectListHeader").html("Projects with a Runtime of " + label + " Seconds");
-    for(var i = 0; i < currentChartDataArray.length; i++) {
-        var projId = currentChartDataArray[i].id;
-        if (currentChartDataArray[i].runtime == label)
-            $("#projectList").append("<li class='list-group-item'><a href = '/projects/" + projId + "/edit'>" + projId + "</a></li>");
+
+    // Loop through the data and list all
+    for(var i = 0; i < currentProjectChartDataArray.length; i++) {
+        var id = currentProjectChartDataArray[i].id;
+        if (currentProjectChartDataArray[i].runtime == label) {
+            var title = currentProjectChartDataArray[i].title;
+            var listLabel = title == null || title == "" ? id : title;
+            $("#projectList").append("<li><a href = '/projects/" + id + "/edit'>" + listLabel + "</a></li>");
+        }
     }
 }
 
@@ -331,11 +432,11 @@ function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
 function resetCanvas()
 {
     $('#parent').html("");
-    $('#parent').append('<div id="graphContainer" style="height: 500px; width: 100%"><div>')
+    $('#parent').append('<div id="graphContainer" class="height100"><div>')
     $('#graphContainer').append('<canvas id="myChart"><canvas>');
 }
 
-function resetProjectList()
+function resetSidebarList()
 {
     $("#projectList").html("");
     $('#projectListHeader').html("");
@@ -355,7 +456,6 @@ function unpack(rows, key) {
 
 function displayRuntimeGraph(dataArray)
 {
-    currentChartDataArray = dataArray;
     var KVArray = []; // 'Key-Value Array'
     var labelArray = [];
 
@@ -365,7 +465,7 @@ function displayRuntimeGraph(dataArray)
         var key = dataArray[i].runtime
         if ((key in KVArray))
             KVArray[key] += 1;
-        else
+        else if(key != null)
             KVArray[key] = 1;
     }
 

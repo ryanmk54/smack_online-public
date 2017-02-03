@@ -7,6 +7,9 @@
       <li class="<%= 'active' if current_page?('/') %>"><%= link_to "Editor", '/' %></li>
   <li class="<%= 'active' if current_page?('/analytics/usage') %>"><%= link_to "Analytics", '/analytics/usage' %></li>
   <li class="<%= 'active' if current_page?('/community/home') %>"><%= link_to "Commmunity", '/community/home' %></li>
+  <% if user_signed_in? %>
+          <li class="<%= 'active' if current_page?('/profile') %>"><%= link_to "Home", '/profile' %></li>
+  <% end %>
     </ul>
     <p class="navbar-text pull-right">
 
