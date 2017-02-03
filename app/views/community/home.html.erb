@@ -22,24 +22,32 @@
 
       <section class="row text-center placeholders">
             <div class="col-6 col-sm-3 placeholder">
-              <%= image_tag users[0].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
-              <h4><%= users[0].username %></h4>
-              <div class="text-muted"><%= users[0].email %></div>
+              <% if users[0] %>
+                <%= image_tag users[0].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
+                <h4><%= users[0].username %></h4>
+                <div class="text-muted"><%= users[0].email %></div>
+              <% end %>
             </div>
             <div class="col-6 col-sm-3 placeholder">
-              <%= image_tag users[1].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
-              <h4><%= users[1].username %></h4>
-              <span class="text-muted"><%= users[1].email %></span>
+              <% if users[1] %>
+                <%= image_tag users[1].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
+                <h4><%= users[1].username %></h4>
+                <span class="text-muted"><%= users[1].email %></span>
+              <% end %>
             </div>
             <div class="col-6 col-sm-3 placeholder">
-              <%= image_tag users[2].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
-              <h4><%= users[2].username %></h4>
-              <span class="text-muted"><%= users[2].email %></span>
+              <% if users[2] %>
+                <%= image_tag users[2].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
+                <h4><%= users[2].username %></h4>
+                <span class="text-muted"><%= users[2].email %></span>
+              <% end %>
             </div>
             <div class="col-6 col-sm-3 placeholder">
-              <%= image_tag users[3].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
-              <h4><%= users[3].username %></h4>
-              <span class="text-muted"><%= users[3].email %></span>
+              <% if users[3] %>
+                <%= image_tag users[3].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
+                <h4><%= users[3].username %></h4>
+                <span class="text-muted"><%= users[3].email %></span>
+              <% end %>
             </div>
           </section>
 
