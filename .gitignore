@@ -30,3 +30,6 @@ public/assets/UserLocations.csv
 
 # ignore RubyMine files
 .idea/*
+
+# Ignore application configuration
+/config/application.yml

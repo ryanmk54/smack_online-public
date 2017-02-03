@@ -63,6 +63,8 @@ GEM
       factory_girl (~> 4.8.0)
       railties (>= 3.0.0)
     ffi (1.9.17)
+    figaro (1.1.1)
+      thor (~> 0.14)
     geocoder (1.4.1)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
@@ -193,6 +195,7 @@ DEPENDENCIES
   chart-js-rails
   devise
   factory_girl_rails
+  figaro (~> 1.1, >= 1.1.1)
   geocoder
   jbuilder (~> 2.5)
   jquery-rails
@@ -213,4 +216,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   1.13.6
+   1.14.3

@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'devise'
+# Use figaro to manage environment variables
+gem 'figaro', '~> 1.1', '>= 1.1.1'
 
 gem 'rb-readline'
 gem 'pry-rails'
