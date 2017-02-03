@@ -3,18 +3,20 @@
 </div>
 
 <div id="top-row" class="lgray row">
-  <div class="col-lg-2">
+  <div class="col-md-2 col-sm-12">
     <%= form_for project, remote: true, html: {id: 'project-title-form'} do |f| %>
       <%= f.text_field :title, placeholder: 'Title', class: 'form-control' %>
     <% end %>
   </div>
 
-  <div class="col-lg-10">
-    <select class="selectpicker col-lg-6">
+  <div class="col-md-5 col-sm-10">
+    <select class="selectpicker col-md-12">
       <option>Smack</option>
       <option>Boogie</option>
     </select>
-    <div class="col-lg-6">
+  </div>
+  <div class="col-md-5 col-sm-2">
+    <div>
       <button class="btn btn-primary tool-select-button">?</button>
     </div>
   </div>
@@ -22,7 +24,7 @@
 <div class="main-container row container-fluid">
 
     <!-- Sidebar -->
-    <div id="sidebar" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 height100 gray">
+    <div id="sidebar" class="col-sm-4 col-md-2 col-lg-2 height100 gray">
 
 
       <!-- Files -->
@@ -41,19 +43,19 @@
     </div>
 
     <!-- Main -->
-    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 height100">
+    <div class="col-sm-8 col-md-10 col-lg-10 height100">
 
       <!-- Middle -->
       <div id="editors-row" class="middle lgray row">
 
         <!-- Left -->
-        <div class="editor-container col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="editor-container col-sm-12 col-md-6 col-lg-6 responsive-height100">
           <div id="editor1">
           </div>
         </div>
 
         <!-- Right -->
-        <div class="editor-container col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="editor-container col-sm-12 col-md-6 col-lg-6 responsive-height100">
           <div id="editor2">
           </div>
         </div>
