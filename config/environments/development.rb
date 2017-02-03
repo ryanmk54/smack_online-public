@@ -7,10 +7,10 @@ Rails.application.configure do
     port:      587,
     authentication: "plain",
     enable_starttls_auto: true,
-    user_name:  "capstone.smackers@gmail.com",
-    password:  "cjmr4:30",
+    user_name: ENV["EMAIL_USERNAME"],
+    password:  ENV["EMAIL_PASSWORD"],
   }
-  config.action_mailer.default_url_options = { host: 'localhost:3000' }
+  config.action_mailer.default_url_options = { host: ENV["HOST"], port: ENV["PORT"] }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
@@ -45,9 +45,6 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
 
   config.action_mailer.perform_caching = false
-
-  # Default url so devise will work
-  config.action_mailer.default_url_options = { host: 'localhost', port:3000 }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
