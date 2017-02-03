@@ -8,6 +8,45 @@
   height: 94%;
 }
 
+.top-bar {
+  padding: 4px;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+}
+
+.analytics-sidebar {
+  height: 100%;
+}
+
+.no-padding-right {
+  padding-right: 0;
+}
+
+.no-padding-left {
+  padding-left: 0;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.scrollable-menu {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.analytics-main-container {
+  height: 94%;
+}
+
 .scrollable-menu {
   overflow-x: hidden;
 }
