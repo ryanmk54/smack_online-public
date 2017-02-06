@@ -9,6 +9,12 @@
 */
 @import 'variables';
 
+#top-row {
+  & > div:first-child {
+    padding-left: 8px;
+  }
+}
+
 .main-container
 {
   height: calc(100% - 2*52px);

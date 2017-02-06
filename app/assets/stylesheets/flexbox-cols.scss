@@ -32,6 +32,58 @@ $col-12: percentage(12/12);
   align-items: stretch;
 }
 
+.flex-col-xs-1, .flex-col-xs-2,  .flex-col-xs-3,  .flex-col-xs-4,
+.flex-col-xs-5, .flex-col-xs-6,  .flex-col-xs-7,  .flex-col-xs-8,
+.flex-col-xs-9, .flex-col-xs-10, .flex-col-xs-11, .flex-col-xs-12,
+.flex-col-sm-1, .flex-col-sm-2,  .flex-col-sm-3,  .flex-col-sm-4,
+.flex-col-sm-5, .flex-col-sm-6,  .flex-col-sm-7,  .flex-col-sm-8,
+.flex-col-sm-9, .flex-col-sm-10, .flex-col-sm-11, .flex-col-sm-12,
+.flex-col-md-1, .flex-col-md-2,  .flex-col-md-3,  .flex-col-md-4,
+.flex-col-md-5, .flex-col-md-6,  .flex-col-md-7,  .flex-col-md-8,
+.flex-col-md-9, .flex-col-md-10, .flex-col-md-11, .flex-col-md-12,
+.flex-col-lg-1, .flex-col-lg-2,  .flex-col-lg-3,  .flex-col-lg-4,
+.flex-col-lg-5, .flex-col-lg-6,  .flex-col-lg-7,  .flex-col-lg-8,
+.flex-col-lg-9, .flex-col-lg-10, .flex-col-lg-11, .flex-col-lg-12 {
+  position: relative;
+}
+
+.flex-col-xs-1 {
+  width: $col-1;
+}
+.flex-col-xs-2 {
+  width: $col-2;
+}
+.flex-col-xs-3 {
+  width: $col-3;
+}
+.flex-col-xs-4 {
+  width: $col-4;
+}
+.flex-col-xs-5 {
+  width: $col-5;
+}
+.flex-col-xs-6 {
+  width: $col-6;
+}
+.flex-col-xs-7 {
+  width: $col-7;
+}
+.flex-col-xs-8 {
+  width: $col-8;
+}
+.flex-col-xs-9 {
+  width: $col-9;
+}
+.flex-col-xs-10 {
+  width: $col-10;
+}
+.flex-col-xs-11 {
+  width: $col-11;
+}
+.flex-col-xs-12 {
+  width: $col-12;
+}
+
 @media (min-width: $screen-sm-min) {
   .flex-col-sm-1 {
     width: $col-1;
