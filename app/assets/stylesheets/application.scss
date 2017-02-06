@@ -16,12 +16,15 @@
 @import 'variables';
 @import 'utilities';
 
-.flash.alert {
-  margin: 0;
+html, 
+body {
+  height: 100%;
+  width: 100%;
 }
 
- .navbar {
+.navbar {
     margin-bottom: 0;
+    height: 52px;
     width: 100%;
 }
 

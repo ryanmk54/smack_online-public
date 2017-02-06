@@ -1,12 +1,16 @@
 @import "variables";
+@import "flexbox-cols";
 
-.main-container
-{
-  height: calc(100% - 50px);
-  width: calc(100% + 15px);
-  overflow: hidden;
+.h-form-row {
+  height: 52px;
+  padding-left: 4px;
+
+  div {
+    padding: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
 }
-
 
 .lgray
 {
