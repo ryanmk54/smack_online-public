@@ -8,6 +8,8 @@ class ProjectsController < ApplicationController
   SERVICE_REQUEST_URL = 'ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started'
   PROJECT_CSV_PATH = Rails.root.join('public', 'assets', 'ProjectLocations.csv')
 
+  Geocoder.configure(:timeout => 10000)
+
   # GET /projects/1
   # GET /projects/1.json
   def show
@@ -23,7 +25,7 @@ class ProjectsController < ApplicationController
       @project = Project.new
       return
     end
-    @project = current_user.projects.create()
+    @project = current_user.projects.new
   end
 
   # POST /projects.json

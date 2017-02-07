@@ -22,7 +22,6 @@
   overflow: hidden;
 }
 
-
 #file-list {
   margin-right: -15px;
 }
@@ -30,23 +29,7 @@
 #file-list ul.jqtree-tree .jqtree-toggler {
   color: #eee;
 }
-/*
-ul.jqtree-tree li:not(.jqtree-folder) .jqtree-element {
-  display: flex;
-  align-items: center;
-  
-}
-li.jqtree_common:not(.jqtree-folder) div:before {
-  content: image-url("nested.png");
-  width: 15px;
-  height: 15px;
-  margin-left: 11px;
-  color: #eee;
-}
-#file-list ul.jqtree-tree .jqtree-title {
-  margin-left: 0px;
-}
-*/
+
 .current-file,
 ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover {
   background: $light-sky-blue;
