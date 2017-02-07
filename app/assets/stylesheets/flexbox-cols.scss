@@ -83,6 +83,12 @@ $col-12: percentage(12/12);
 .flex-col-xs-12 {
   width: $col-12;
 }
+.flex-col-xs-nogrow {
+  flex-grow: 0;
+}
+.flex-col-xs-grow {
+  flex-grow: 1;
+}
 
 @media (min-width: $screen-sm-min) {
   .flex-col-sm-1 {
@@ -120,6 +126,12 @@ $col-12: percentage(12/12);
   }
   .flex-col-sm-12 {
     width: $col-12;
+  }
+  .flex-col-sm-grow {
+    flex-grow: 0;
+  }
+  .flex-col-sm-grow {
+    flex-grow: 1;
   }
 }
 
@@ -160,6 +172,12 @@ $col-12: percentage(12/12);
   .flex-col-md-12 {
     width: $col-12;
   }
+  .flex-col-md-nogrow {
+    flex-grow: 0;
+  }
+  .flex-col-md-grow {
+    flex-grow: 1;
+  }
 }
 
 @media (min-width: $screen-lg-min) {
@@ -198,6 +216,12 @@ $col-12: percentage(12/12);
   }
   .flex-col-lg-12 {
     width: $col-12;
+  }
+  .flex-col-lg-nogrow {
+    flex-grow: 0;
+  }
+  .flex-col-lg-grow {
+    flex-grow: 1;
   }
 }
 
