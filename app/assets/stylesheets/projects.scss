@@ -65,6 +65,7 @@ ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover
   padding: 8px;
 }
 
-button {
+.flex-ccol button,
+.flex-row button {
   width: 95px;
 }
