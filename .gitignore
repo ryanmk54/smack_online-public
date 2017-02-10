@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore gem directory
+/gems
+
 # Comment out these rules if you are OK with secrets being uploaded to the repo
 config/initializers/secret_token.rb
 config/secrets.yml
