@@ -3,10 +3,6 @@
  */
 //= require tree.jquery
 
-function open_project(project_id) {
-    $.get("/projects/" + project_id + "/edit");
-    // location.href = "/projects/" + project_id +"/edit";
-}
 
 function delete_project(project_id) {
     $.ajax({
@@ -18,7 +14,35 @@ function delete_project(project_id) {
     });
 }
 
-// id is the user's id
-function load_projects(id) {
-    var projects_container = $('#projects');
+// // id is the user's id
+// function load_projects(id) {
+//     var projects_container = $('#projects');
+// }
+
+window.onload = function() {
+    $('#show_projects').click(function() {
+        // hide_followers();
+        $.ajax({
+            url: '/users/projects',
+            type: 'get',
+            success: function(payload) {
+                console.log('hello');
+                document.getElementById('projects_preview').innerHTML = payload;
+                document.getElementById('projects-container').style.visibility = 'visible';
+
+            }
+        })
+    })
+};
+
+function hide_followers() {
+
 }
+
+// function hide_projects() {
+//     document.getElementById('followers-container').style.visibility = 'hidden';
+// }
+//
+// function show_projects() {
+//
+// }

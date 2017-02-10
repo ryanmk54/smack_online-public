@@ -32,6 +32,17 @@ body {
   display: table-cell;
 }
 
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 50%;
+  border-style: solid black;
+}
 .btn-play{
   color: black;
   background-color: limegreen;
@@ -52,4 +63,12 @@ body {
   border-width: 1px;
   border-color: black;
   box-shadow: 2px 2px 2px #000;
+}
+.img-card-top{
+  width:100%;
+  opacity:0.85;
+}
+
+#projects_preview {
+  padding-left: 5%;
 }

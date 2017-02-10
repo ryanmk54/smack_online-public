@@ -14,11 +14,12 @@ Rails.application.routes.draw do
   get 'analytics/project_runtimes'
   get 'analytics/users_created'
 
+  get 'users/projects', to: 'users#projects'
+
   resources(:projects,  except: [:index]) do
     member do
       post 'receive_service_output', to: 'projects#receive_service_output'
     end
   end
-
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
