@@ -1,0 +1,22 @@
+<!-- Bottom -->
+<div id="options-and-run-row" class="bottom-container lgray h-form-row flex-row">
+  <!-- Bottom Left -->
+  <div class="flex-col-sm-9 flex-col-sm-grow flex-col-md-6 flex-col-md-nogrow">
+    <select multiple class="flex-col-xs-12 options-select selectpicker" data-live-search="true">
+      <option value="volvo">Option 1</option>
+      <option value="saab">Option 2</option>
+    </select>
+
+  </div>
+
+  <!-- Bottom Right -->
+  <div class="col-md-1">
+    <%= form_for(@project, remote: true, format: :js, 
+                 html: {id: "run-project-form"}) do |f| %>
+      <div hidden>
+        <%= f.text_field :input, value: @base64_input%>
+      </div>
+    <% end %>
+    <button id="run_project" class="btn btn-default btn-primary run-button">Run</button>
+  </div>
+</div>

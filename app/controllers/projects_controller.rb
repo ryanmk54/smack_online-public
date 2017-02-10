@@ -40,9 +40,10 @@ class ProjectsController < ApplicationController
 
     # Save the new project to the database and redirect the user to 'edit'
     respond_to do |format|
+      puts "which format"
       if @project.save
         format.html { redirect_to edit_project_path(@project)}
-        format.js { render :edit  }
+        format.js
         format.json { render json: @project, only: [:eta, :output, :id] }
       else
         format.html { render :new }
@@ -72,7 +73,6 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.update(project_params)
         format.html { redirect_to edit_project_path(@project)}
-        format.js { render :edit }
         format.json { render json: @project, only: [:eta, :output, :id] }
       else
         format.html { render :edit } # If the save fails, show the user the edit window again.

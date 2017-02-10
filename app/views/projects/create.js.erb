@@ -1,1 +1,5 @@
-editor2.setValue("<%= @project.output %>");
+let projectJson = JSON.parse('<%= @project.ajax_json %>');
+
+$("#options-and-run-row").replaceWith("<%= j render partial: "options_and_run_row" %>");
+$("#title-form").replaceWith("<%= j render partial: "title_form" %>");
+pollForOutputUpdates(projectJson);

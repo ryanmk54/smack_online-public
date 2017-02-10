@@ -76,4 +76,8 @@ class Project < ApplicationRecord
     end
   end
 
+  def ajax_json
+    (self.to_json only: [:eta, :output, :id]).html_safe
+  end
+
 end
