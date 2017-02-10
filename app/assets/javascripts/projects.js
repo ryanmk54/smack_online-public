@@ -92,13 +92,24 @@ $().ready(function(){
 
 function watchProjectTitleForm() {
   lastTitle = $('#project-title-form #project_title')[0].value;
-  $("#project_title").on('blur', function(evt) {
-    if (evt.target.value == lastTitle){
-      return;
+
+  let updateProjectIfTitleChanged = function() {
+    currentTitle = $('#project-title-form #project_title')[0].value;
+
+    // if the title hasn't changed do nothing
+    if (currentTitle == lastTitle){
+      return false;
     }
-    lastTitle = evt.target.value;
+
+    // if it has changed updated the cached title and
+    // the project stored on the server
+    lastTitle = currentTitle;
     $.rails.handleRemote($('#project-title-form'));
-  });
+    return false;
+  }
+
+  $('#project-title-form').submit(updateProjectIfTitleChanged);
+  $('#project-title-form #project_title').blur(updateProjectIfTitleChanged);
 }
 
 

@@ -1,5 +1,6 @@
-let projectJson = JSON.parse('<%= @project.ajax_json %>');
-
 $("#options-and-run-row").replaceWith("<%= j render partial: "options_and_run_row" %>");
-$("#title-form").replaceWith("<%= j render partial: "title_form" %>");
-pollForOutputUpdates(projectJson);
+$("#project-title-form").replaceWith("<%= j render partial: "title_form" %>");
+watchProjectTitleForm();
+$(".selectpicker").selectpicker();
+
+<%= render partial: "poll_for_output_if_input" %>

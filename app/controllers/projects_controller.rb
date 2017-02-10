@@ -35,8 +35,11 @@ class ProjectsController < ApplicationController
     @project = Project.new(project_params)
     @project.save # Need to save before send_service_input in order to know the project id
 
-    @project.input = params[:project][:input] # Save the input
-    @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
+    if params[:project][:input]
+      @project.input = params[:project][:input] # Save the input
+      @project[:eta] = send_service_input 
+        # Make a request to the SMACK server with the new project
+    end
 
     # Save the new project to the database and redirect the user to 'edit'
     respond_to do |format|
@@ -46,6 +49,9 @@ class ProjectsController < ApplicationController
         format.js
         format.json { render json: @project, only: [:eta, :output, :id] }
       else
+        format.any(:js, :json) do
+          render json: @project.errors, status: :unprocessable_entity
+        end
         format.html { render :new }
       end
     end
@@ -64,17 +70,22 @@ class ProjectsController < ApplicationController
   # Updates the project db attributes, saves the new input to the file system,
   # deletes the old output from file system.
   def update
-    # Delete the old output so the client doesn't get confused thinking it is the new output.
-    @project.output = nil
+      # Delete the old output so the client doesn't get confused thinking it is the new output.
+      @project.output = nil
 
-    @project.input = params[:project][:input]
-    params[:project][:eta] = send_service_input # Make a request to the SMACK server with updated project
+      @project.input = params[:project][:input]
+      params[:project][:eta] = send_service_input 
+        # Make a request to the SMACK server with updated project
 
     respond_to do |format|
       if @project.update(project_params)
         format.html { redirect_to edit_project_path(@project)}
+        format.js { render status: :ok }
         format.json { render json: @project, only: [:eta, :output, :id] }
       else
+        format.any(:js, :json) do
+          render json: @project.errors, status: :unprocessable_entity
+        end
         format.html { render :edit } # If the save fails, show the user the edit window again.
       end
     end
@@ -140,7 +151,7 @@ class ProjectsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def project_params
-    params.require(:project).permit(:title, :output, :eta)
+    params.require(:project).permit(:title, :input)
   end
 
   # TODO: Needs to go to model
