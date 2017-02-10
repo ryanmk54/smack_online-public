@@ -7,11 +7,18 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 ## Add default Users
-
-
 User.destroy_all
 User.create(
     id: 1,
     email: 'address@gmail.com',
     password: 'password'
+)
+
+# Add default projects
+Project.destroy_all
+Project.create(
+  id: 1,
+  title: "Test Project",
+  city: "Salt Lake City",
+  state: "Utah"
 )
