@@ -52,7 +52,7 @@ class Project < ApplicationRecord
       output = file.read
       file.close
     else # Otherwise, the job is still processing
-      output = 'Processing...'
+      output = ''
     end
 
     return output
