@@ -10,8 +10,8 @@ class UsersController < ApplicationController
     render partial: 'profiles/follower', collection: current_user.followers
   end
 
-  # # GET /users/following
-  # def projects
-  #   render partial: 'profiles/following', collection: current_user.following
-  # end
+  # GET /users/following
+  def followees
+    render partial: 'profiles/followee', collection: current_user.followees
+  end
 end

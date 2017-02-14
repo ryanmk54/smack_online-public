@@ -1,96 +1,9 @@
 <p id="notice"><%= notice %></p>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
 
-<style type="text/css">
-  body {
-    background-color: lightgrey;
-  }
-  .card {
-    margin-top: 15px;
-    margin-left: 15%;
-    /*margin-left: 15px;*/
-    padding: 2% 5% 2% 5%;
-
-  }
-  .card-project {
-    width: 220px;
-    height: 220px;
-  }
-  .card-project-preview{
-    border-radius: 2px;
-    background-color: white;
-    box-shadow: 1px 1px 1px 1px;
-    display: table;
-  }
-  .card-project-new{
-    border-radius: 2px;
-    display: table;
-  }
-
-  .btn-newproject{
-    color: black;
-    background-color: darkgrey;
-    border-width: 1px;
-    border-color: black;
-    box-shadow: 2px 2px 2px #000;
-    display: table-cell;
-  }
-
-  .btn-circle {
-    width: 30px;
-    height: 30px;
-    text-align: center;
-
-    padding: 6px 0;
-    font-size: 12px;
-    line-height: 1.428571429;
-    border-radius: 50%;
-    border-style: solid black;
-  }
-  .btn-play{
-    color: black;
-    background-color: limegreen;
-    border-width: 1px;
-    border-color: black;
-    box-shadow: 2px 2px 2px;
-  }
-  .btn-remove{
-    color: red;
-    background-color: darkgrey;
-    border-width: 1px;
-    border-color: black;
-    box-shadow: 2px 2px 2px #000;
-  }
-  .btn-open{
-    color: black;
-    background-color: darkgrey;
-    border-width: 1px;
-    border-color: black;
-    box-shadow: 2px 2px 2px #000;
-  }
-  .img-card-top{
-    width:100%;
-    opacity:0.85;
-  }
-</style>
-
-<script>
-  function delete_project(project_id) {
-    $.ajax({
-      url: '/projects/' + project_id +'.json',
-      type: 'delete',
-      success: function(result) {
-        var project_preview_container = document.getElementById('projects_preview')
-        var project_preview_card = document.getElementById('project-preview-' + project_id);
-        project_preview_container.removeChild(project_preview_card);
-      }
-    });
-  }
-</script>
 
 
 <div class="row">
-
   <!--profile-->
   <div class="col-sm-2">
     <div id="profilecard" class="card" style="box-shadow: 1px 1px 1px 1px; background-color: white;">
@@ -104,89 +17,31 @@
       </div>
       <ul class="nav nav-pills nav-stacked">
         <li role="presentation">
-          <a href= "#" onclick="document.getElementById('projects').style.visibility='visible';">
+          <a href= "#" id="show_projects">
             <strong>My Projects</strong>
           </a>
         </li>
         <li role="presentation">
-          <a href= "#" onclick="document.getElementById('collaborators').style.visibility='visible';">
-            <strong>My Collaborators</strong>
+          <a href= "#" id="show_followers">
+            <strong>Followers</strong>
           </a>
         </li>
         <li role="presentation">
-          <a href="/projects/new">
-            <strong>Edit Profile</strong>
+          <a href= "#" id="show_following">
+            <strong>Following</strong>
           </a>
         </li>
       </ul>
     </div>
   </div>
-  <div id="projects" style="visibility: hidden;">
-    <div class="card" style="border-right-style: solid 5px">
-      <div class="col-sm-2">
-        <ul  id= "projectsmenu" class="nav nav-pills nav-stacked" style="border-right-style: solid; border-right-width: 2px;">
-          <li role="presentation"><a href= "#" ><strong> Private Projects</strong></a></li>
-          <li role="presentation"><a href= "#" ><strong>Public Projects</strong> </a></li>
-          <li role="presentation"><a href= "#" ><strong>All Projects</strong></a></li>
-          <li role="presentation"><a href= "#" ><strong>Currently Running Projects</strong></a></li>
-          <li style="padding:15px;">
-            <div class="form-group has-feedback">
-              <input type="text" class="form-control" placeholder="Search for project" />
-              <i class="glyphicon glyphicon-search form-control-feedback"></i>
-            </div>
-          </li>
 
-        </ul>
-
-      </div>
-    </div>
-
-
-    <div class="col-sm-6" id="projects_preview">
-      <h2 style="padding-left: 15px;" ><strong>Projects</strong></h2>
-      <% @user.projects.each do |project| %>
-          <div class="col-xs-6 col-md-4"  id="project-preview-<%= project.id%>">
-            <div class="card card-project card-project-preview" style=""  >
-              <h4 class="card-title"><%= project.title %></h4>
-              <p class="card-text">
-                <a href="#">click to add a description</a>
-              </p>
-              <p>date created:</p>
-              <p>last test run:</p>
-              <br/>
-              <footer>
-                <p>
-
-                  <div class="btn btn-open">
-                    <a href="<%= edit_project_path(project)%>">
-                      <div class="glyphicon glyphicon-folder-open"></div>
-                    </a>
-                  </div>
-
-                  <div class="btn btn-play" >
-                    <a href="<%= edit_project_path(project)%>">
-                      <div class="glyphicon glyphicon-play"></div>
-                    </a>
-                  </div>
-                  <div class="btn btn-remove" onclick="delete_project(<%= project.id %>)">
-                    <!--button_to "delete", project, :method => :delete, remote: true -->
-                    <div class="glyphicon glyphicon-remove"></div>
-                  </div>
-                </p>
-              </footer>
-            </div>
-          </div>
-      <% end %>
-      <div class="col-xs-6- col-md-4" >
-        <div class="card card-project card-project-new">
-
-          <a href="/projects/new"class="btn btn-newproject">
-            <div class="glyphicon glyphicon-plus" style="font-size: 24px;"></div>
-          </a>
-        </div>
-      </div>
+  <div id="preview-container" class="panel panel-default" style="margin-left: 25px;">
+    <h2 id="preview-header" class="panel-header" style="padding-left: 15px;" ><strong></strong></h2>
+    <div class="col-sm-6" >
+      <div id="preview-body"></div>
     </div>
   </div>
+
 
 </div>
 

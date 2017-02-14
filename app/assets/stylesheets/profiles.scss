@@ -5,7 +5,7 @@ body {
   margin-top: 15px;
   margin-left: 15%;
   /*margin-left: 15px;*/
-  padding: 2% 5% 2% 5%;
+  padding: 5px 5px 5px;
 
 }
 .card-project {
@@ -71,4 +71,41 @@ body {
 
 #projects_preview {
   padding-left: 5%;
+}
+#followers_preview {
+  padding-left: 5%;
+}
+
+.card-img-follower{
+  text-align: center;
+  margin: 0 auto; /* Added */
+  float: none; /* Added */
+  margin-bottom: 10px; /* Added */
+  background-color: lightgrey;
+
+  max-width: 220px;
+  max-height:220px;
+  min-width: 220px;
+  min-height: 220px;
+  padding: 15px;
+}
+
+.circular--square {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  border-width:2px;
+  border-color: black;
+  box-shadow: 5px 5px 5px;
+  margin-bottom: 10px;
+}
+
+.container-follower{
+  display: flex;
+  padding: 10px;
+  text-align: center;
+}
+
+#preview-body {
+  background-color: #2e6da4;
 }

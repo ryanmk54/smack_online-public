@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   get 'analytics/users_created'
 
   get 'users/projects', to: 'users#projects'
+  get 'users/followers', to: 'users#followers'
+  get 'users/following', to: 'users#followees'
 
   resources(:projects,  except: [:index]) do
     member do

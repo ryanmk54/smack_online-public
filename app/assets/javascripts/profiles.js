@@ -26,23 +26,41 @@ window.onload = function() {
             url: '/users/projects',
             type: 'get',
             success: function(payload) {
-                console.log('hello');
-                document.getElementById('projects_preview').innerHTML = payload;
-                document.getElementById('projects-container').style.visibility = 'visible';
+                // document.getElementById('preview-header').innerText = 'Projects';
+                // document.getElementById('preview-body').innerHTML = payload;
+                $('#preview-header').text('Projects');
+                $('#preview-body').html(payload);
 
             }
         })
-    })
+    });
+
+    $('#show_followers').click(function() {
+        // hide_followers();
+        $.ajax({
+            url: '/users/followers',
+            type: 'get',
+            success: function(payload) {
+                // document.getElementById('preview-header').innerText = 'Projects';
+                // document.getElementById('preview-body').innerHTML = payload;
+                $('#preview-header').text('Followers');
+                $('#preview-body').html(payload);
+            }
+        })
+    });
+
+
+    $('#show_following').click(function() {
+        // hide_followers();
+        $.ajax({
+            url: '/users/following',
+            type: 'get',
+            success: function(payload) {
+                // document.getElementById('preview-header').innerText = 'Projects';
+                // document.getElementById('preview-body').innerHTML = payload;
+                $('#preview-header').text("Users I'm Following");
+                $('#preview-body').html(payload);
+            }
+        })
+    });
 };
-
-function hide_followers() {
-
-}
-
-// function hide_projects() {
-//     document.getElementById('followers-container').style.visibility = 'hidden';
-// }
-//
-// function show_projects() {
-//
-// }
