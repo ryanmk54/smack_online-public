@@ -24,11 +24,12 @@
     <!-- Sidebar -->
     <div id="sidebar" class="flex-col-sm-4 flex-col-md-2 gray">
       <!-- Files -->
-      <div id="upload-project-container">
+      <div id="upload-project-container"
+           title="Upload a zip file containing your source code">
         <div class="field white-color">
           <%= label_tag :input_upload, "Upload Project" %>
           <%= file_field_tag :input_upload, accept: ".zip, application/zip", 
-                             class: 'white-color' %>
+              class: 'white-color' %>
           <span id="input_upload_status"></span>
         </div>
       </div>
@@ -60,7 +61,7 @@
       <!-- Bottom -->
       <div id="options-and-run-row" class="bottom-container lgray h-form-row flex-row">
         <!-- Bottom Left -->
-        <div class="flex-col-sm-9 flex-col-sm-grow flex-col-md-6 flex-col-md-nogrow">
+        <div id="options-col" class="flex-col-sm-9 flex-col-sm-grow flex-col-md-6 flex-col-md-nogrow">
           <select multiple class="flex-col-xs-12 options-select selectpicker" data-live-search="true">
             <option value="volvo">Option 1</option>
             <option value="saab">Option 2</option>

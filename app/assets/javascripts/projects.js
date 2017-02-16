@@ -455,19 +455,28 @@ function initTour() {
     {
       element: "#select-service-dropdown",
       title: "Welcome to " + capstoneName + "!",
-      content: "First, Select the service you would like to use"
+      content: "Select the service you would like to use"
     },
     {
       element: "#project_title",
-      title: "The Title",
-      content: "Next, Give your project a descriptive title"
+      title: "Naming your project",
+      content: "Give your project a descriptive title that will be shown on the community page"
     },
     {
       element: "#upload-project-container",
-      title: "Upload you source",
-      content: "Next, Upload a zip file containing your source code"
+      title: "Upload your source code",
+      content: "Upload a zip file containing your source code"
     },
-
+    {
+      element: "#options-col",
+      title: "Options",
+      content: "Choose your options here"
+    },
+    {
+      element: "#run_project",
+      title: "Running your project",
+      content: "As soon as you're ready, hit run!"
+    }
     ]
   });
 
