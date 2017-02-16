@@ -79,10 +79,12 @@ $().ready(function(){
   // handle the zip file upload button
   $(zipInput).change(tryLoadZipFromUpload);
 
-  let projectFormSelectors = 'form.new_project, form.edit_project';
-  $(projectFormSelectors).on('ajax:success', projectUpdateSuccess);
+  let projectFormSelector = '#options-and-run-row form';
+  $(projectFormSelector).on('ajax:success', projectUpdateSuccess);
   // TODO account for if it is a failure. We would need to send it again
-  //
+
+  // TODO on form.new_project, it should go to projectUpdateSuccess
+  // TODO on form.edit_project it should go to pollForOutputUpdates
 
   watchProjectTitleForm();
 });
@@ -90,13 +92,24 @@ $().ready(function(){
 
 function watchProjectTitleForm() {
   lastTitle = $('#project-title-form #project_title')[0].value;
-  $("#project_title").on('blur', function(evt) {
-    if (evt.target.value == lastTitle){
-      return;
+
+  let updateProjectIfTitleChanged = function() {
+    currentTitle = $('#project-title-form #project_title')[0].value;
+
+    // if the title hasn't changed do nothing
+    if (currentTitle == lastTitle){
+      return false;
     }
-    lastTitle = evt.target.value;
+
+    // if it has changed updated the cached title and
+    // the project stored on the server
+    lastTitle = currentTitle;
     $.rails.handleRemote($('#project-title-form'));
-  });
+    return false;
+  }
+
+  $('#project-title-form').submit(updateProjectIfTitleChanged);
+  $('#project-title-form #project_title').blur(updateProjectIfTitleChanged);
 }
 
 
@@ -166,8 +179,17 @@ function handleEditor2ChangeSelection() {
 
 
 function projectUpdateSuccess(event, data, status, xhr) {
+  // TODO replace title form and project form
+
+  pollForOutputUpdates(data);
+}
+
+
+function pollForOutputUpdates(data) {
   timer = setInterval(function() {ajaxCall(data.id)}, data.eta)
 }
+
+
 
 function ajaxCall(id)
 {

@@ -52,7 +52,7 @@ class Project < ApplicationRecord
       output = file.read
       file.close
     else # Otherwise, the job is still processing
-      output = 'Processing...'
+      output = ''
     end
 
     return output
@@ -74,6 +74,10 @@ class Project < ApplicationRecord
       file.write(value)
       file.close
     end
+  end
+
+  def ajax_json
+    (self.to_json only: [:eta, :output, :id]).html_safe
   end
 
 end
