@@ -3,9 +3,11 @@
 //
 //
 //= require bootstrap-select
+//= require bootstrap-tour.min
 //= require jszip
 //= require tree.jquery
 
+const capstoneName = "SMACK Online";
 const id = {
   base64Input: 'project_input',
   base64Output: 'output',
@@ -85,6 +87,9 @@ $().ready(function(){
   //
 
   watchProjectTitleForm();
+
+  let tour = initTour();
+  $("#start-tutorial-btn").on('click', function(){ tour.start(true); });
 });
 
 
@@ -441,4 +446,31 @@ function isZipUploadValid(zipUpload) {
   }
 
   return true;
+}
+
+function initTour() {
+  let tour = new Tour({
+    storage: false,
+    steps: [
+    {
+      element: "#select-service-dropdown",
+      title: "Welcome to " + capstoneName + "!",
+      content: "First, Select the service you would like to use"
+    },
+    {
+      element: "#project_title",
+      title: "The Title",
+      content: "Next, Give your project a descriptive title"
+    },
+    {
+      element: "#upload-project-container",
+      title: "Upload you source",
+      content: "Next, Upload a zip file containing your source code"
+    },
+
+    ]
+  });
+
+  tour.init();
+  return tour;
 }

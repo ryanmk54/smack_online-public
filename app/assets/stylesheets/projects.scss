@@ -4,6 +4,7 @@
 * You can use Sass (SCSS) here: http://sass-lang.com/
 *
 *= require bootstrap-select.min
+*= require bootstrap-tour.min
 *= require editor
 *= require jqtree
 */
@@ -65,6 +66,6 @@ ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover
   padding: 8px;
 }
 
-button {
+.project-btn {
   width: 95px;
 }

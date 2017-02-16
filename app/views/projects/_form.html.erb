@@ -10,13 +10,13 @@
   </div>
 
   <div class="flex-col-md-5 flex-col-md-nogrow flex-col-sm-grow flex-col-sm-6">
-    <select class="selectpicker flex-col-xs-12">
+    <select id="select-service-dropdown" class="selectpicker flex-col-xs-12">
       <option>Smack</option>
       <option>Boogie</option>
     </select>
   </div>
   <div class="flex-col-md-1">
-    <button class="btn btn-primary tool-select-button">?</button>
+    <button id="start-tutorial-btn" class="btn btn-primary project-btn">Tutorial</button>
   </div>
 </div>
 
@@ -76,7 +76,7 @@
               <%= f.text_field :input, value: @base64_input%>
             </div>
           <% end %>
-          <button id="run_project" class="btn btn-default btn-primary run-button">Run</button>
+          <button id="run_project" class="btn btn-default btn-primary project-btn run-button">Run</button>
         </div>
       </div>
     </div>
