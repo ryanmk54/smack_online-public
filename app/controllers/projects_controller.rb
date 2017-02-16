@@ -2,7 +2,7 @@ require 'csv'
 
 class ProjectsController < ApplicationController
   #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
-  before_action :set_project, only: [:show, :edit, :update, :receive_service_output]
+  before_action :set_project, only: [:show, :edit, :update, :run, :receive_service_output]
 
   # Production SMACK server URL
   SERVICE_REQUEST_URL = 'ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started'
@@ -78,6 +78,12 @@ class ProjectsController < ApplicationController
         format.html { render :edit } # If the save fails, show the user the edit window again.
       end
     end
+  end
+
+  # POST /projects/1/run
+  def run
+    @project.attributes = run_project_params
+    @project.eta = send_service_input
   end
 
   # GET /projects/1.json will be called every "eta" seconds (AJAX)
