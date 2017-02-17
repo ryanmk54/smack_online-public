@@ -1,0 +1,227 @@
+$screen-sm-min: 768px;
+$screen-md-min: 992px;
+$screen-lg-min: 1200px;
+$col-1:  percentage(1/12);
+$col-2:  percentage(2/12);
+$col-3:  percentage(3/12);
+$col-4:  percentage(4/12);
+$col-5:  percentage(5/12);
+$col-6:  percentage(6/12);
+$col-7:  percentage(7/12);
+$col-8:  percentage(8/12);
+$col-9:  percentage(9/12);
+$col-10: percentage(10/12);
+$col-11: percentage(11/12);
+$col-12: percentage(12/12);
+
+.flex-col {
+  display: flex;
+  flex-direction: col
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.flex-align-center {
+  align-items: center;
+}
+.flex-align-stretch {
+  align-items: stretch;
+}
+
+.flex-col-xs-1, .flex-col-xs-2,  .flex-col-xs-3,  .flex-col-xs-4,
+.flex-col-xs-5, .flex-col-xs-6,  .flex-col-xs-7,  .flex-col-xs-8,
+.flex-col-xs-9, .flex-col-xs-10, .flex-col-xs-11, .flex-col-xs-12,
+.flex-col-sm-1, .flex-col-sm-2,  .flex-col-sm-3,  .flex-col-sm-4,
+.flex-col-sm-5, .flex-col-sm-6,  .flex-col-sm-7,  .flex-col-sm-8,
+.flex-col-sm-9, .flex-col-sm-10, .flex-col-sm-11, .flex-col-sm-12,
+.flex-col-md-1, .flex-col-md-2,  .flex-col-md-3,  .flex-col-md-4,
+.flex-col-md-5, .flex-col-md-6,  .flex-col-md-7,  .flex-col-md-8,
+.flex-col-md-9, .flex-col-md-10, .flex-col-md-11, .flex-col-md-12,
+.flex-col-lg-1, .flex-col-lg-2,  .flex-col-lg-3,  .flex-col-lg-4,
+.flex-col-lg-5, .flex-col-lg-6,  .flex-col-lg-7,  .flex-col-lg-8,
+.flex-col-lg-9, .flex-col-lg-10, .flex-col-lg-11, .flex-col-lg-12 {
+  position: relative;
+}
+
+.flex-col-xs-1 {
+  width: $col-1;
+}
+.flex-col-xs-2 {
+  width: $col-2;
+}
+.flex-col-xs-3 {
+  width: $col-3;
+}
+.flex-col-xs-4 {
+  width: $col-4;
+}
+.flex-col-xs-5 {
+  width: $col-5;
+}
+.flex-col-xs-6 {
+  width: $col-6;
+}
+.flex-col-xs-7 {
+  width: $col-7;
+}
+.flex-col-xs-8 {
+  width: $col-8;
+}
+.flex-col-xs-9 {
+  width: $col-9;
+}
+.flex-col-xs-10 {
+  width: $col-10;
+}
+.flex-col-xs-11 {
+  width: $col-11;
+}
+.flex-col-xs-12 {
+  width: $col-12;
+}
+.flex-col-xs-nogrow {
+  flex-grow: 0;
+}
+.flex-col-xs-grow {
+  flex-grow: 1;
+}
+
+@media (min-width: $screen-sm-min) {
+  .flex-col-sm-1 {
+    width: $col-1;
+  }
+  .flex-col-sm-2 {
+    width: $col-2;
+  }
+  .flex-col-sm-3 {
+    width: $col-3;
+  }
+  .flex-col-sm-4 {
+    width: $col-4;
+  }
+  .flex-col-sm-5 {
+    width: $col-5;
+  }
+  .flex-col-sm-6 {
+    width: $col-6;
+  }
+  .flex-col-sm-7 {
+    width: $col-7;
+  }
+  .flex-col-sm-8 {
+    width: $col-8;
+  }
+  .flex-col-sm-9 {
+    width: $col-9;
+  }
+  .flex-col-sm-10 {
+    width: $col-10;
+  }
+  .flex-col-sm-11 {
+    width: $col-11;
+  }
+  .flex-col-sm-12 {
+    width: $col-12;
+  }
+  .flex-col-sm-grow {
+    flex-grow: 0;
+  }
+  .flex-col-sm-grow {
+    flex-grow: 1;
+  }
+}
+
+@media (min-width: $screen-md-min) {
+  .flex-col-md-1 {
+    width: $col-1;
+  }
+  .flex-col-md-2 {
+    width: $col-2;
+  }
+  .flex-col-md-3 {
+    width: $col-3;
+  }
+  .flex-col-md-4 {
+    width: $col-4;
+  }
+  .flex-col-md-5 {
+    width: $col-5;
+  }
+  .flex-col-md-6 {
+    width: $col-6;
+  }
+  .flex-col-md-7 {
+    width: $col-7;
+  }
+  .flex-col-md-8 {
+    width: $col-8;
+  }
+  .flex-col-md-9 {
+    width: $col-9;
+  }
+  .flex-col-md-10 {
+    width: $col-10;
+  }
+  .flex-col-md-11 {
+    width: $col-11;
+  }
+  .flex-col-md-12 {
+    width: $col-12;
+  }
+  .flex-col-md-nogrow {
+    flex-grow: 0;
+  }
+  .flex-col-md-grow {
+    flex-grow: 1;
+  }
+}
+
+@media (min-width: $screen-lg-min) {
+  .flex-col-lg-1 {
+    width: $col-1;
+  }
+  .flex-col-lg-2 {
+    width: $col-2;
+  }
+  .flex-col-lg-3 {
+    width: $col-3;
+  }
+  .flex-col-lg-4 {
+    width: $col-4;
+  }
+  .flex-col-lg-5 {
+    width: $col-5;
+  }
+  .flex-col-lg-6 {
+    width: $col-6;
+  }
+  .flex-col-lg-7 {
+    width: $col-7;
+  }
+  .flex-col-lg-8 {
+    width: $col-8;
+  }
+  .flex-col-lg-9 {
+    width: $col-9;
+  }
+  .flex-col-lg-10 {
+    width: $col-10;
+  }
+  .flex-col-lg-11 {
+    width: $col-11;
+  }
+  .flex-col-lg-12 {
+    width: $col-12;
+  }
+  .flex-col-lg-nogrow {
+    flex-grow: 0;
+  }
+  .flex-col-lg-grow {
+    flex-grow: 1;
+  }
+}
+

@@ -97,6 +97,8 @@
       <%= image_tag @user.avatar.url(:thumb), :class => 'img-card-top' %>
       <div class="card-block">
         <div class="card-title">
+          <strong><%= @user.username %></strong>
+          <br/>
           <strong><%= @user.email %></strong>
         </div>
       </div>

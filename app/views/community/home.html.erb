@@ -1,3 +1,6 @@
+<% projects = get_top_projects %>
+<% users = get_top_users %>
+
 <div hidden>
   <%= text_area_tag :output, @output %>
 </div>
@@ -19,24 +22,32 @@
 
       <section class="row text-center placeholders">
             <div class="col-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-              <h4>Christopher Bowcutt</h4>
-              <div class="text-muted">Christopher Bowcutt</div>
+              <% if users[0] %>
+                <%= image_tag users[0].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
+                <h4><%= users[0].username %></h4>
+                <div class="text-muted"><%= users[0].email %></div>
+              <% end %>
             </div>
             <div class="col-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-              <h4>Ryan Kingston</h4>
-              <span class="text-muted">Ryan Kingston</span>
+              <% if users[1] %>
+                <%= image_tag users[1].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
+                <h4><%= users[1].username %></h4>
+                <span class="text-muted"><%= users[1].email %></span>
+              <% end %>
             </div>
             <div class="col-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-              <h4>Matthew Mendez</h4>
-              <span class="text-muted">Matthew Mendez</span>
+              <% if users[2] %>
+                <%= image_tag users[2].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
+                <h4><%= users[2].username %></h4>
+                <span class="text-muted"><%= users[2].email %></span>
+              <% end %>
             </div>
             <div class="col-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-              <h4>Jake Sebright</h4>
-              <span class="text-muted">Jake Sebright</span>
+              <% if users[3] %>
+                <%= image_tag users[3].avatar.url(:medium), :class => "img-fluid rounded-circle top-users-avatar" %>
+                <h4><%= users[3].username %></h4>
+                <span class="text-muted"><%= users[3].email %></span>
+              <% end %>
             </div>
           </section>
 
@@ -51,90 +62,91 @@
                   <th>Title</th>
                   <th>Created At</th>
                   <th>Updated At</th>
-                  <th>City</th>
+                  <th>State</th>
                   <th>Runtime</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><%= get_top_projects[0].id %></td>
-                  <td><%= get_top_projects[0].title %></td>
-                  <td><%= get_top_projects[0].created_at %></td>
-                  <td><%= get_top_projects[0].updated_at %></td>
-                  <td><%= get_top_projects[0].city %></td>
-                  <td><%= get_top_projects[0].runtime %></td>
+                  <td><a href="/projects/<%= projects[0].id %>/edit"><%= projects[0].id %></a></td>
+                  <td><a href="/projects/<%= projects[0].id %>/edit"><%= projects[0].title %></a></td>
+                  <td><%= projects[0].created_at %></td>
+                  <td><%= projects[0].updated_at %></td>
+                  <td><%= projects[0].state %></td>
+                  <td><%= projects[0].runtime %></td>
                 </tr>
                <tr>
-                  <td><%= get_top_projects[1].id %></td>
-                  <td><%= get_top_projects[1].title %></td>
-                  <td><%= get_top_projects[1].created_at %></td>
-                  <td><%= get_top_projects[1].updated_at %></td>
-                  <td><%= get_top_projects[1].city %></td>
-                  <td><%= get_top_projects[1].runtime %></td>
+                  <td><a href="/projects/<%= projects[1].id %>/edit"><%= projects[1].id %></a></td>
+                  </a>
+                  <td><a href="/projects/<%= projects[1].id %>/edit"><%= projects[1].title %></a></td>
+                  <td><%= projects[1].created_at %></td>
+                  <td><%= projects[1].updated_at %></td>
+                  <td><%= projects[1].state %></td>
+                  <td><%= projects[1].runtime %></td>
                 </tr>
                 <tr>
-                  <td><%= get_top_projects[2].id %></td>
-                  <td><%= get_top_projects[2].title %></td>
-                  <td><%= get_top_projects[2].created_at %></td>
-                  <td><%= get_top_projects[2].updated_at %></td>
-                  <td><%= get_top_projects[2].city %></td>
-                  <td><%= get_top_projects[2].runtime %></td>
+                  <td><a href="/projects/<%= projects[2].id %>/edit"><%= projects[2].id %></a></td>
+                  <td><a href="/projects/<%= projects[2].id %>/edit"><%= projects[2].title %></a></td>
+                  <td><%= projects[2].created_at %></td>
+                  <td><%= projects[2].updated_at %></td>
+                  <td><%= projects[2].state %></td>
+                  <td><%= projects[2].runtime %></td>
                 </tr>
                <tr>
-                  <td><%= get_top_projects[3].id %></td>
-                  <td><%= get_top_projects[3].title %></td>
-                  <td><%= get_top_projects[3].created_at %></td>
-                  <td><%= get_top_projects[3].updated_at %></td>
-                  <td><%= get_top_projects[3].city %></td>
-                  <td><%= get_top_projects[3].runtime %></td>
+                  <td><a href="/projects/<%= projects[3].id %>/edit"><%= projects[3].id %></a></td>
+                  <td><a href="/projects/<%= projects[3].id %>/edit"><%= projects[3].title %></a></td>
+                  <td><%= projects[3].created_at %></td>
+                  <td><%= projects[3].updated_at %></td>
+                  <td><%= projects[3].state %></td>
+                  <td><%= projects[3].runtime %></td>
                 </tr>
                 <tr>
-                  <td><%= get_top_projects[4].id %></td>
-                  <td><%= get_top_projects[4].title %></td>
-                  <td><%= get_top_projects[4].created_at %></td>
-                  <td><%= get_top_projects[4].updated_at %></td>
-                  <td><%= get_top_projects[4].city %></td>
-                  <td><%= get_top_projects[4].runtime %></td>
+                  <td><a href="/projects/<%= projects[4].id %>/edit"><%= projects[4].id %></a></td>
+                  <td><a href="/projects/<%= projects[4].id %>/edit"><%= projects[4].title %></a></td>
+                  <td><%= projects[4].created_at %></td>
+                  <td><%= projects[4].updated_at %></td>
+                  <td><%= projects[4].state %></td>
+                  <td><%= projects[4].runtime %></td>
                 </tr>
                <tr>
-                  <td><%= get_top_projects[5].id %></td>
-                  <td><%= get_top_projects[5].title %></td>
-                  <td><%= get_top_projects[5].created_at %></td>
-                  <td><%= get_top_projects[5].updated_at %></td>
-                  <td><%= get_top_projects[5].city %></td>
-                  <td><%= get_top_projects[5].runtime %></td>
+                  <td><a href="/projects/<%= projects[5].id %>/edit"><%= projects[5].id %></a></td>
+                  <td><a href="/projects/<%= projects[5].id %>/edit"><%= projects[5].title %></a></td>
+                  <td><%= projects[5].created_at %></td>
+                  <td><%= projects[5].updated_at %></td>
+                  <td><%= projects[5].state %></td>
+                  <td><%= projects[5].runtime %></td>
                 </tr>
                 <tr>
-                  <td><%= get_top_projects[6].id %></td>
-                  <td><%= get_top_projects[6].title %></td>
-                  <td><%= get_top_projects[6].created_at %></td>
-                  <td><%= get_top_projects[6].updated_at %></td>
-                  <td><%= get_top_projects[6].city %></td>
-                  <td><%= get_top_projects[6].runtime %></td>
+                  <td><a href="/projects/<%= projects[6].id %>/edit"><%= projects[6].id %></a></td>
+                  <td><a href="/projects/<%= projects[6].id %>/edit"><%= projects[6].title %></a></td>
+                  <td><%= projects[6].created_at %></td>
+                  <td><%= projects[6].updated_at %></td>
+                  <td><%= projects[6].state %></td>
+                  <td><%= projects[6].runtime %></td>
                 </tr>
                <tr>
-                  <td><%= get_top_projects[7].id %></td>
-                  <td><%= get_top_projects[7].title %></td>
-                  <td><%= get_top_projects[7].created_at %></td>
-                  <td><%= get_top_projects[7].updated_at %></td>
-                  <td><%= get_top_projects[7].city %></td>
-                  <td><%= get_top_projects[7].runtime %></td>
+                  <td><a href="/projects/<%= projects[7].id %>/edit"><%= projects[7].id %></a></td>
+                  <td><a href="/projects/<%= projects[7].id %>/edit"><%= projects[7].title %></a></td>
+                  <td><%= projects[7].created_at %></td>
+                  <td><%= projects[7].updated_at %></td>
+                  <td><%= projects[7].state %></td>
+                  <td><%= projects[7].runtime %></td>
                 </tr>
                 <tr>
-                  <td><%= get_top_projects[8].id %></td>
-                  <td><%= get_top_projects[8].title %></td>
-                  <td><%= get_top_projects[8].created_at %></td>
-                  <td><%= get_top_projects[8].updated_at %></td>
-                  <td><%= get_top_projects[8].city %></td>
-                  <td><%= get_top_projects[8].runtime %></td>
+                  <td><a href="/projects/<%= projects[8].id %>/edit"><%= projects[8].id %></a></td>
+                  <td><a href="/projects/<%= projects[8].id %>/edit"><%= projects[8].title %></a></td>
+                  <td><%= projects[8].created_at %></td>
+                  <td><%= projects[8].updated_at %></td>
+                  <td><%= projects[8].state %></td>
+                  <td><%= projects[8].runtime %></td>
                 </tr>
                <tr>
-                  <td><%= get_top_projects[9].id %></td>
-                  <td><%= get_top_projects[9].title %></td>
-                  <td><%= get_top_projects[9].created_at %></td>
-                  <td><%= get_top_projects[9].updated_at %></td>
-                  <td><%= get_top_projects[9].city %></td>
-                  <td><%= get_top_projects[9].runtime %></td>
+                  <td><a href="/projects/<%= projects[9].id %>/edit"><%= projects[9].id %></a></td>
+                  <td><a href="/projects/<%= projects[9].id %>/edit"><%= projects[9].title %></a></td>
+                  <td><%= projects[9].created_at %></td>
+                  <td><%= projects[9].updated_at %></td>
+                  <td><%= projects[9].state %></td>
+                  <td><%= projects[9].runtime %></td>
                 </tr>
               </tbody>
             </table>

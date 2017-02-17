@@ -5,22 +5,6 @@
  */
 @import 'variables';
 
-html
-{
-  height: 100%;
-  width: 100%;
-}
-
-body
-{
-  height: 100%;
-  width: 100%;
-}
-
-.navbar {
-  height: 52px;
-}
-
 .tool-select
 {
   height: 35px;
@@ -38,7 +22,6 @@ form {
 .options-select
 {
   height: 35px;
-  width: 72.5%;
   position: relative;
   top: 50%;
   transform: translateY(-50%);
@@ -50,7 +33,6 @@ form {
 {
   height: 35px;
   position: relative;
-  width: 25%;
   top: 50%;
   transform: translateY(-50%);
 }

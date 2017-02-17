@@ -26,7 +26,7 @@ class ProjectsController < ApplicationController
       @project = Project.new
       return
     end
-    @project = current_user.projects.create()
+    @project = current_user.projects.new
   end
 
   # POST /projects.json

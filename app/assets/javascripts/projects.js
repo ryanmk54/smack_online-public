@@ -11,7 +11,9 @@ const id = {
   base64Output: 'output',
   zipUpload: 'input_upload',
   fileList: 'file-list',
-  runProject: 'run_project'
+  runProject: 'run_project',
+  projectTitle: 'project_title'
+
 }
 
 
@@ -196,12 +198,15 @@ function ajaxCall(id)
 }
 
 function tryLoadZipFromUpload() {
-  if (isZipUploadValid()) {
+  let zipUpload = document.getElementById(id.zipUpload);
+
+  if (isZipUploadValid(zipUpload)) {
     // if the zip is valid, clear any previous errors
     clearZipError();
 
     loadZipFromFileUpload()
       .then(function success(zip) {
+        setProjectTitleIfEmptyToZipName(zipUpload);
         loadIDE();
       }, function error(e) {
         throw("unable to load zip from file upload");
@@ -399,9 +404,32 @@ function outputZipError(errorMessage) {
 }
 
 
-function isZipUploadValid() {
-  var zipUpload = document.getElementById(id.zipUpload);
+/**
+ * Sets the project title to the name of the zip file 
+ * if the project doesn't have a title
+ */
+function setProjectTitleIfEmptyToZipName(zipUpload) {
+  let currentProjectTitle = getProjectTitle();
+  if (currentProjectTitle == "") {
+    let title = zipUpload.files[0].name;
+    title = title.replace(/\.[^/.]+$/, "");
+    setProjectTitle(title);
+  }
+}
 
+
+function getProjectTitle() {
+  return document.getElementById(id.projectTitle).value;
+}
+
+
+function setProjectTitle(title) {
+  document.getElementById(id.projectTitle).value = title;
+  $.rails.handleRemote($('#project-title-form'));
+}
+
+
+function isZipUploadValid(zipUpload) {
   // Verify only one file was uploaded
   if (zipUpload.files.length != 1) {
     outputZipError("Multiple files aren't allowed");

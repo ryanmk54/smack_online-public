@@ -10,6 +10,25 @@
 */
 @import 'variables';
 
+html, 
+body {
+  height: 100%;
+  width: 100%;
+}
+
+#top-row {
+  & > div:first-child {
+    padding-left: 8px;
+  }
+}
+
+.main-container
+{
+  height: calc(100% - 2*52px);
+    /* 2*52 b/c the navbar and top-row are each 52px tall */
+  overflow: hidden;
+}
+
 #file-list {
   margin-right: -15px;
 }
@@ -17,23 +36,7 @@
 #file-list ul.jqtree-tree .jqtree-toggler {
   color: #eee;
 }
-/*
-ul.jqtree-tree li:not(.jqtree-folder) .jqtree-element {
-  display: flex;
-  align-items: center;
-  
-}
-li.jqtree_common:not(.jqtree-folder) div:before {
-  content: image-url("nested.png");
-  width: 15px;
-  height: 15px;
-  margin-left: 11px;
-  color: #eee;
-}
-#file-list ul.jqtree-tree .jqtree-title {
-  margin-left: 0px;
-}
-*/
+
 .current-file,
 ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover {
   background: $light-sky-blue;
@@ -56,49 +59,13 @@ ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover
   color: red;
 }
 
-#top-row,
-#options-and-run-row {
-  padding: 4px;
-}
-#options-and-run-row {
-  height: 44px;
-
-  div {
-    padding-left:  4px;
-    padding-right: 4px;
-  }
-}
-#top-row > div:first-child {
-  padding-right: 4px;
-}
-#top-row > div:nth-of-type(2) {
-  padding-left: 4px;
-
-  div {
-    padding-left:  8px;
-    padding-right: 8px;
-  }
-
-  .bootstrap-select {
-    display: block;
-  }
-}
-.tool-select-button
-{
-  width: 90px;
-}
-
 #editors-row {
-  height: calc(100% - 88px);
+  height: calc(100% - 52px);
 }
 #sidebar {
   padding: 8px;
 }
-/*
-#project_title {
-  width: 100%;
-  margin-bottom: 20px;
-  border-radius: 0;
-  height: 44px;
+
+button {
+  width: 95px;
 }
-*/
