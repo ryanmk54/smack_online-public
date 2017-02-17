@@ -60,6 +60,12 @@ form {
   height: 12.5%;
 }
 
+.scrollable-menu
+{
+  max-height:500px;
+  overflow-y:scroll;
+}
+
 .project-selection-container
 {
   height: 25%;
@@ -90,3 +96,5 @@ form {
     right: 0;
     z-index: 0;
 }
+
+

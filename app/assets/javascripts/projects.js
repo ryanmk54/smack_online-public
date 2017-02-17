@@ -1,7 +1,7 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//
+//= require dropdowns-enhancement
 //= require bootstrap-select
 //= require jszip
 //= require tree.jquery
@@ -76,13 +76,22 @@ $().ready(function(){
 
   // handle the zip file upload button
   $(zipInput).change(tryLoadZipFromUpload);
-
   let projectFormSelectors = 'form.new_project, form.edit_project';
   $(projectFormSelectors).on('ajax:success', projectUpdateSuccess);
   // TODO account for if it is a failure. We would need to send it again
   //
 
   watchProjectTitleForm();
+  
+  // LOGIC FOR SWITCHING OPTIONS MENUS
+  
+  // Set the options menu html to the html of the hidden field associated with
+  // the value of the drop down menu value (service-selector.val == service-options.id)
+  $("#optionsMenu").html($("#" + $("#service-selector").find(":selected").val()).html());
+  $("#service-selector").change(function()
+  {
+    $("#optionsMenu").html($("#" + $(this).find(":selected").val()).html());
+  });
 });
 
 

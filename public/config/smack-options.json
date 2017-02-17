@@ -1,0 +1,52 @@
+{
+    "Group Options":
+    [
+        {
+            "name": "verifier",
+            "options":
+            [
+                {"name": "boogie", "default": true},
+                {"name": "dorral", "default": false},
+                {"name": "duality", "default": false},
+                {"name": "svcomp", "default": false}
+            ]
+        },
+        {
+            "name": "mem-mod",
+            "options":
+            [
+                {"name": "no-reuse-impls", "default": true},
+                {"name": "no-reuse", "default": false},
+                {"name": "reuse", "default": false}
+            ]
+        }
+    ],
+    "Integer Options":
+    [
+        {"name": "unroll", "min": 1, "max": 12341234, "default": 1},
+        {"name": "loop-limit", "min": 1, "max": 432134312, "default": 1},
+        {"name": "context-bound", "min": 1, "max": 432134312, "default": 1},
+        {"name": "time-limit", "min": 1, "max": 432134312, "default": 1200},
+        {"name": "max-violations", "min": 1, "max": 432134312, "default": 1}
+    ],
+    "String Options":
+    [
+        {"name": "entry-points", "default": "['main']"},
+        {"name": "verifier-options", "default": ""}
+    ],
+    "Boolean Options":
+    [
+        {"name": "no-memory-splitting"},
+        {"name": "static-unroll"},
+        {"name": "pthread"},
+        {"name": "bit-precise" },
+        {"name": "bit-precise-pointers"},
+        {"name": "no-byte-access-inference"},
+        {"name": "memory-safety"},
+        {"name": "quiet"},
+        {"name": "verbose"},
+        {"name": "debug"},
+        {"name": "no-verify"},
+        {"name": "help"}
+    ]
+}
