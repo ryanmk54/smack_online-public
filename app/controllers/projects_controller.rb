@@ -1,4 +1,5 @@
 require 'csv'
+require 'json'
 
 class ProjectsController < ApplicationController
   #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
@@ -34,11 +35,14 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.save # Need to save before send_service_input in order to know the project id
+    current_user.projects.push @project if current_user
 
     if params[:project][:input]
+      #TODO: Change config file based off of other services
+      @project[:service_options] = generateOptionsString('smack-options.json')
+
       @project.input = params[:project][:input] # Save the input
-      @project[:eta] = send_service_input 
-        # Make a request to the SMACK server with the new project
+      @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
     end
 
     # Save the new project to the database and redirect the user to 'edit'
@@ -70,12 +74,12 @@ class ProjectsController < ApplicationController
   # Updates the project db attributes, saves the new input to the file system,
   # deletes the old output from file system.
   def update
-      # Delete the old output so the client doesn't get confused thinking it is the new output.
-      @project.output = nil
+    # Delete the old output so the client doesn't get confused thinking it is the new output.
+    @project.output = nil
 
-      @project.input = params[:project][:input]
-      params[:project][:eta] = send_service_input 
-        # Make a request to the SMACK server with updated project
+    @project.input = params[:project][:input]
+    @project[:service_options] = generateOptionsString('smack-options.json')
+    @project.eta = send_service_input # Make a request to the SMACK server with updated project
 
     respond_to do |format|
       if @project.update(project_params)
@@ -137,7 +141,7 @@ class ProjectsController < ApplicationController
     response = RestClient.post(SERVICE_REQUEST_URL,
     {
         :id => @project[:id],
-        :options => @project[:options],
+        :options => @project[:service_options],
         :input => base64Input
     }.to_json, {content_type: :json, accept: :json})
     # Set the project's eta to the SMACK server's predicted processing time
@@ -152,6 +156,37 @@ class ProjectsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def project_params
     params.require(:project).permit(:title, :input)
+  end
+
+  def generateOptionsString(optionsConfigFile)
+    optionsString = ''
+    json = File.read('public/config/' + optionsConfigFile)
+    json = JSON.parse(json)
+
+    json['Group Options'].each do |group|
+      if params.include? group['name']
+        optionsString += '--' + group['name'] + ' ' + params[group['name']] + ' '
+      end
+    end
+
+    json['Integer Options'].each do |option|
+      if params.include? option['name']
+        optionsString += '--' + option['name'] + ' ' + params[option['name']] + ' '
+      end
+    end
+
+    json['String Options'].each do |option|
+      if params.include? option['name'] and params[option['name']] != ''
+        optionsString += '--' + option['name'] + ' ' + params[option['name']] + ' '
+      end
+    end
+
+    json['Boolean Options'].each do |option|
+      if params.include? option['name']
+        optionsString += '--' + option['name'] + ' '
+      end
+    end
+    return optionsString
   end
 
   # TODO: Needs to go to model

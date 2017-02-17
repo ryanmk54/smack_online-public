@@ -2,10 +2,19 @@
 <div id="options-and-run-row" class="bottom-container lgray h-form-row flex-row">
   <!-- Bottom Left -->
   <div class="flex-col-sm-9 flex-col-sm-grow flex-col-md-6 flex-col-md-nogrow">
-    <select multiple class="flex-col-xs-12 options-select selectpicker" data-live-search="true">
-      <option value="volvo">Option 1</option>
-      <option value="saab">Option 2</option>
-    </select>
+    <%= form_for(@project, remote: true, format: :json, 
+                 html: {id: "run-project-form"}) do |f| %>
+      <!--Placeholder for options menu-->
+      <div class="btn-group" id="optionsMenu">
+        <button data-toggle="dropdown" class="btn dropdown-toggle">
+          Options
+          <span class="caret"></span>
+        </button>
+      </div>
+      <div hidden>
+        <%= f.text_field :input, value: @base64_input%>
+      </div>
+    <% end %>
 
   </div>
 
@@ -20,3 +29,92 @@
     <button id="run_project" class="btn btn-default btn-primary run-button">Run</button>
   </div>
 </div>
+
+<%
+  splitOptionsString = [];
+  if !@project[:service_options].nil?
+    splitOptionsString = @project[:service_options].split()
+  end
+
+  # Generate hidden options menu for each config file that will be pulled into
+  # the shown options menu when the service type is changed.
+  require 'json'
+  option_config_files = %w[smack-options.json boogie-options.json]
+  option_config_files.each do |file|
+    json = File.read('public/config/' + file)
+    json = JSON.parse(json)
+    id = 1%>
+      <div class='hidden' id='<%=file[0..file.index('.json')-1]%>'>
+        <button data-toggle="dropdown" class="btn dropdown-toggle"
+                data-placeholder='false'>Options <span class="caret"></span></button>
+        <ul class="dropdown-menu scrollable-menu pull-top noclose" role="menu">
+
+          <h6 class="dropdown-header">Integer Options</h6>
+          <%json['Integer Options'].each do |option|
+              index = splitOptionsString.find_index('--'+option['name'])
+              if index.nil?
+                value = option['default']
+              else
+                value = splitOptionsString[index + 1]
+              end
+          %>
+              <li><label><%=option['name']%>
+                <input type="number" name="<%=option['name']%>" value="<%=value%>" min="<%=option['min']%>"
+                       max="<%=option['max']%>" step="1"/></label></li>
+            <%id+=1
+            end%>
+
+          <h6 class="dropdown-header">String Options</h6>
+          <%json['String Options'].each do |option|
+              index = splitOptionsString.find_index('--'+option['name'])
+              if index.nil?
+                value = option['default']
+              else
+                value = splitOptionsString[index + 1]
+              end
+          %>
+              <li><label><%=option['name']%>
+                <input type="text" name="<%=option['name']%>" value="<%=value%>"/></label></li>
+          <%id+=1
+            end%>
+
+          <h6 class="dropdown-header">Boolean Options</h6>
+          <%json['Boolean Options'].each do |option|
+              index = splitOptionsString.find_index('--'+option['name'])
+              if index.nil?
+                checked = ''
+              else
+                checked = 'checked'
+              end
+          %>
+              <li>
+                <input name='<%=option['name']%>' <%=checked%> type='checkbox' id='<%=id%>'/>
+                <label for='<%=id%>' ><%=option['name']%></label>
+              </li>
+          <%
+              id+=1
+            end
+          %>
+
+          <%json['Group Options'].each do |group|
+              index = splitOptionsString.find_index('--'+group['name'])
+              if !index.nil?
+                value = splitOptionsString[index + 1]
+              end
+          %>
+              <h1 class="dropdown-header"><%=group['name']%></h1>
+              <%group['options'].each do |option|
+                  if (index.nil? and option['default']) or (!index.nil? and option['name'] == value)%>
+                        <li><input type="radio" id="<%=id%>" name="<%=group['name']%>" value="<%=option['name']%>" checked >
+                          <label for="<%=id%>"><%=option['name']%></label></li>
+                    <%else%>
+                        <li><input type="radio" id="<%=id%>" name="<%=group['name']%>" value="<%=option['name']%>">
+                          <label for="<%=id%>"><%=option['name']%></label></li>
+                  <%
+                  end
+                  id += 1
+              end%>
+          <%end%>
+        </ul>
+      </div>
+<%end%>

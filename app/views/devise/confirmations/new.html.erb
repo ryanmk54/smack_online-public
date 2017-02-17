@@ -1,16 +1,42 @@
-<h2>Resend confirmation instructions</h2>
+<style type="text/css">
+  body 
+  {
+    background-color: #eeeeee;
+  }
 
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-  <%= devise_error_messages! %>
+  .container > div{
+    width: 50%;
+    max-width: 1024px;
+    margin: 0 auto;
+    text-align: left;
+}
+</style>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
-  </div>
+<div class="container">
 
-  <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
-  </div>
-<% end %>
+  <div class="row">
 
-<%= render "devise/shared/links" %>
+		<h2>Resend confirmation instructions</h2>
+
+		<%= form_for(resource, :html => {:class => "form-signin "}, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+		  <%= devise_error_messages! %>
+
+		  <div class="field">
+		    <%= f.label :email %><br />
+		    <%= f.email_field :email, :class => "form-control", :placeholder => "Email address", autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+		  </div>
+
+		  <br />
+
+		  <div class="actions">
+		    <%= f.submit "Resend confirmation instructions", :class => "btn btn-lg btn-primary btn-block" %>
+		  </div>
+		<% end %>
+
+		<br />
+
+		<%= render "devise/shared/links" %>
+
+	</div>
+
+</div>

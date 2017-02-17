@@ -7,10 +7,11 @@
     <%= render "title_form" %>
   </div>
 
-  <div class="flex-col-md-5 flex-col-md-nogrow flex-col-sm-grow flex-col-sm-6">
-    <select class="selectpicker flex-col-xs-12">
-      <option>Smack</option>
-      <option>Boogie</option>
+<div class="flex-col-md-5 flex-col-md-nogrow flex-col-sm-grow flex-col-sm-6">
+    <select class="flex-col-xs-12" id="service-selector">
+      <!--THE VALUE OF THESE OPTIONS MUST MATCH THE ASSOCIATED CONFIG FILE NAME IN /PUBLIC/CONFIG/-->
+      <option value="smack-options">Smack</option>
+      <option value="boogie-options">Boogie</option>
     </select>
   </div>
   <div class="flex-col-md-1">
@@ -58,8 +59,9 @@
       <%= render "options_and_run_row" %>
     </div>
 
-<div>
+</div>
 
 <!-- End page body -->
+<script src="/assets/ace/ace.js" type="text/javascript" charset="utf-8">
+</script>
 
-<script src="/assets/ace/ace.js" type="text/javascript" charset="utf-8"></script>

@@ -189,8 +189,11 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
             landcolor: 'rgb(217, 217, 217)'
         },
     };
-
-    Plotly.newPlot(document.getElementById('graphContainer'), data, layout);
+    var myPlot = document.getElementById('graphContainer');
+    Plotly.newPlot(myPlot, data, layout);
+    $("#graphContainer").click(function(data){
+        alert('hi');
+    });
 }
 
 /*

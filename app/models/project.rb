@@ -1,7 +1,9 @@
 class Project < ApplicationRecord
   default_scope { order updated_at: :desc }
 
-  has_and_belongs_to_many :users
+  # has_and_belongs_to_many :users
+  has_many :project_users
+  has_many :users, through: :project_users
 
   def created_at
     self[:created_at].strftime("%D")
@@ -52,7 +54,7 @@ class Project < ApplicationRecord
       output = file.read
       file.close
     else # Otherwise, the job is still processing
-      output = ''
+      output = nil
     end
 
     return output
