@@ -1,0 +1,6 @@
+<div id="project-input-container" hidden>
+  <%= form_for(@project, remote: true, format: :js, 
+               html: {id: "project-input-form"}) do |f| %>
+      <%= f.text_field :input, value: @base64_input%>
+  <% end %>
+</div>

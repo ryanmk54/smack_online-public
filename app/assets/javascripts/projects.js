@@ -79,6 +79,7 @@ $().ready(function(){
   // handle the zip file upload button
   $(zipInput).change(tryLoadZipFromUpload);
 
+  // TODO this might be broken since I moved the project inpur form
   let projectFormSelector = '#options-and-run-row form';
   $(projectFormSelector).on('ajax:success', projectUpdateSuccess);
   // TODO account for if it is a failure. We would need to send it again
@@ -87,6 +88,7 @@ $().ready(function(){
   // TODO on form.edit_project it should go to pollForOutputUpdates
 
   watchProjectTitleForm();
+  $('[data-toggle="tooltip"]').tooltip();
 });
 
 
@@ -302,6 +304,7 @@ function loadIDE() {
   // Update the zip file every time the editor loses focus
   editor.on('blur', function() {
     zip.file(currentFile, editor.getValue());
+    submitProjectInputForm();
   });
 
   // handle clicking on editor2
@@ -315,13 +318,13 @@ function loadIDE() {
  * Generates the base64 for the given zip and
  * submits the pages form
  */
-function generateBase64AndSubmitForm() {
+function generateBase64AndSubmitProjectInputForm() {
   // zip up the files and ask rails to submit it
   zip.generateAsync({type: "base64"})
     .then(function (content) {
       var base64Input = document.getElementById(id.base64Input);
       base64Input.value = content;
-      $.rails.handleRemote($('#run-project-form'));
+      $.rails.handleRemote($('#project-input-form'));
     });
 }
 

@@ -2,6 +2,8 @@
   <%= text_area_tag :output, @output %>
 </div>
 
+<%= render partial: "project_input_container" %>
+
 <div id="top-row" class="lgray flex-row h-form-row flex-align-center">
   <div class="flex-col-md-2 flex-col-sm-4">
     <%= form_for @project, remote: true, html: {id: 'project-title-form'} do |f| %>
@@ -70,13 +72,22 @@
 
         <!-- Bottom Right -->
         <div class="col-md-1">
-          <%= form_for(@project, remote: true, format: :json, 
-                       html: {id: "run-project-form"}) do |f| %>
-            <div hidden>
-              <%= f.text_field :input, value: @base64_input%>
+          <% if @project.persisted? %>
+            <%= form_for(@project, url: {id: @project.id, action: :run}, remote: true, 
+                         html: {id: 'run-project-form'}) do |f| 
+            %>
+              <%= f.submit(value: "Run", 
+                options: {id: :run_project, class: "btn btn-default btn-primary run-button"})
+              %>
+            <% end %>
+          <% else %>
+            <div class="tooltip-wrapper run-button " data-toggle="tooltip" data-placement="top"
+                 title="Add some code to your project before you try to run it">
+              <button class="btn btn-default btn-primary" disabled>
+                Run
+              </button>
             </div>
           <% end %>
-          <button id="run_project" class="btn btn-default btn-primary run-button">Run</button>
         </div>
       </div>
     </div>

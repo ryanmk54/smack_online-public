@@ -21,11 +21,8 @@ class ProjectsController < ApplicationController
   # GET /projects/new
   # Displays the initial code editor to the user.
   def new
-    if current_user == nil
-      @project = Project.new
-      return
-    end
-    @project = current_user.projects.new
+    @project = Project.new
+    render 'edit'
   end
 
   # POST /projects.json
@@ -43,7 +40,6 @@ class ProjectsController < ApplicationController
 
     # Save the new project to the database and redirect the user to 'edit'
     respond_to do |format|
-      puts "which format"
       if @project.save
         format.html { redirect_to edit_project_path(@project)}
         format.js
@@ -70,23 +66,21 @@ class ProjectsController < ApplicationController
   # Updates the project db attributes, saves the new input to the file system,
   # deletes the old output from file system.
   def update
-      # Delete the old output so the client doesn't get confused thinking it is the new output.
-      @project.output = nil
+    # Delete the old output so the client doesn't get confused thinking it is the new output.
+    @project.output = nil
 
-      @project.input = params[:project][:input]
-      params[:project][:eta] = send_service_input 
-        # Make a request to the SMACK server with updated project
+    @project.input = params[:project][:input]
+    params[:project][:eta] = send_service_input 
+      # Make a request to the SMACK server with updated project
 
     respond_to do |format|
       if @project.update(project_params)
-        format.html { redirect_to edit_project_path(@project)}
         format.js { render status: :ok }
         format.json { render json: @project, only: [:eta, :output, :id] }
       else
         format.any(:js, :json) do
           render json: @project.errors, status: :unprocessable_entity
         end
-        format.html { render :edit } # If the save fails, show the user the edit window again.
       end
     end
   end
@@ -95,6 +89,17 @@ class ProjectsController < ApplicationController
   def run
     @project.attributes = run_project_params
     @project.eta = send_service_input
+
+    respond_to do |format|
+      if @project.save
+        format.js
+        format.json { render json: @project, only: [:eta, :output, :id] }
+      else
+        format.any(:js, :json) do
+          render json: @project.errors, status: :unprocessable_entity
+        end
+      end
+    end
   end
 
   # GET /projects/1.json will be called every "eta" seconds (AJAX)
