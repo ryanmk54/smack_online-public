@@ -22,6 +22,12 @@ body {
   }
 }
 
+#options-and-run-row {
+  & > div:first-child {
+    margin: 8px;
+  }
+}
+
 .main-container
 {
   height: calc(100% - 2*52px);

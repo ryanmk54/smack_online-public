@@ -9,7 +9,7 @@
     <% end %>
   </div>
 
-<div class="flex-col-md-5 flex-col-md-nogrow flex-col-sm-grow flex-col-sm-6">
+  <div class="flex-col-md-5 flex-col-md-nogrow flex-col-sm-grow flex-col-sm-6">
     <select class="flex-col-xs-12" id="service-selector">
       <!--THE VALUE OF THESE OPTIONS MUST MATCH THE ASSOCIATED CONFIG FILE NAME IN /PUBLIC/CONFIG/-->
       <option value="smack-options">Smack</option>
@@ -28,7 +28,7 @@
       <div id="upload-project-container">
         <div class="field white-color">
           <%= label_tag :input_upload, "Upload Project" %>
-          <%= file_field_tag :input_upload, accept: ".zip, application/zip", 
+          <%= file_field_tag :input_upload, accept: ".zip, application/zip",
                              class: 'white-color' %>
           <span id="input_upload_status"></span>
         </div>
@@ -59,9 +59,9 @@
       </div>
 
       <!-- Bottom -->
-      <div id="options-and-run-row" class="bottom-container lgray h-form-row flex-row">
-        <div class="col-md-12">
-          <%= form_for(project, remote: true, format: :json, 
+      <div id="options-and-run-row" class="lgray flex-row h-form-row flex-align-center">
+        <div class="flex-col-md-1">
+          <%= form_for(project, remote: true, format: :json,
                        html: {id: "run-project-form"}) do |f| %>
             <!--Placeholder for options menu-->
             <div class="btn-group" id="optionsMenu">
@@ -71,10 +71,13 @@
               <%= f.text_field :input, value: @base64_input%>
             </div>
           <% end %>
-          <button id="run_project" class="btn btn-default btn-primary run-button">Run</button>
+        </div>
+        <div class="flex-col-md-1">
+          <button id="run_project" class="btn btn-default btn-primary">Run</button>
         </div>
       </div>
     </div>
+</div>
 
 </div>
 
