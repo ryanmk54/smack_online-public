@@ -6,6 +6,8 @@
 //= require bootstrap-tour.min
 //= require jszip
 //= require tree.jquery
+//= require _title
+//= require _tutorial
 
 const capstoneName = "SMACK Online";
 const id = {
@@ -85,13 +87,8 @@ $().ready(function(){
   $(projectFormSelector).on('ajax:success', projectUpdateSuccess);
   // TODO account for if it is a failure. We would need to send it again
 
-  // TODO on form.new_project, it should go to projectUpdateSuccess
-  // TODO on form.edit_project it should go to pollForOutputUpdates
-
-  watchProjectTitleForm();
-
-  let tour = initTour();
-  $("#start-tutorial-btn").on('click', function(){ tour.start(true); });
+  initTitle();
+  Tutorial.init('#start-tutorial-btn');
 
   // LOGIC FOR SWITCHING OPTIONS MENUS
   // Set the options menu html to the html of the hidden field associated with
@@ -104,26 +101,11 @@ $().ready(function(){
 });
 
 
-function watchProjectTitleForm() {
-  lastTitle = $('#project-title-form #project_title')[0].value;
-
-  let updateProjectIfTitleChanged = function() {
-    currentTitle = $('#project-title-form #project_title')[0].value;
-
-    // if the title hasn't changed do nothing
-    if (currentTitle == lastTitle){
-      return false;
-    }
-
-    // if it has changed updated the cached title and
-    // the project stored on the server
-    lastTitle = currentTitle;
-    $.rails.handleRemote($('#project-title-form'));
-    return false;
-  }
-
-  $('#project-title-form').submit(updateProjectIfTitleChanged);
-  $('#project-title-form #project_title').blur(updateProjectIfTitleChanged);
+function initTitle() {
+  Title.init({
+    formSelector: "#project-title-form",
+    titleSelector: "#project-title-form #project_title"
+  });
 }
 
 
@@ -204,7 +186,9 @@ function pollForOutputUpdates(data) {
 }
 
 
-
+/**
+ * Submits the base64 without the run buttons
+ */
 function ajaxCall(id)
 {
     $.ajax({
@@ -340,6 +324,27 @@ function generateBase64AndSubmitForm() {
 }
 
 
+/**
+ * Send base64 of just the input
+ */
+function generateBase64AndSubmitInput() {
+  zip.generateAsync({type: "base64"})
+    .then(function (content) {
+      let url = document.getElementById('run-project-form').action;
+      $.ajax({
+          url,
+          method: "POST",
+          datatype: "script",
+          data: {
+            project: {
+              input: content
+            }
+          }
+      });
+    });
+}
+
+
 // Unzips the file out of zip and 
 // sets the contents of the editor 
 // to the contents of the file
@@ -439,40 +444,4 @@ function isZipUploadValid(zipUpload) {
   }
 
   return true;
-}
-
-function initTour() {
-  let tour = new Tour({
-    storage: false,
-    steps: [
-    {
-      element: "#service-selector",
-      title: "Welcome to " + capstoneName + "!",
-      content: "Select the service you would like to use"
-    },
-    {
-      element: "#project_title",
-      title: "Naming your project",
-      content: "Give your project a descriptive title that will be shown on the community page"
-    },
-    {
-      element: "#upload-project-container",
-      title: "Upload your source code",
-      content: "Upload a zip file containing your source code"
-    },
-    {
-      element: "#optionsMenu",
-      title: "Options",
-      content: "Choose your options here"
-    },
-    {
-      element: "#run_project",
-      title: "Running your project",
-      content: "As soon as you're ready, hit run!"
-    }
-    ]
-  });
-
-  tour.init();
-  return tour;
 }

@@ -37,7 +37,7 @@ class ProjectsController < ApplicationController
     @project.save # Need to save before send_service_input in order to know the project id
     current_user.projects.push @project if current_user
 
-    if params[:project][:input]
+    if params[:run]
       #TODO: Change config file based off of other services
       @project[:service_options] = generateOptionsString('smack-options.json')
 

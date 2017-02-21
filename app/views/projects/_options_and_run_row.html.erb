@@ -1,8 +1,8 @@
 <!-- Bottom -->
-<div id="options-and-run-row" class="bottom-container lgray h-form-row flex-row">
+<div id="options-and-run-row" class="lgray h-form-row flex-row">
   <!-- Bottom Left -->
   <div class="flex-col-sm-9 flex-col-sm-grow flex-col-md-6 flex-col-md-nogrow">
-    <%= form_for(@project, remote: true, format: :json, 
+    <%= form_for(@project, remote: true, format: :js, 
                  html: {id: "run-project-form"}) do |f| %>
       <!--Placeholder for options menu-->
       <div class="btn-group" id="optionsMenu">
@@ -14,19 +14,10 @@
       <div hidden>
         <%= f.text_field :input, value: @base64_input%>
       </div>
+      <%= f.submit "Run", id: :run_project, name: :run, 
+                   class: "btn btn-default btn-primary run-button" %>
     <% end %>
 
-  </div>
-
-  <!-- Bottom Right -->
-  <div class="col-md-1">
-    <%= form_for(@project, remote: true, format: :js, 
-                 html: {id: "run-project-form"}) do |f| %>
-      <div hidden>
-        <%= f.text_field :input, value: @base64_input%>
-      </div>
-    <% end %>
-    <button id="run_project" class="btn btn-default btn-primary run-button">Run</button>
   </div>
 </div>
 
