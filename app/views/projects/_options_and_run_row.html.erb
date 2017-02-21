@@ -32,7 +32,7 @@
   require 'json'
   option_config_files = %w[smack-options.json boogie-options.json]
   option_config_files.each do |file|
-    json = File.read('public/config/' + file)
+    json = File.read("#{Rails.root}/public/config/" + file)
     json = JSON.parse(json)
     id = 1%>
       <div class='hidden' id='<%=file[0..file.index('.json')-1]%>'>
