@@ -1,7 +1,7 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//
+//= require dropdowns-enhancement
 //= require bootstrap-select
 //= require bootstrap-tour.min
 //= require jszip
@@ -81,27 +81,49 @@ $().ready(function(){
   // handle the zip file upload button
   $(zipInput).change(tryLoadZipFromUpload);
 
-  let projectFormSelectors = 'form.new_project, form.edit_project';
-  $(projectFormSelectors).on('ajax:success', projectUpdateSuccess);
+  let projectFormSelector = '#options-and-run-row form';
+  $(projectFormSelector).on('ajax:success', projectUpdateSuccess);
   // TODO account for if it is a failure. We would need to send it again
-  //
+
+  // TODO on form.new_project, it should go to projectUpdateSuccess
+  // TODO on form.edit_project it should go to pollForOutputUpdates
 
   watchProjectTitleForm();
 
   let tour = initTour();
   $("#start-tutorial-btn").on('click', function(){ tour.start(true); });
+
+  // LOGIC FOR SWITCHING OPTIONS MENUS
+  // Set the options menu html to the html of the hidden field associated with
+  // the value of the drop down menu value (service-selector.val == service-options.id)
+  $("#optionsMenu").html($("#" + $("#service-selector").find(":selected").val()).html());
+  $("#service-selector").change(function()
+  {
+    $("#optionsMenu").html($("#" + $(this).find(":selected").val()).html());
+  });
 });
 
 
 function watchProjectTitleForm() {
   lastTitle = $('#project-title-form #project_title')[0].value;
-  $("#project_title").on('blur', function(evt) {
-    if (evt.target.value == lastTitle){
-      return;
+
+  let updateProjectIfTitleChanged = function() {
+    currentTitle = $('#project-title-form #project_title')[0].value;
+
+    // if the title hasn't changed do nothing
+    if (currentTitle == lastTitle){
+      return false;
     }
-    lastTitle = evt.target.value;
+
+    // if it has changed updated the cached title and
+    // the project stored on the server
+    lastTitle = currentTitle;
     $.rails.handleRemote($('#project-title-form'));
-  });
+    return false;
+  }
+
+  $('#project-title-form').submit(updateProjectIfTitleChanged);
+  $('#project-title-form #project_title').blur(updateProjectIfTitleChanged);
 }
 
 
@@ -171,8 +193,17 @@ function handleEditor2ChangeSelection() {
 
 
 function projectUpdateSuccess(event, data, status, xhr) {
+  // TODO replace title form and project form
+
+  pollForOutputUpdates(data);
+}
+
+
+function pollForOutputUpdates(data) {
   timer = setInterval(function() {ajaxCall(data.id)}, data.eta)
 }
+
+
 
 function ajaxCall(id)
 {
@@ -306,44 +337,6 @@ function generateBase64AndSubmitForm() {
       base64Input.value = content;
       $.rails.handleRemote($('#run-project-form'));
     });
-}
-
-
-function createFilePathsObject(filePaths) {
-  data = [];
-
-  let prefix = "";
-  let dataIndex = -1;
-    // the index where children should be added
-  filePaths.forEach(function(filePath) {
-
-    if (filepath.includes(prefix)) {
-      // continue down the path
-      
-      // if (filepath - prefix) contains a /
-      // set the label up to the last / and add it to the prefix
-    }
-    else {
-      // reset the prefix and start over
-    }
-
-    /*
-     * This part is old. I am not using it for now
-    // first filePath is either a file or folder
-    // if it ends in a / it is a folder
-    // else a file
-    if (filePath.endsWith('/') {
-      filePathParts = filePath.split('/');
-      numParts filePathParts.length;
-      label = 
-
-      label = filePath.split('/')
-    }
-    */
-    
-  });
-
-  return data;
 }
 
 

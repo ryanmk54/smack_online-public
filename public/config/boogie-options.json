@@ -1,0 +1,26 @@
+{
+    "Group Options":
+    [
+        {
+            "name": "Boogie Group",
+            "options":
+            [
+                {"name": "Boogie1", "default": true},
+                {"name": "Boogie2", "default": false}
+            ]
+        }
+    ],
+    "Integer Options":
+    [
+        {"name": "BoogieIntOption", "min": 1, "max": 50, "default": 1}
+    ],
+    "String Options":
+    [
+
+    ],
+    "Boolean Options":
+    [
+        {"name": "BoogieBool1"},
+        {"name": "BoogieBool2"}
+    ]
+}
