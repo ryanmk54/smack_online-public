@@ -446,7 +446,7 @@ function initTour() {
     storage: false,
     steps: [
     {
-      element: "#select-service-dropdown",
+      element: "#service-selector",
       title: "Welcome to " + capstoneName + "!",
       content: "Select the service you would like to use"
     },
@@ -461,7 +461,7 @@ function initTour() {
       content: "Upload a zip file containing your source code"
     },
     {
-      element: "#options-col",
+      element: "#optionsMenu",
       title: "Options",
       content: "Choose your options here"
     },
