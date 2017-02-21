@@ -45,8 +45,8 @@ $().ready(function(){
   initJqTree();
 
   // Load input editor 
-  let base64Input = document.getElementById(id.base64Input);
-  let zipInput = document.getElementById(id.zipUpload);
+  var base64Input = document.getElementById(id.base64Input);
+  var zipInput = document.getElementById(id.zipUpload);
   zip = new JSZip();
   if (base64Input.value != '') {
       zip.loadAsync(base64Input.value, {base64: true})
@@ -61,16 +61,16 @@ $().ready(function(){
   }
 
   // Load output editor
-  let output = document.getElementById(id.base64Output);
+  var output = document.getElementById(id.base64Output);
   editor2.setValue(output.value);
 
   // handle the run button click
-  let runProject = document.getElementById(id.runProject);
+  var runProject = document.getElementById(id.runProject);
   $(runProject).on('click', function() {
     // try to run the projet
     // if the project is unable to run, there probably isn't a zip file loaded
     if (runProjectFn == undefined) {
-      let zip = new JSZip();
+      var zip = new JSZip();
       zip.file("main.c", editor.getValue());
       loadIDE(zip);
       generateBase64AndSubmitForm(zip);
@@ -83,7 +83,7 @@ $().ready(function(){
   // handle the zip file upload button
   $(zipInput).change(tryLoadZipFromUpload);
 
-  let projectFormSelector = '#options-and-run-row form';
+  var projectFormSelector = '#options-and-run-row form';
   $(projectFormSelector).on('ajax:success', projectUpdateSuccess);
   // TODO account for if it is a failure. We would need to send it again
 
@@ -147,21 +147,21 @@ function initJqTree() {
 
 
 function handleEditor2ChangeSelection() {
-  let cursorPos = editor2.getSelection().getCursor();
-  let contentInRow = editor2.getSession().getLine(cursorPos.row);
+  var cursorPos = editor2.getSelection().getCursor();
+  var contentInRow = editor2.getSession().getLine(cursorPos.row);
   contentInRow = contentInRow.trim();
 
-  let matchStrings = [
+  var matchStrings = [
     /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*)\((\d*),(\d*)\)/,
     /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*):(\d*):(\d*)/
   ];
 
   matchStrings.forEach(function(matchString) {
-    let match = contentInRow.match(matchString);
+    var match = contentInRow.match(matchString);
     if (match) {
-      let fileName = match[1];
-      let rowNum = match[2];
-      let colNum = match[3];
+      var fileName = match[1];
+      var rowNum = match[2];
+      var colNum = match[3];
 
       rowNum -= 1;
         // rows are zero based
@@ -175,8 +175,6 @@ function handleEditor2ChangeSelection() {
 
 
 function projectUpdateSuccess(event, data, status, xhr) {
-  // TODO replace title form and project form
-
   pollForOutputUpdates(data);
 }
 
@@ -209,7 +207,7 @@ function ajaxCall(id)
 }
 
 function tryLoadZipFromUpload() {
-  let zipUpload = document.getElementById(id.zipUpload);
+  var zipUpload = document.getElementById(id.zipUpload);
 
   if (isZipUploadValid(zipUpload)) {
     // if the zip is valid, clear any previous errors
@@ -245,18 +243,18 @@ function loadIDE() {
   console.log("loading IDE");
 
   // Load each file as a string and add it to the file list
-  let data = [];
-  let dataPosStack = [data];
-  let dirPrefixStack  = [""];
+  var data = [];
+  var dataPosStack = [data];
+  var dirPrefixStack  = [""];
 
-  let firstFile = "";
+  var firstFile = "";
   zip.forEach(function (relativePath, file) {
-    let curNode = {
+    var curNode = {
       name: file.name,
       relativePath: relativePath,
       dir: file.dir
     }
-    let lastDirPrefix = dirPrefixStack[dirPrefixStack.length - 1];
+    var lastDirPrefix = dirPrefixStack[dirPrefixStack.length - 1];
     if (file.dir && !relativePath.startsWith(lastDirPrefix)) {
       dataPosStack.pop();
       dirPrefixStack.pop();
@@ -269,7 +267,7 @@ function loadIDE() {
     }
 
     // add curNode to dataPosStack
-    let dataPos = dataPosStack[dataPosStack.length - 1];
+    var dataPos = dataPosStack[dataPosStack.length - 1];
     dataPos.push(curNode);
 
     if (file.dir && relativePath.startsWith(lastDirPrefix)) {
@@ -330,9 +328,9 @@ function generateBase64AndSubmitForm() {
 function generateBase64AndSubmitInput() {
   zip.generateAsync({type: "base64"})
     .then(function (content) {
-      let url = document.getElementById('run-project-form').action;
+      var url = document.getElementById('run-project-form').action;
       $.ajax({
-          url,
+          url: url,
           method: "POST",
           datatype: "script",
           data: {
@@ -356,7 +354,7 @@ function setCurrentFile(filename, callback) {
 
   // remove the styling from the old current file
   if (currentFile != "") {
-    let curFileElement = document.getElementById(currentFile);
+    var curFileElement = document.getElementById(currentFile);
     if (curFileElement != null) {
       curFileElement.classList.remove("current-file");
     }
@@ -365,7 +363,7 @@ function setCurrentFile(filename, callback) {
   currentFile = filename;
 
   // add styling to the new current file
-  let currentFileElement = document.getElementById(currentFile);
+  var currentFileElement = document.getElementById(currentFile);
   currentFileElement.classList.add("current-file");
 
   // input editor variable is called editor
@@ -403,9 +401,9 @@ function outputZipError(errorMessage) {
  * if the project doesn't have a title
  */
 function setProjectTitleIfEmptyToZipName(zipUpload) {
-  let currentProjectTitle = getProjectTitle();
+  var currentProjectTitle = getProjectTitle();
   if (currentProjectTitle == "") {
-    let title = zipUpload.files[0].name;
+    var title = zipUpload.files[0].name;
     title = title.replace(/\.[^/.]+$/, "");
     setProjectTitle(title);
   }
@@ -431,8 +429,8 @@ function isZipUploadValid(zipUpload) {
   }
 
   // Check the MIME type
-  let mimeType = zipUpload.files[0].type;
-  let validMimeTypes = [
+  var mimeType = zipUpload.files[0].type;
+  var validMimeTypes = [
     "application/zip", 
     "application/x-zip-compressed",
     "application/octet-stream"

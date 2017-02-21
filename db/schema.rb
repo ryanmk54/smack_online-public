@@ -54,9 +54,9 @@ ActiveRecord::Schema.define(version: 20170217174227) do
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, length: { confirmation_token: 128 }, using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true, length: { email: 128 }, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, length: { reset_password_token: 128 }, using: :btree
   end
 
 end

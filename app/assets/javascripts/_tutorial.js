@@ -1,10 +1,10 @@
 var Tutorial = {
   init: function(startSelector) {
-    let tour = this.createTour();
+    var tour = this.createTour();
     $(startSelector).on('click', function(){ tour.start(true) });
   },
   createTour: function() {
-    let tour = new Tour({
+    var tour = new Tour({
       storage: false,
       steps: [
       {
