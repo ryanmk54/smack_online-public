@@ -6,7 +6,7 @@
             "options":
             [
                 {"name": "boogie", "default": true},
-                {"name": "dorral", "default": false},
+                {"name": "corral", "default": false},
                 {"name": "duality", "default": false},
                 {"name": "svcomp", "default": false}
             ]
@@ -31,7 +31,7 @@
     ],
     "String Options":
     [
-        {"name": "entry-points", "default": "['main']"},
+        {"name": "entry-points", "default": "main"},
         {"name": "verifier-options", "default": ""}
     ],
     "Boolean Options":
