@@ -1,4 +1,0 @@
-<% if params[:project][:input] %>
-var projectJson = JSON.parse('<%= @project.ajax_json %>');
-pollForOutputUpdates(projectJson);
-<% end %>

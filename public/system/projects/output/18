@@ -1,8 +1,0 @@
-SMACK program verifier version 1.6.0
-test.c:1:1: error: unknown type name 'include'
-include <stdio.h>
-^
-test.c:1:9: error: expected identifier or '('
-include <stdio.h>
-        ^
-2 errors generated.

@@ -84,7 +84,7 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.update(project_params)
         format.html { redirect_to edit_project_path(@project)}
-        format.js { render status: :ok }
+        format.js { render nothing: :true, status: 200}
         format.json { render json: @project, only: [:eta, :output, :id] }
       else
         format.any(:js, :json) do
@@ -160,7 +160,7 @@ class ProjectsController < ApplicationController
 
   def generateOptionsString(optionsConfigFile)
     optionsString = ''
-    json = File.read('public/config/' + optionsConfigFile)
+    json = File.read("#{Rails.root}/public/config/" + optionsConfigFile)
     json = JSON.parse(json)
 
     json['Group Options'].each do |group|

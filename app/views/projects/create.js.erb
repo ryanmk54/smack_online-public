@@ -1,10 +1,7 @@
 $("#options-and-run-row").replaceWith("<%= j render partial: "options_and_run_row" %>");
-$("#project-title-form").replaceWith("<%= j render partial: "title_form" %>");
-initTitle();
+$("#project_title_form").replaceWith("<%= j render partial: "title_form" %>");
 $(".selectpicker").selectpicker();
 
 <% prev_url = url_for controller: 'projects', action: 'edit', id: @project.id %>
 var stateObj = { prev: "<%= prev_url %>" };
 window.history.pushState(stateObj, "<%= @project.title %>", "<%= prev_url %>");
-
-<%= render partial: "poll_for_output_if_input" %>

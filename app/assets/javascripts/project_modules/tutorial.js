@@ -1,9 +1,12 @@
-var Tutorial = {
-  init: function(startSelector) {
-    var tour = this.createTour();
-    $(startSelector).on('click', function(){ tour.start(true) });
-  },
-  createTour: function() {
+var Tutorial = (function() {
+  "use strict";
+
+  const capstoneName = "SMACK Online";
+  var createTour,
+      init;
+
+
+  createTour = function() {
     var tour = new Tour({
       storage: false,
       steps: [
@@ -37,5 +40,14 @@ var Tutorial = {
 
     tour.init();
     return tour;
+  };
+
+  init = function() {
+    var tour = createTour();
+    $("#start-tutorial-btn").on('click', function(){ tour.start(true) });
+  };
+
+  return {
+    init: init
   }
-}
+}());

@@ -1,3 +1,3 @@
-<%= form_for @project, remote: true, format: :js, html: {id: 'project-title-form'} do |f| %>
+<%= form_for @project, remote: true, format: :js, html: {id: :project_title_form} do |f| %>
   <%= f.text_field :title, placeholder: 'Title', class: 'form-control' %>
 <% end %>

@@ -14,10 +14,11 @@
       <div hidden>
         <%= f.text_field :input, value: @base64_input%>
       </div>
-      <%= f.submit "Run", id: :run_project, name: :run, 
+      <!-- TODO this form gets submitted twice. Once from the form submission and once from getBase64AsSubmitForm -->
+      <%= f.submit "Run", name: :run, type: :button, id: :run_button,
                    class: "btn btn-default btn-primary run-button" %>
     <% end %>
-
+    <%= form_for @project, remote: true, format: :json, html: {id: "poll-form"} do end%>
   </div>
 </div>
 
