@@ -31,7 +31,7 @@ var Tutorial = (function() {
         content: "Choose your options here"
       },
       {
-        element: "#run_project",
+        element: "#run_button",
         title: "Running your project",
         content: "As soon as you're ready, hit run!"
       }
