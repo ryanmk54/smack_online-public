@@ -46,6 +46,7 @@ var OutputEditor = (function() {
 
   set = function(value) {
     editor.setValue(value);
+    editor.navigateTo(0,0);
   };
 
   return {
