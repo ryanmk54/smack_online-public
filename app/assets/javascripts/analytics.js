@@ -208,53 +208,54 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
  * span and unit.
  */
 function displayUsageChart(dataArray){
+  
+  var unit = $('#unitPicker').val();
+  var span = $('#numberPicker').val();
+  
+  var KVArray = []; // 'Key-Value Array'
+  var labelArray = [];
+  
+  // Create the list of labels for the last <span> units.
+  for (var i = span - 1; i >= 0; i--) {
+    var formattedLabel;
+    if(unit == "day")
+        formattedLabel = generateMonthDayYearLabel(i);
+    else if(unit == "month")
+        formattedLabel = generateMonthYearLabel(i);
+    labelArray.push(formattedLabel)
+    KVArray[formattedLabel] = 0;
+  }
+  
+  // Count the number of data occurrences for each label
+  // and populate the key-value array accordingly
+  for (var i = 0; i < dataArray.length; i++) {
+    var key;
+    if (unit == "day")
+      key = dataArray[i].created_at;
+    else if (unit == "month")
+      key = dataArray[i].created_at.substring(0, 2) + "/" + dataArray[i].created_at.substring(6);
+    if ((key in KVArray))
+      KVArray[key] += 1;
+  }
+  
+  // This is necessary to 'sort' the KVArray
+  // Create random color array while we're at it
+  var valueArray = [];
+  var colorArray = [];
+  for (var i = 0; i < labelArray.length; i++) {
+    valueArray.push(KVArray[labelArray[i]]);
+    colorArray[i] = "rgb(" + randRGBVal() + "," + randRGBVal() + "," + randRGBVal() + ")";
+  }
+  // This line makes it so that if there are
+  // no projects or users associated with the chosen
+  // timespan, the graph doesn't get screwed up
+  valueArray.push(1)
+  
+  var canvas = document.getElementById("myChart");
+  var ctx = canvas.getContext("2d");
+  setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit);
+  chart = new Chart(ctx, chartConfiguration);
 
-    var unit = $('#unitPicker').val();
-    var span = $('#numberPicker').val();
-
-    var KVArray = []; // 'Key-Value Array'
-    var labelArray = [];
-
-    // Create the list of labels for the last <span> units.
-    for (var i = span - 1; i >= 0; i--) {
-        var formattedLabel;
-        if(unit == "day")
-            formattedLabel = generateMonthDayYearLabel(i);
-        else if(unit == "month")
-            formattedLabel = generateMonthYearLabel(i);
-        labelArray.push(formattedLabel)
-        KVArray[formattedLabel] = 0;
-    }
-
-    // Count the number of data occurrences for each label
-    // and populate the key-value array accordingly
-    for (var i = 0; i < dataArray.length; i++) {
-        var key;
-        if(unit == "day")
-            key = dataArray[i].created_at;
-        else if(unit == "month")
-            key = dataArray[i].created_at.substring(0, 2) + "/" + dataArray[i].created_at.substring(6);
-        if ((key in KVArray))
-            KVArray[key] += 1;
-    }
-
-    // This is necessary to 'sort' the KVArray
-    // Create random color array while we're at it
-    var valueArray = [];
-    var colorArray = [];
-    for (var i = 0; i < labelArray.length; i++) {
-        valueArray.push(KVArray[labelArray[i]]);
-        colorArray[i] = "rgb(" + randRGBVal() + "," + randRGBVal() + "," + randRGBVal() + ")";
-    }
-
-    var canvas = document.getElementById("myChart");
-    var ctx = canvas.getContext("2d");
-    if(1 < labelArray.length) {
-      setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit);
-      chart = new Chart(ctx, chartConfiguration);
-    } else {
-      alert('hi')
-    }
 }
 
 function onUsageGraphBarClick(evt)
@@ -372,6 +373,9 @@ function generateMonthYearLabel(monthsPrevious) {
 
 function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
 {
+    var type;
+    document.getElementsByClassName("list-group-item active")[0].id == 'userCreationListItem'
+        ? type = 'Users' : type = 'Projects';
     chartConfiguration = {
         type: 'bar',
         options: {
@@ -396,7 +400,7 @@ function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
         data: {
             labels: labelArray,
             datasets: [{
-                label: '# of projects created per ' + unit,
+                label: 'Number of ' + type + ' Created per ' + unit[0].toUpperCase() + unit.slice(1),
                 data: valueArray,
                 borderWidth: 1,
                 backgroundColor: colorArray
@@ -431,7 +435,7 @@ function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
         data: {
             labels: labelArray,
             datasets: [{
-                label: 'hello',
+                label: 'Project Runtime Count in Seconds',
                 data: valueArray,
                 borderWidth: 1,
                 backgroundColor: colorArray
