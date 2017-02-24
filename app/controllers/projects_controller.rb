@@ -79,6 +79,7 @@ class ProjectsController < ApplicationController
 
     @project.input = params[:project][:input]
     @project[:service_options] = generateOptionsString('smack-options.json')
+
     if params[:run]
       @project.eta = send_service_input # Make a request to the SMACK server with updated project
     end
@@ -160,6 +161,7 @@ class ProjectsController < ApplicationController
     params.require(:project).permit(:title, :input)
   end
 
+
   def generateOptionsString(optionsConfigFile)
     optionsString = ''
     json = File.read("#{Rails.root}/public/config/" + optionsConfigFile)
@@ -198,6 +200,13 @@ class ProjectsController < ApplicationController
     @project.city = city;
     @project.state = state;
     @project.save
+
+    # Creates the CSV file if it doesn't exist
+    CSV.open(PROJECT_CSV_PATH, 'a') do end
+
+    # Read the CSV file and increment the value associated with the
+    # state if the row exists. This puts the entire csv file into
+    # the variable 'csv'
     rowExists = false;
     csv = CSV.read(PROJECT_CSV_PATH, headers:true);
     csv.each do |row|
@@ -207,7 +216,9 @@ class ProjectsController < ApplicationController
       end
     end
 
-    CSV.open(PROJECT_CSV_PATH, 'wb', write_headers:true, :headers=>['name','pop','lat','lon']) do |file|
+    # This library does not allow you to simply add a row.
+    # Every line in the csv variable is rewritten to the file
+    CSV.open(PROJECT_CSV_PATH, 'w', write_headers:true, :headers=>['name','pop','lat','lon']) do |file|
       csv.each do |row|
         file << row
       end

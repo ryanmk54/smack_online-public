@@ -23,12 +23,8 @@ config/secrets.yml
 # Ignore Byebug command history file.
 .byebug_history
 
-# Ignore all project files
-public/system/*
-
 # Ignore the Project Locations csv
 public/assets/ProjectLocations.csv
-public/assets/UserLocations.csv
 
 # ignore RubyMine files
 .idea/*

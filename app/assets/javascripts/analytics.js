@@ -9,6 +9,10 @@
 // Default span for '# projects per span' graphs
 DEFAULT_SPAN = 20;
 
+GEOGRAPH_BUBBLE_SCALE = 10;
+MAX_GEOGRAPH_BUBBLE_SIZE = 100;
+MIN_GEOGRPAH_BUBBLE_SIZE = 5;
+
 var chart;
 var chartConfiguration = {};
 var currentProjectChartDataArray = [];
@@ -166,9 +170,15 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
     //TODO: Scale locationSizes by setting a scale and dividing each size by it
     var locationSizes = [];
     var hoverTextArray = [];
+    var stateSizes = [];
     for (var i = 0; i < locationCounts.length; i++) {
-        locationSizes.push(locationCounts[i]);
-        hoverTextArray.push(locationNames[i] + " # Projects: " + locationCounts[i]);
+      if(locationCounts[i] / GEOGRAPH_BUBBLE_SCALE < MIN_GEOGRPAH_BUBBLE_SIZE)
+        locationSizes.push(MIN_GEOGRPAH_BUBBLE_SIZE)
+      else if(locationCounts[i] / GEOGRAPH_BUBBLE_SCALE > MAX_GEOGRAPH_BUBBLE_SIZE)
+        locationSizes.push(MAX_GEOGRAPH_BUBBLE_SIZE)
+      else
+        locationSizes.push(locationCounts[i] / GEOGRAPH_BUBBLE_SCALE);
+      hoverTextArray.push(locationNames[i] + " # Projects: " + locationCounts[i]);
     }
 
     var data = [{
@@ -182,7 +192,7 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
     }];
 
     var layout = {
-        title: '# of SMACK Projects Made Per United States City',
+        title: 'Number of SMACK Projects Made Per State/Province',
         showlegend: false,
         geo: {
             showland: true,
@@ -190,10 +200,7 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
         },
     };
     var myPlot = document.getElementById('graphContainer');
-    Plotly.newPlot(myPlot, data, layout);
-    $("#graphContainer").click(function(data){
-        alert('hi');
-    });
+    Plotly.plot(myPlot, data, layout);
 }
 
 /*
@@ -242,8 +249,12 @@ function displayUsageChart(dataArray){
 
     var canvas = document.getElementById("myChart");
     var ctx = canvas.getContext("2d");
-    setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit);
-    chart = new Chart(ctx, chartConfiguration);
+    if(1 < labelArray.length) {
+      setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit);
+      chart = new Chart(ctx, chartConfiguration);
+    } else {
+      alert('hi')
+    }
 }
 
 function onUsageGraphBarClick(evt)
@@ -474,6 +485,7 @@ function displayRuntimeGraph(dataArray)
 
     var max = Math.max.apply(null, Object.keys(KVArray));
     for (var i = 0; i <= max; i++)
+      if(KVArray[i] != null)
         labelArray.push(i);
 
     // This is necessary to 'sort' the KVArray

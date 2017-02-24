@@ -32,6 +32,13 @@ ActiveRecord::Schema.define(version: 20170217174227) do
     t.text     "service_options", limit: 65535
   end
 
+  create_table "projects_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "project_id", null: false
+    t.integer "user_id",    null: false
+    t.index ["project_id", "user_id"], name: "index_projects_users_on_project_id_and_user_id", using: :btree
+    t.index ["user_id", "project_id"], name: "index_projects_users_on_user_id_and_project_id", using: :btree
+  end
+
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -58,5 +65,4 @@ ActiveRecord::Schema.define(version: 20170217174227) do
     t.index ["email"], name: "index_users_on_email", unique: true, length: { email: 128 }, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, length: { reset_password_token: 128 }, using: :btree
   end
-
 end

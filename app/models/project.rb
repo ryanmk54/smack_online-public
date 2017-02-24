@@ -36,7 +36,7 @@ class Project < ApplicationRecord
       self.save
     end
 
-    file = File.open(Rails.root.join('public', 'system', 'projects', 'input', self.id.to_s), 'wb')
+    file = File.open(Rails.root.join('public', 'system', 'projects', 'input', self.id.to_s), 'w')
     file.write(value)
     file.close
   end
@@ -72,7 +72,7 @@ class Project < ApplicationRecord
       File.delete(output_path) if File.exist?(output_path)
       return nil
     else # Otherwise write the output value to file
-      file = File.open(output_path, 'wb')
+      file = File.open(output_path, 'w')
       file.write(value)
       file.close
     end
@@ -81,5 +81,4 @@ class Project < ApplicationRecord
   def ajax_json
     (self.to_json only: [:eta, :output, :id]).html_safe
   end
-
 end
