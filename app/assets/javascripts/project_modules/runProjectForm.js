@@ -39,6 +39,7 @@ RunProjectForm = (function() {
             OutputEditor.set(data.output);
           }
           else {
+            OutputEditor.set("Estimated time remaining: " + data.eta + "ms");
             requestOutputFromServer();
           }
         },
@@ -51,6 +52,7 @@ RunProjectForm = (function() {
 
 
   submitWithUpdatedBase64 = function(event) {
+    OutputEditor.set("Sending code to server");
     InputEditor.save();
     FileTree.getBase64()
       .then(function (content) {
