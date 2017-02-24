@@ -249,8 +249,12 @@ function displayUsageChart(dataArray){
 
     var canvas = document.getElementById("myChart");
     var ctx = canvas.getContext("2d");
-    setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit);
-    chart = new Chart(ctx, chartConfiguration);
+    if(1 < labelArray.length) {
+      setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit);
+      chart = new Chart(ctx, chartConfiguration);
+    } else {
+      alert('hi')
+    }
 }
 
 function onUsageGraphBarClick(evt)
@@ -481,6 +485,7 @@ function displayRuntimeGraph(dataArray)
 
     var max = Math.max.apply(null, Object.keys(KVArray));
     for (var i = 0; i <= max; i++)
+      if(KVArray[i] != null)
         labelArray.push(i);
 
     // This is necessary to 'sort' the KVArray
