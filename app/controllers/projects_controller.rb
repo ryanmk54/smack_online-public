@@ -79,7 +79,9 @@ class ProjectsController < ApplicationController
 
     @project.input = params[:project][:input]
     @project[:service_options] = generateOptionsString('smack-options.json')
-    @project.eta = send_service_input # Make a request to the SMACK server with updated project
+    if params[:run]
+      @project.eta = send_service_input # Make a request to the SMACK server with updated project
+    end
 
     respond_to do |format|
       if @project.update(project_params)

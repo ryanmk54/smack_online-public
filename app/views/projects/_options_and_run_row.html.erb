@@ -12,9 +12,8 @@
         </button>
       </div>
       <div hidden>
-        <%= f.text_field :input, value: @base64_input%>
+        <%= f.text_field :input, value: @project.input %>
       </div>
-      <!-- TODO this form gets submitted twice. Once from the form submission and once from getBase64AsSubmitForm -->
       <%= f.submit "Run", name: :run, type: :button, id: :run_button,
                    class: "btn btn-default btn-primary run-button" %>
     <% end %>

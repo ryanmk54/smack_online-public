@@ -1,6 +1,8 @@
 $("#options-and-run-row").replaceWith("<%= j render partial: "options_and_run_row" %>");
 $("#project_title_form").replaceWith("<%= j render partial: "title_form" %>");
+$("#file_tree_form").replaceWith("<%= j render partial: "file_tree_form" %>");
 $(".selectpicker").selectpicker();
+initOptionsMenu();
 
 <% prev_url = url_for controller: 'projects', action: 'edit', id: @project.id %>
 var stateObj = { prev: "<%= prev_url %>" };

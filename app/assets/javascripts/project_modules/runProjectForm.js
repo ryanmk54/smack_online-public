@@ -1,7 +1,8 @@
 RunProjectForm = (function() {
   "use strict";
 
-  var init,
+  var addRunField,
+      init,
       pollDelay,
       requestOutputFromServer,
       startPollingServerForOutput,
@@ -11,6 +12,7 @@ RunProjectForm = (function() {
   init = function() {
     pollDelay = 0;
     $(document).on('click', '#run_button', submitWithUpdatedBase64);
+    $(document).on('ajax:beforeSend', '#run-project-form', addRunField);
     $(document).on('ajax:success', '#run-project-form', startPollingServerForOutput);
   };
 
@@ -52,11 +54,15 @@ RunProjectForm = (function() {
     InputEditor.save();
     FileTree.getBase64()
       .then(function (content) {
-        $("#project_input").val(content);
+        $("#run-project-form #project_input").val(content);
         $.rails.handleRemote($("#run-project-form"));
       });
     return false;
   };
+
+  addRunField = function(event, xhr, settings) {
+    settings.data += "&run=run";
+  }
 
   return {
     init: init

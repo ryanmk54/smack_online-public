@@ -141,7 +141,7 @@ var FileTree = (function() {
   };
 
 
-  setValueOfCurrentFile = function(value) {
+  setValueOfCurrentFile = function(value, save) {
     if (zip) {
       zip.file(currentFileName, value);
     }
@@ -149,23 +149,18 @@ var FileTree = (function() {
       zip = new JSZip();
       zip.file("main.c", value);
     }
+
+    if (save) {
+      saveToServer();
+    }
   };
 
 
   saveToServer = function() {
     zip.generateAsync({type: "base64"})
       .then(function (content) {
-        var url = document.getElementById('run-project-form').action;
-        $.ajax({
-            url: url,
-            method: "POST",
-            datatype: "script",
-            data: {
-              project: {
-                input: content
-              }
-            }
-        });
+        $("#file_tree_form #project_input").val(content);
+        $.rails.handleRemote($("#file_tree_form"));
       });
   };
 
@@ -187,6 +182,7 @@ var FileTree = (function() {
   return {
     init: init,
     getBase64,
+    saveToServer,
     setCurrentFile,
     setValueOfCurrentFile
   };

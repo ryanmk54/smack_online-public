@@ -1,7 +1,9 @@
 var InputEditor = (function() {
   "use strict";
 
-  var init,
+  var changed,
+
+      init,
       editor,
       navigateTo,
       save,
@@ -14,6 +16,11 @@ var InputEditor = (function() {
     editor.setTheme("ace/theme/clouds");
     editor.session.setMode("ace/mode/c_cpp");
     editor.on('blur', save);
+    editor.getSession().on('change', function(e) {
+      console.log(e);
+      changed = true;
+    });
+    changed = false;
   };
 
 
@@ -24,7 +31,10 @@ var InputEditor = (function() {
 
 
   save = function() {
-    FileTree.setValueOfCurrentFile(editor.getValue());
+    if (changed) {
+      FileTree.setValueOfCurrentFile(editor.getValue(), true);
+      changed = false;
+    }
   };
 
 

@@ -19,7 +19,10 @@ $().ready(function(){
   RunProjectForm.init();
   Title.init();
   Tutorial.init();
+  initOptionsMenu();
+});
 
+function initOptionsMenu() {
   // LOGIC FOR SWITCHING OPTIONS MENUS
   // Set the options menu html to the html of the hidden field associated with
   // the value of the drop down menu value (service-selector.val == service-options.id)
@@ -28,4 +31,4 @@ $().ready(function(){
   {
     $("#optionsMenu").html($("#" + $(this).find(":selected").val()).html());
   });
-});
+}
