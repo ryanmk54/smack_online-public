@@ -2,47 +2,54 @@
 <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
 
 
+<div class="container">
+  <div class="row">
+    <div id="sidebar" class="col-md-3 no-float" style="padding-top: 15px;">
+      <%= image_tag @user.avatar.url(:thumb), :class => 'circular--square--large' %>
+      <h2><%= @user.username %></h2>
+      <h2><%= @user.email %></h2>
 
-<div class="row">
-  <!--profile-->
-  <div class="col-sm-2">
-    <div id="profilecard" class="card" style="box-shadow: 1px 1px 1px 1px; background-color: white;">
-      <%= image_tag @user.avatar.url(:thumb), :class => 'img-card-top' %>
-      <div class="card-block">
-        <div class="card-title">
-          <strong><%= @user.username %></strong>
-          <br/>
-          <strong><%= @user.email %></strong>
+        <ul class="nav nav-pills nav-stacked" >
+          <li role="presentation">
+            <a href= "#" id="show_projects">
+              <h4>My Projects</h4>
+            </a>
+          </li>
+          <li role="presentation">
+            <a href= "#" id="show_followers">
+              <h4>Followers</h4>
+            </a>
+          </li>
+          <li role="presentation">
+            <a href= "#" id="show_following">
+              <h4>Following</h4>
+            </a>
+          </li>
+          <li role="presentation">
+            <a href= "#" id="search_for_users">
+              <h4>Search For Users</h4>
+            </a>
+          </li>
+        </ul>
+
+
+    </div>
+      <div id="preview-container" class="col-md-6 no-float">
+        <div class="no-float" id="search_container">
         </div>
+
+        <h2 id="preview-header" class="panel-header" style="padding-left: 15px;" ><strong></strong></h2>
+        <div id="preview-body"></div>
       </div>
-      <ul class="nav nav-pills nav-stacked">
-        <li role="presentation">
-          <a href= "#" id="show_projects">
-            <strong>My Projects</strong>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href= "#" id="show_followers">
-            <strong>Followers</strong>
-          </a>
-        </li>
-        <li role="presentation">
-          <a href= "#" id="show_following">
-            <strong>Following</strong>
-          </a>
-        </li>
-      </ul>
+
     </div>
+
+
+
+
   </div>
 
-  <div id="preview-container" class="panel panel-default" style="margin-left: 25px;">
-    <h2 id="preview-header" class="panel-header" style="padding-left: 15px;" ><strong></strong></h2>
-    <div class="col-sm-6" >
-      <div id="preview-body"></div>
-    </div>
-  </div>
-
-
+</div>
 </div>
 
 

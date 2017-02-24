@@ -8,6 +8,7 @@ class User < ApplicationRecord
 
 
   has_many :followers
+  has_and_belongs_to_many :projects
 
 
 
@@ -15,8 +16,12 @@ class User < ApplicationRecord
   has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "missing.png"
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
 
-
-  has_and_belongs_to_many :projects
+  def self.search input = nil
+    if input.blank? or input.nil?
+      self.all
+    end
+    where('username like ?', "%#{input}%")
+  end
 
   def created_at
     self[:created_at].strftime("%D")
@@ -30,28 +35,30 @@ class User < ApplicationRecord
   end
 
   def followers
-    follower_ids = Follower.where(following_id: self.id).select(:follower_id).map {|follower| follower.follower_id}
-    if follower_ids.empty?
-      return
-    end
+    follower_ids = Follower.where(following_id: self.id).select(:follower_id).map {|entry| entry.follower_id}
     User.find(follower_ids)
   end
 
   def followees
-    following_ids = Follower.where(follower_id: self.id).select(:following_id).map {|following| following.following_id}
-    if following_ids.empty?
-      return
-    end
+    following_ids = Follower.where(follower_id: self.id).select(:following_id).map {|entry| entry.following_id}
     User.find(following_ids)
   end
 
-  def add_follower follower_id
-    Follower.create(follower_id: follower_id, following_id: self.id)
+  def follow followee_id
+    Follower.create(follower_id: self.id, following_id: followee_id)
   end
 
-  def add_followee following_id
-    Follower.create(following_id: following_id, follower_id: self.id)
+  def unfollow followee_id
+    entries = Follower.where(follower_id: self.id).where(following_id: followee_id)
+    Follower.delete(entries.map{ |f| f.id})
   end
+
+
+
+  def is_following user_id
+    return self.followees.include? User.find(user_id)
+  end
+
 
 
 end
