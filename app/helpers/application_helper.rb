@@ -6,6 +6,7 @@ def flash_class(level)
     when 'success' then "flash alert alert-dismissable alert-success"
     when 'error'   then "flash alert alert-dismissable alert-error"
     when 'alert'   then "flash alert alert-dismissable alert-error"
+    else 'level'
   end
 end
 

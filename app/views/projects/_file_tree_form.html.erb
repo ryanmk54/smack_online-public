@@ -1,0 +1,3 @@
+<%= form_for @project, remote: true, format: :js, html: {id: :file_tree_form} do |f| %>
+  <%= f.text_field :input, value: @project.input %>
+<% end %>
