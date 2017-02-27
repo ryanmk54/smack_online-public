@@ -1,4 +1,5 @@
 require 'csv'
+require 'json'
 
 class ProjectsController < ApplicationController
   #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
@@ -38,17 +39,27 @@ class ProjectsController < ApplicationController
       @project = current_user.projects.create(project_params)
     end
     @project.save # Need to save before send_service_input in order to know the project id
+    current_user.projects.push @project if current_user
 
-    @project.input = params[:project][:input] # Save the input
-    @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
+    if params[:run]
+      #TODO: Change config file based off of other services
+      @project[:service_options] = generateOptionsString('smack-options.json')
+
+      @project.input = params[:project][:input] # Save the input
+      @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
+    end
 
     # Save the new project to the database and redirect the user to 'edit'
     respond_to do |format|
+      puts "which format"
       if @project.save
         format.html { redirect_to edit_project_path(@project)}
-        format.js { render :edit  }
+        format.js
         format.json { render json: @project, only: [:eta, :output, :id] }
       else
+        format.any(:js, :json) do
+          render json: @project.errors, status: :unprocessable_entity
+        end
         format.html { render :new }
       end
     end
@@ -71,14 +82,21 @@ class ProjectsController < ApplicationController
     @project.output = nil
 
     @project.input = params[:project][:input]
-    params[:project][:eta] = send_service_input # Make a request to the SMACK server with updated project
+    @project[:service_options] = generateOptionsString('smack-options.json')
+
+    if params[:run]
+      @project.eta = send_service_input # Make a request to the SMACK server with updated project
+    end
 
     respond_to do |format|
       if @project.update(project_params)
         format.html { redirect_to edit_project_path(@project)}
-        format.js { render :edit }
+        format.js { render nothing: :true, status: 200}
         format.json { render json: @project, only: [:eta, :output, :id] }
       else
+        format.any(:js, :json) do
+          render json: @project.errors, status: :unprocessable_entity
+        end
         format.html { render :edit } # If the save fails, show the user the edit window again.
       end
     end
@@ -130,7 +148,7 @@ class ProjectsController < ApplicationController
     response = RestClient.post(SERVICE_REQUEST_URL,
     {
         :id => @project[:id],
-        :options => @project[:options],
+        :options => @project[:service_options],
         :input => base64Input
     }.to_json, {content_type: :json, accept: :json})
     # Set the project's eta to the SMACK server's predicted processing time
@@ -144,7 +162,39 @@ class ProjectsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def project_params
-    params.require(:project).permit(:title, :output, :eta)
+    params.require(:project).permit(:title, :input)
+  end
+
+
+  def generateOptionsString(optionsConfigFile)
+    optionsString = ''
+    json = File.read("#{Rails.root}/public/config/" + optionsConfigFile)
+    json = JSON.parse(json)
+
+    json['Group Options'].each do |group|
+      if params.include? group['name']
+        optionsString += '--' + group['name'] + ' ' + params[group['name']] + ' '
+      end
+    end
+
+    json['Integer Options'].each do |option|
+      if params.include? option['name']
+        optionsString += '--' + option['name'] + ' ' + params[option['name']] + ' '
+      end
+    end
+
+    json['String Options'].each do |option|
+      if params.include? option['name'] and params[option['name']] != ''
+        optionsString += '--' + option['name'] + ' ' + params[option['name']] + ' '
+      end
+    end
+
+    json['Boolean Options'].each do |option|
+      if params.include? option['name']
+        optionsString += '--' + option['name'] + ' '
+      end
+    end
+    return optionsString
   end
 
   # TODO: Needs to go to model
@@ -154,6 +204,13 @@ class ProjectsController < ApplicationController
     @project.city = city;
     @project.state = state;
     @project.save
+
+    # Creates the CSV file if it doesn't exist
+    CSV.open(PROJECT_CSV_PATH, 'a') do end
+
+    # Read the CSV file and increment the value associated with the
+    # state if the row exists. This puts the entire csv file into
+    # the variable 'csv'
     rowExists = false;
     csv = CSV.read(PROJECT_CSV_PATH, headers:true);
     csv.each do |row|
@@ -163,7 +220,9 @@ class ProjectsController < ApplicationController
       end
     end
 
-    CSV.open(PROJECT_CSV_PATH, 'wb', write_headers:true, :headers=>['name','pop','lat','lon']) do |file|
+    # This library does not allow you to simply add a row.
+    # Every line in the csv variable is rewritten to the file
+    CSV.open(PROJECT_CSV_PATH, 'w', write_headers:true, :headers=>['name','pop','lat','lon']) do |file|
       csv.each do |row|
         file << row
       end

@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore gem directory
+vendor/bundle/
+
 # Comment out these rules if you are OK with secrets being uploaded to the repo
 config/initializers/secret_token.rb
 config/secrets.yml
@@ -20,12 +23,8 @@ config/secrets.yml
 # Ignore Byebug command history file.
 .byebug_history
 
-# Ignore all project files
-public/system/*
-
 # Ignore the Project Locations csv
 public/assets/ProjectLocations.csv
-public/assets/UserLocations.csv
 
 # ignore RubyMine files
 .idea/*

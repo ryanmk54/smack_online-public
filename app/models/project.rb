@@ -1,7 +1,9 @@
 class Project < ApplicationRecord
   default_scope { order updated_at: :desc }
 
-  has_and_belongs_to_many :users
+  # has_and_belongs_to_many :users
+  has_many :project_users
+  has_many :users, through: :project_users
 
   def created_at
     self[:created_at].strftime("%D")
@@ -34,7 +36,7 @@ class Project < ApplicationRecord
       self.save
     end
 
-    file = File.open(Rails.root.join('public', 'system', 'projects', 'input', self.id.to_s), 'wb')
+    file = File.open(Rails.root.join('public', 'system', 'projects', 'input', self.id.to_s), 'w')
     file.write(value)
     file.close
   end
@@ -52,7 +54,7 @@ class Project < ApplicationRecord
       output = file.read
       file.close
     else # Otherwise, the job is still processing
-      output = 'Processing...'
+      output = nil
     end
 
     return output
@@ -70,10 +72,13 @@ class Project < ApplicationRecord
       File.delete(output_path) if File.exist?(output_path)
       return nil
     else # Otherwise write the output value to file
-      file = File.open(output_path, 'wb')
+      file = File.open(output_path, 'w')
       file.write(value)
       file.close
     end
   end
 
+  def ajax_json
+    (self.to_json only: [:eta, :output, :id]).html_safe
+  end
 end

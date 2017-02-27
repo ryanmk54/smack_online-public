@@ -5,13 +5,10 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :timeoutable
 
-
-
   has_many :followers
-  has_and_belongs_to_many :projects
 
-
-
+  has_many :project_users
+  has_many :projects, through: :project_users
 
   has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "missing.png"
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
@@ -58,7 +55,4 @@ class User < ApplicationRecord
   def is_following user_id
     return self.followees.include? User.find(user_id)
   end
-
-
-
 end

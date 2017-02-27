@@ -9,6 +9,10 @@
 // Default span for '# projects per span' graphs
 DEFAULT_SPAN = 20;
 
+GEOGRAPH_BUBBLE_SCALE = 10;
+MAX_GEOGRAPH_BUBBLE_SIZE = 100;
+MIN_GEOGRPAH_BUBBLE_SIZE = 5;
+
 var chart;
 var chartConfiguration = {};
 var currentProjectChartDataArray = [];
@@ -166,9 +170,15 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
     //TODO: Scale locationSizes by setting a scale and dividing each size by it
     var locationSizes = [];
     var hoverTextArray = [];
+    var stateSizes = [];
     for (var i = 0; i < locationCounts.length; i++) {
-        locationSizes.push(locationCounts[i]);
-        hoverTextArray.push(locationNames[i] + " # Projects: " + locationCounts[i]);
+      if(locationCounts[i] / GEOGRAPH_BUBBLE_SCALE < MIN_GEOGRPAH_BUBBLE_SIZE)
+        locationSizes.push(MIN_GEOGRPAH_BUBBLE_SIZE)
+      else if(locationCounts[i] / GEOGRAPH_BUBBLE_SCALE > MAX_GEOGRAPH_BUBBLE_SIZE)
+        locationSizes.push(MAX_GEOGRAPH_BUBBLE_SIZE)
+      else
+        locationSizes.push(locationCounts[i] / GEOGRAPH_BUBBLE_SCALE);
+      hoverTextArray.push(locationNames[i] + " # Projects: " + locationCounts[i]);
     }
 
     var data = [{
@@ -182,15 +192,15 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
     }];
 
     var layout = {
-        title: '# of SMACK Projects Made Per United States City',
+        title: 'Number of SMACK Projects Made Per State/Province',
         showlegend: false,
         geo: {
             showland: true,
             landcolor: 'rgb(217, 217, 217)'
         },
     };
-
-    Plotly.newPlot(document.getElementById('graphContainer'), data, layout);
+    var myPlot = document.getElementById('graphContainer');
+    Plotly.plot(myPlot, data, layout);
 }
 
 /*
@@ -198,49 +208,54 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
  * span and unit.
  */
 function displayUsageChart(dataArray){
+  
+  var unit = $('#unitPicker').val();
+  var span = $('#numberPicker').val();
+  
+  var KVArray = []; // 'Key-Value Array'
+  var labelArray = [];
+  
+  // Create the list of labels for the last <span> units.
+  for (var i = span - 1; i >= 0; i--) {
+    var formattedLabel;
+    if(unit == "day")
+        formattedLabel = generateMonthDayYearLabel(i);
+    else if(unit == "month")
+        formattedLabel = generateMonthYearLabel(i);
+    labelArray.push(formattedLabel)
+    KVArray[formattedLabel] = 0;
+  }
+  
+  // Count the number of data occurrences for each label
+  // and populate the key-value array accordingly
+  for (var i = 0; i < dataArray.length; i++) {
+    var key;
+    if (unit == "day")
+      key = dataArray[i].created_at;
+    else if (unit == "month")
+      key = dataArray[i].created_at.substring(0, 2) + "/" + dataArray[i].created_at.substring(6);
+    if ((key in KVArray))
+      KVArray[key] += 1;
+  }
+  
+  // This is necessary to 'sort' the KVArray
+  // Create random color array while we're at it
+  var valueArray = [];
+  var colorArray = [];
+  for (var i = 0; i < labelArray.length; i++) {
+    valueArray.push(KVArray[labelArray[i]]);
+    colorArray[i] = "rgb(" + randRGBVal() + "," + randRGBVal() + "," + randRGBVal() + ")";
+  }
+  // This line makes it so that if there are
+  // no projects or users associated with the chosen
+  // timespan, the graph doesn't get screwed up
+  valueArray.push(1)
+  
+  var canvas = document.getElementById("myChart");
+  var ctx = canvas.getContext("2d");
+  setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit);
+  chart = new Chart(ctx, chartConfiguration);
 
-    var unit = $('#unitPicker').val();
-    var span = $('#numberPicker').val();
-
-    var KVArray = []; // 'Key-Value Array'
-    var labelArray = [];
-
-    // Create the list of labels for the last <span> units.
-    for (var i = span - 1; i >= 0; i--) {
-        var formattedLabel;
-        if(unit == "day")
-            formattedLabel = generateMonthDayYearLabel(i);
-        else if(unit == "month")
-            formattedLabel = generateMonthYearLabel(i);
-        labelArray.push(formattedLabel)
-        KVArray[formattedLabel] = 0;
-    }
-
-    // Count the number of data occurrences for each label
-    // and populate the key-value array accordingly
-    for (var i = 0; i < dataArray.length; i++) {
-        var key;
-        if(unit == "day")
-            key = dataArray[i].created_at;
-        else if(unit == "month")
-            key = dataArray[i].created_at.substring(0, 2) + "/" + dataArray[i].created_at.substring(6);
-        if ((key in KVArray))
-            KVArray[key] += 1;
-    }
-
-    // This is necessary to 'sort' the KVArray
-    // Create random color array while we're at it
-    var valueArray = [];
-    var colorArray = [];
-    for (var i = 0; i < labelArray.length; i++) {
-        valueArray.push(KVArray[labelArray[i]]);
-        colorArray[i] = "rgb(" + randRGBVal() + "," + randRGBVal() + "," + randRGBVal() + ")";
-    }
-
-    var canvas = document.getElementById("myChart");
-    var ctx = canvas.getContext("2d");
-    setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit);
-    chart = new Chart(ctx, chartConfiguration);
 }
 
 function onUsageGraphBarClick(evt)
@@ -358,6 +373,9 @@ function generateMonthYearLabel(monthsPrevious) {
 
 function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
 {
+    var type;
+    document.getElementsByClassName("list-group-item active")[0].id == 'userCreationListItem'
+        ? type = 'Users' : type = 'Projects';
     chartConfiguration = {
         type: 'bar',
         options: {
@@ -382,7 +400,7 @@ function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
         data: {
             labels: labelArray,
             datasets: [{
-                label: '# of projects created per ' + unit,
+                label: 'Number of ' + type + ' Created per ' + unit[0].toUpperCase() + unit.slice(1),
                 data: valueArray,
                 borderWidth: 1,
                 backgroundColor: colorArray
@@ -417,7 +435,7 @@ function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
         data: {
             labels: labelArray,
             datasets: [{
-                label: 'hello',
+                label: 'Project Runtime Count in Seconds',
                 data: valueArray,
                 borderWidth: 1,
                 backgroundColor: colorArray
@@ -471,6 +489,7 @@ function displayRuntimeGraph(dataArray)
 
     var max = Math.max.apply(null, Object.keys(KVArray));
     for (var i = 0; i <= max; i++)
+      if(KVArray[i] != null)
         labelArray.push(i);
 
     // This is necessary to 'sort' the KVArray
