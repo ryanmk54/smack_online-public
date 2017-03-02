@@ -39,7 +39,7 @@ class ProjectsController < ApplicationController
       @project = current_user.projects.create(project_params)
     end
     @project.save # Need to save before send_service_input in order to know the project id
-    current_user.projects.push @project if current_user
+   # current_user.projects.push @project if current_user
 
     if params[:run]
       #TODO: Change config file based off of other services
