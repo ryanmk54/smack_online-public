@@ -6,10 +6,10 @@
 
 function delete_project(project_id) {
     $.ajax({
-        url: '/projects' + project_id,
+        url: '/projects/' + project_id,
         type: 'delete',
         success: function(result) {
-            // Do something with the result
+          displayProjects();
         }
     });
 }
