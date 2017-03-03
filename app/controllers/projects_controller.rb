@@ -131,7 +131,7 @@ class ProjectsController < ApplicationController
     end
     puts 'deleted'
     respond_to do |format|
-      format.html { redirect_to projects_url }
+      format.html { render :nothing => true }
       format.json { head :no_content }
       format.js   { render :layout => false }
     end
