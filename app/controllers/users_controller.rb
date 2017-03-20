@@ -34,12 +34,9 @@ class UsersController < ApplicationController
 
   def search
     @user = current_user
-    if params[:username] == '' or params[:username].empty?
-      users = User.all()
-    else
-      users = User.search(params[:username])
-    end
-      render partial:'users/search_preview', collection: users, as: 'user'
+    users = User.search(params[:username])
+    users.each { |u| puts 'true' if u.nil? }  
+    render partial:'users/search_preview', collection: users, as: 'user'
   end
 
   def newProjectButton

@@ -9,10 +9,8 @@
           <strong><h2><%= user.username %></h2></strong>
         </div>
         <div class="card-body">
-          <strong>Member Since: </strong>
+          <strong>Member Since: <%= user.confirmed_at.to_datetime.strftime("%m/%d/%Y") %></strong>
           <br/>
-          <strong>Projects Run: </strong>
-
         </div>
       </div>
     </div>
