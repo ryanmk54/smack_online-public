@@ -3,33 +3,29 @@
 
 <div class="container">
   <div class="row">
-    <div id="sidebar" class="col-md-3 no-float" style="padding-top: 15px;">
-      <%= image_tag @user.avatar.url(:thumb), :class => 'circular--square--large' %>
-      <h2><%= @user.username %></h2>
-      <h2><%= @user.email %></h2>
-
-        <ul class="nav nav-pills nav-stacked" >
+    <div class="navbar-profile" class="col-md-3 no-float" style="padding-top: 15px;">
+        <div class="col-lg-1">
+          <%= image_tag @user.avatar.url(:thumb), :class => 'circular--square' %>
+        </div>
+	<div class="col-lg-6">
+        <ul class="nav navbar-nav" >
           <li role="presentation">
-            <a href= "#" id="show_projects">
-              <h4>My Projects</h4>
+	  <a href= "#" id="show_peer_projects" onclick= "displayPeerProjects(<%=@user.id %>)">
+              <h4>Projects</h4>
             </a>
           </li>
           <li role="presentation">
-            <a href= "#" id="show_followers">
+            <a href= "#" id="show_peer_followers">
               <h4>Followers</h4>
             </a>
           </li>
           <li role="presentation">
-            <a href= "#" id="show_following">
+            <a href= "#" id="show_peer_following">
               <h4>Following</h4>
             </a>
           </li>
-          <li role="presentation">
-            <a href= "#" id="search_for_users">
-              <h4>Search For Users</h4>
-            </a>
-          </li>
         </ul>
+        </div>
 
 
     </div>
@@ -42,10 +38,6 @@
       </div>
 
     </div>
-
-
-
-
   </div>
 
 </div>

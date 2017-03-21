@@ -19,6 +19,10 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def fork
+    Project.find(params[:id]).fork(current_user.id)
+  end
+
   # GET /projects/new
   # Displays the initial code editor to the user.
   def new

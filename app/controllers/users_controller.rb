@@ -1,7 +1,11 @@
 class UsersController < ApplicationController
   # GET /users/projects
   def projects
-    render partial: 'profiles/project', collection: current_user.projects
+    if params[:id].nil?
+      render partial: 'profiles/project', collection: current_user.projects
+    else
+      render partial: 'profiles/peer_project', collection: User.find(params[:id]).projects, as: 'project'
+    end
   end
 
   # GET /users/followers

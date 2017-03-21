@@ -1,13 +1,13 @@
-<div id="project-preview-<%= peer_project.id%>">
+<div id="project-preview-<%= project.id%>">
   <div class="card card-project card-project-preview"  >
     <div class="col-sm-6">
       <div class="card-title">
-      <strong>
-        <h2>
-          <%= project.title %>
-        </h2>
-      </strong>
-        </div>
+        <strong>
+          <h2>
+            <%= project.title %>
+          </h2>
+        </strong>
+      </div>
     </div>
     <div class="project_options" style="visibility: hidden;">
       <div class="col-sm-2" style="align-content: center;">
@@ -28,11 +28,10 @@
         </h2>
 
       </div>
-
       <div class="col-sm-2">
         <h2>
-          <a href="#" onclick="delete_project(<%= project.id %>)">
-            <div class="glyphicon glyphicon-remove" style="color: red;"></div>
+          <a href="#" onclick="forkProject(<%= project.id%>)">
+            <button class="btn btn-success">Fork A Copy</button>
           </a>
         </h2>
       </div>

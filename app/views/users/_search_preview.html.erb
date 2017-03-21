@@ -15,15 +15,15 @@
           </div>
           <div class="card-footer" style="align-text: center; padding-top: 5px; padding-bottom: 5px;">
             <% if(@user != nil && @user.is_following(user.id)) %>
-            <p>
               <button id="follow_button_<%=user.id%>" class="btn btn-danger" onclick = unfollow(<%= user.id.to_s %>) >unfollow <div class="glyphicon glyphicon-minus-sign"> </div></button>
-            </p>
             <% else %>
-            <p>
               <button id="follow_button_<%=user.id%>" class="btn btn-success" onclick = follow(<%= user.id.to_s %>) >follow <div class="glyphicon glyphicon-plus"> </div></button>
-            </p>
             <% end %>
+            <a href="/profile/<%=user.id%>">
+	      <button id="view_profile" class="btn btn-primary" > view profile </button>
+            </a>
           </div>
+
         </div>
       </div>
     </div>

@@ -163,6 +163,40 @@ function submitSearchForm() {
 
 }
 
+function displayPeerProjects(peer_id) {
+    $.ajax({
+        url: '/users/projects/' + peer_id,
+        type: 'get',
+        success: function(payload) {
+            // $('#preview-header').text('Projects');
+            $('#search_container').empty();
+            $('#preview-body').empty();
+
+            $('#preview-body').html(payload);
+
+            $('.card-project').hover(
+                function() {
+                    $(this).css('box-shadow', '10px 10px 5px #888');
+                    $(this).find( '.project_options').css('visibility', 'visible');
+                },
+
+                function() {
+                    $(this).css('box-shadow', '1px 1px 0.5px #888');
+                    $(this).find( '.project_options').css('visibility', 'hidden');
+                }
+            );
+        }
+    });
+}
+
+function forkProject(project_id) {
+    $.ajax({
+       url: '/projects/' + project_id + '/fork',
+       type: 'get',
+       success: {}
+    });
+}
+
 $(document).ready(function() {
 
     $('#show_projects').click(function() {
