@@ -4,10 +4,16 @@
 <div class="container">
   <div class="row">
     <div class="navbar-profile" class="col-md-3 no-float" style="padding-top: 15px;">
-        <div class="col-lg-1">
-          <%= image_tag @user.avatar.url(:thumb), :class => 'circular--square' %>
+        <div class="col-lg-2">
+          <div class="card" style="box-shadow: 5px 5px 5px 5px; align-content: center; width: 170px; background-color: white;">
+            <%= image_tag @user.avatar.url(:thumb), :class => 'circular--square', :align => 'middle' %>
+            <br/>
+            <h2><strong> <%= @user.username %> </strong> </h2>
+            <strong> Member Since <%= @user.created_at %>
+            <strong> Last Sign In: <%= @user.last_sign_in_at.strftime("%m/%d%/Y") %>
+          </div>
         </div>
-	<div class="col-lg-6">
+	<div class="col-lg-6"> 
         <ul class="nav navbar-nav" >
           <li role="presentation">
 	  <a href= "#" id="show_peer_projects" onclick= "displayPeerProjects(<%=@user.id %>)">

@@ -9,10 +9,10 @@ Rails.application.routes.draw do
   get 'profile', to: 'profiles#show'
   get 'profile/:id', to: 'profiles#show'
   get 'profile/projects', to: 'profiles#load_project_previews'
-
   get 'analytics/project_location_csv'
   get 'analytics/project_runtimes'
   get 'analytics/users_created'
+  get 'users/projects', to: 'users#projects'
 
   get 'users/projects/:id', to: 'users#projects'
   get 'users/followers', to: 'users#followers'

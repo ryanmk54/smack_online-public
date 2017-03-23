@@ -10,12 +10,14 @@ class UsersController < ApplicationController
 
   # GET /users/followers
   def followers
-    render partial: 'users/preview', collection: current_user.followers, as: 'user'
+    @user = current_user
+    render partial: 'users/search_preview', collection: current_user.followers, as: 'user'
   end
 
   # GET /users/following
   def followees
-    render partial: 'users/preview', collection: current_user.followees, as: 'user'
+    @user = current_user
+    render partial: 'users/search_preview', collection: current_user.followees, as: 'user'
   end
 
   def index

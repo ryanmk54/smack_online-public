@@ -19,6 +19,7 @@ function displayNewProjectButton() {
         url: '/users/newProject',
         type: 'get',
         success: function(payload) {
+            $('#preview-header').html('');
             $('#preview-header').append(payload);
         }
     })
