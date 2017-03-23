@@ -3,11 +3,11 @@
 </div>
 
 <div id="top-row" class="lgray flex-row h-form-row flex-align-center">
-  <div class="flex-col-md-2 flex-col-sm-4">
+  <div class="flex-col-md-2 flex-col-xs-4">
     <%= render "title_form" %>
   </div>
 
-  <div class="flex-col-md-5 flex-col-md-nogrow flex-col-sm-grow flex-col-sm-6">
+  <div class="flex-col-md-5 flex-col-md-nogrow flex-col-xs-grow flex-col-xs-6">
     <select class="flex-col-xs-12" id="service-selector">
       <!--THE VALUE OF THESE OPTIONS MUST MATCH THE ASSOCIATED CONFIG FILE NAME IN /PUBLIC/CONFIG/-->
       <option value="smack-options">Smack</option>
@@ -21,7 +21,7 @@
 
 <div class="main-container flex-row">
     <!-- Sidebar -->
-    <div id="sidebar" class="flex-col-sm-4 flex-col-md-2 gray">
+    <div id="sidebar" class="flex-col-xs-4 flex-col-md-2 gray">
       <!-- Files -->
       <div id="upload-project-container"
            title="Upload a zip file containing your source code">
@@ -42,21 +42,19 @@
     </div>
 
     <!-- Main -->
-    <div class="flex-col-sm-8 flex-col-md-10">
+    <div class="flex-col-xs-8 flex-col-md-10">
 
       <!-- Middle -->
       <div id="editors-row" class="flex-row flex-wrap flex-align-stretch lgray">
 
         <!-- Left -->
-        <div class="editor-container flex-col-sm-12 flex-col-md-6">
-          <div id="inputEditor">
-          </div>
+        <div class="editor-container flex-col-xs-12 flex-col-md-6">
+          <div id="inputEditor"></div>
         </div>
 
         <!-- Right -->
-        <div class="editor-container flex-col-sm-12 flex-col-md-6">
-          <div id="outputEditor">
-          </div>
+        <div class="editor-container flex-col-xs-12 flex-col-md-6">
+          <div id="outputEditor"></div>
         </div>
       </div>
 

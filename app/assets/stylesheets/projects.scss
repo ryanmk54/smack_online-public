@@ -36,16 +36,13 @@ body {
   overflow: hidden;
 }
 
-#file-list {
-  margin-right: -15px;
-}
 #file-list ul.jqtree-tree .jqtree-title,
 #file-list ul.jqtree-tree .jqtree-toggler {
   color: #eee;
 }
 
 .current-file,
-ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover {
+ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):not(.editing):hover {
   background: $light-sky-blue;
   border-radius: 0px 0px 0px 6px;
   padding-top: 4px;
@@ -58,10 +55,31 @@ ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover
     padding-bottom: 2px;
   }
 }
-ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover {
+ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):not(.editing):hover {
   animation-name: file;
   animation-duration: 200ms;
+
+  .file-icon {
+    display: block;
+  }
 }
+
+.editing {
+  input {
+    background-color: white;
+  }
+}
+.current-file .file-icon {
+  display: block;
+}
+.file-icon {
+  display: none;
+  padding: 2px;
+  padding-right: 6px;
+  color: white;
+}
+
+
 #input_upload_status {
   color: red;
 }

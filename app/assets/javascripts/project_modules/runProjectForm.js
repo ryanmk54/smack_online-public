@@ -1,16 +1,24 @@
 RunProjectForm = (function() {
   "use strict";
 
-  var addRunField,
-      init,
+  var defaultTimeout,
+      maxRetries,
+      numRetried,
       pollDelay,
+      timeout;
+
+  var init,
+      addRunField,
       requestOutputFromServer,
       startPollingServerForOutput,
-      submitWithUpdatedBase64,
-      timer;
+      submitWithUpdatedBase64;
 
   init = function() {
     pollDelay = 0;
+    defaultTimeout = 1000;
+    timeout = defaultTimeout;
+    maxRetries = 5;
+    numRetried = 9;
     $(document).on('click', '#run_button', submitWithUpdatedBase64);
     $(document).on('ajax:beforeSend', '#run-project-form', addRunField);
     $(document).on('ajax:success', '#run-project-form', startPollingServerForOutput);
@@ -32,19 +40,31 @@ RunProjectForm = (function() {
         type: "GET",
         dataType: 'json',
         url: url,
+        timeout: timeout,
         success: function(data, textStatus, jqXHR) {
           console.log(data.eta);
           pollDelay = data.eta;
           if (data.eta == 0) {
+            numRetried = 0;
+            timeout = defaultTimeout;
             OutputEditor.set(data.output);
           }
           else {
+            timeout = data.eta;
             OutputEditor.set("Estimated time remaining: " + data.eta + "ms");
             requestOutputFromServer();
           }
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          throw(errorThrown);
+          if (numRetried > maxRetries) {
+            OutputEditor.set("Unable to contact server");
+            throw(errorThrown);
+          }
+          else {
+            console.log("timeout");
+            numRetried++;
+            requestOutputFromServer();
+          }
         }
       });
     });

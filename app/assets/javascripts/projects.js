@@ -19,7 +19,7 @@ $().ready(function(){
   RunProjectForm.init();
   Title.init();
   Tutorial.init();
-  initOptionsMenu();
+  //initOptionsMenu();
 });
 
 function initOptionsMenu() {

@@ -11,14 +11,28 @@ var FileTree = (function() {
       jqtree,
       currentFileName,
 
+      editFileName,
       getBase64,
       init,
       initJqTree,
       loadFileTree,
+      renameFile,
       setCurrentFile,
       setValueOfCurrentFile,
       saveToServer,
       tryLoadFromBase64Input;
+
+
+  editFileName = function(fullFilepath, filename) {
+    console.log(filename);
+    var el = document.getElementById(filename);
+    $(el).addClass("editing");
+    var titleEl = $(el).children(".jqtree-title");
+    var newFilenameTextBox = $("<input type='text'/>");
+    newFilenameTextBox.val(filename);
+    newFilenameTextBox.blur(filename, renameFile);
+    $(titleEl).replaceWith(newFilenameTextBox);
+  }
 
 
   getBase64 = function() {
@@ -47,14 +61,21 @@ var FileTree = (function() {
       selectable: false,
       useContextMenu: false,
       onCreateLi: function(node, $li) {
-        //$li.attr('id', node.relativePath);
-        $li.find('.jqtree_common').attr('id', node.relativePath);
-        //$li.find('.jqtree-title').data("relativePath", node.relativePath);
+        var fileItem = $li.find('.jqtree-element.jqtree_common');
+        fileItem.attr('id', node.relativePath);
+        fileItem.addClass('file-item');
+        var iconHtml = "<span class='file-icon glyphicon glyphicon-pencil pull-right'></span>";
+        fileItem.append(iconHtml);
       }
     });
 
-    jqtree.on('click', 'li .jqtree_common:not(.jqtree-folder)', function(e) {
-      setCurrentFile( $(e.target).attr('id') );
+    jqtree.on('click', 'li .jqtree-title:not(.jqtree-folder)', function(e) {
+      setCurrentFile( $(e.target).parent().attr('id') );
+    });
+    jqtree.on('click', 'li .glyphicon-pencil', function(e) {
+      var fullFilepath = $(e.target).parent().attr('id');
+      var filename = $(e.target).parent().children('.jqtree-title').val();
+      editFileName(fullFilepath, filename);
     });
   };
 
@@ -103,7 +124,13 @@ var FileTree = (function() {
 
     jqtree.tree('loadData', data);
     setCurrentFile(firstFile);
-  }
+  };
+
+  renameFile = function(fullFilepath, oldFilename) {
+    console.log(oldFilename);
+    console.log(newFilename);
+    debugger;
+  };
 
 
   // Unzips the file out of zip and 
