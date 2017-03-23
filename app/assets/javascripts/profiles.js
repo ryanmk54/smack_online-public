@@ -19,6 +19,8 @@ function displayNewProjectButton() {
         url: '/users/newProject',
         type: 'get',
         success: function(payload) {
+            $('#preview-header').empty();
+
             $('#preview-header').append(payload);
         }
     })
@@ -31,8 +33,6 @@ function displayProjects() {
         url: '/users/projects',
         type: 'get',
         success: function(payload) {
-            // $('#preview-header').text('Projects');
-            $('#search_container').empty();
             $('#preview-body').empty();
 
             $('#preview-body').html(payload);
@@ -57,6 +57,8 @@ function displayFollowing() {
         url: '/users/following',
         type: 'get',
         success: function(payload) {
+            $('#preview-header').empty();
+            $('#preview-header').text("");
             $('#preview-header').text("Users I'm Following");
             $('#search_container').empty();
             $('#preview-body').empty();
@@ -116,6 +118,8 @@ function displayFollowers() {
         url: '/users/followers',
         type: 'get',
         success: function(payload) {
+            $('#preview-header').empty();
+            $('#preview-header').text("");1
             $('#preview-header').text('Followers');
             $('#search_container').empty();
             $('#preview-body').empty();
