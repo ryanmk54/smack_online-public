@@ -6,7 +6,7 @@
                  html: {id: "run-project-form"}) do |f| %>
       <!--Placeholder for options menu-->
       <div class="btn-group" id="optionsMenu">
-        <button data-toggle="dropdown" class="btn dropdown-toggle">
+        <button data-toggle="dropdown" class="btn btn-default btn-primary dropdown-toggle">
           Options
           <span class="caret"></span>
         </button>
@@ -36,7 +36,7 @@
     json = JSON.parse(json)
     id = 1%>
       <div class='hidden' id='<%=file[0..file.index('.json')-1]%>'>
-        <button data-toggle="dropdown" class="btn dropdown-toggle"
+        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"
                 data-placeholder='false'>Options <span class="caret"></span></button>
         <ul class="dropdown-menu scrollable-menu pull-top noclose" role="menu">
 
