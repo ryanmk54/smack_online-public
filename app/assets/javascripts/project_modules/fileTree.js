@@ -25,13 +25,13 @@ var FileTree = (function() {
 
   editFileName = function(fullFilepath, filename) {
     console.log(filename);
-    var el = document.getElementById(filename);
+    var el = document.getElementById(fullFilepath);
     $(el).addClass("editing");
     var titleEl = $(el).children(".jqtree-title");
     var newFilenameTextBox = $("<input type='text'/>");
     newFilenameTextBox.val(filename);
     newFilenameTextBox.blur(filename, renameFile);
-    $(titleEl).replaceWith(newFilenameTextBox);
+    $(titleEl).html(newFilenameTextBox);
   }
 
 
@@ -70,12 +70,18 @@ var FileTree = (function() {
     });
 
     jqtree.on('click', 'li .jqtree-title:not(.jqtree-folder)', function(e) {
-      setCurrentFile( $(e.target).parent().attr('id') );
+      var fileItem = $(e.target).parent();
+      if (!fileItem.hasClass("editing")){
+        setCurrentFile( $(e.target).parent().attr('id') );
+      }
     });
     jqtree.on('click', 'li .glyphicon-pencil', function(e) {
-      var fullFilepath = $(e.target).parent().attr('id');
-      var filename = $(e.target).parent().children('.jqtree-title').val();
-      editFileName(fullFilepath, filename);
+      var fileItem = $(e.target).parent();
+      if (!fileItem.hasClass("editing")){
+        var fullFilepath = fileItem.attr('id');
+        var filename = fileItem.children('.jqtree-title').text();
+        editFileName(fullFilepath, filename);
+      }
     });
   };
 
@@ -128,8 +134,6 @@ var FileTree = (function() {
 
   renameFile = function(fullFilepath, oldFilename) {
     console.log(oldFilename);
-    console.log(newFilename);
-    debugger;
   };
 
 

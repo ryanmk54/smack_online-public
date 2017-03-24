@@ -65,8 +65,14 @@ ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):not(.
 }
 
 .editing {
-  input {
+  input[type=text] {
     background-color: white;
+    border: 0;
+    border-radius: 6px;
+  }
+
+  .file-icon {
+    display: none;
   }
 }
 .current-file .file-icon {
