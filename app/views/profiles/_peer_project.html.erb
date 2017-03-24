@@ -1,0 +1,40 @@
+<div id="project-preview-<%= project.id%>">
+  <div class="card card-project card-project-preview"  >
+    <div class="col-sm-6">
+      <div class="card-title">
+        <strong>
+          <h2>
+            <%= project.title %>
+          </h2>
+        </strong>
+      </div>
+    </div>
+    <div class="project_options" style="visibility: hidden;">
+      <div class="col-sm-2" style="align-content: center;">
+        <h2>
+          <a href="<%= edit_project_path(project)%>">
+            <div class="glyphicon glyphicon-folder-open"></div>
+          </a>
+        </h2>
+
+        </a>
+      </div>
+
+      <div class="col-sm-2">
+        <h2>
+          <a href=""<%= edit_project_path(project)%>">
+          <div class="glyphicon glyphicon-play" style="color: green;"></div>
+          </a>
+        </h2>
+
+      </div>
+      <div class="col-sm-2">
+        <h2>
+          <a href="#" onclick="forkProject(<%= project.id%>)">
+            <button class="btn btn-success">Fork A Copy</button>
+          </a>
+        </h2>
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,6 +9,15 @@ class Project < ApplicationRecord
     self[:created_at].strftime("%D")
   end
 
+  def fork user_id
+    user = User.find(user_id)
+    project = user.projects.create
+    project.title = self.title
+    project.eta = self.eta
+    project.service_options = self.service_options
+    project.save
+  end
+
   def input
     if self.id == nil
       return nil

@@ -1,0 +1,66 @@
+@import 'variables';
+
+html,body,.container {
+  background-color: $lgray;
+  height:100%;
+}
+
+.container {
+  display:table;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 0px;
+}
+
+
+.card-img-follower{
+
+}
+
+.circular--square {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  border-width:1px;
+  border-style: solid;
+  border-color: black;
+  vertical-align: center;
+}
+
+.card-user {
+  margin-top: 15px;
+  margin-left: 15%;
+  /*margin-left: 15px;*/
+  box-shadow: 3px 3px 3px;
+  border-radius: 5px;
+  background-color: whitesmoke;
+  text-align: left;
+
+  float: none; /* Added */
+  width: 300px;
+  height: 125px;
+  padding: 10px;
+}
+
+
+
+#users-list {
+  padding: 10%;
+}
+
+.row {
+  height: 100%;
+  display: table-row;
+}
+
+.col-md-3 {
+  display: table-cell;
+  min-height: 100%;
+  background-color: $light-sky-blue;
+}
+.card-block {
+  margin-left: 15px;
+}
+
+
+

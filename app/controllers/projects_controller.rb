@@ -19,6 +19,10 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def fork
+    Project.find(params[:id]).fork(current_user.id)
+  end
+
   # GET /projects/new
   # Displays the initial code editor to the user.
   def new
@@ -33,9 +37,13 @@ class ProjectsController < ApplicationController
   # Creates a new project, makes a request to the SMACK server,
   # and saves the input to the file system as a Base64 string.
   def create
-    @project = Project.new(project_params)
+    if current_user == nil
+      @project = Project.new(project_params)
+    else
+      @project = current_user.projects.create(project_params)
+    end
     @project.save # Need to save before send_service_input in order to know the project id
-    current_user.projects.push @project if current_user
+   # current_user.projects.push @project if current_user
 
     if params[:run]
       #TODO: Change config file based off of other services
@@ -127,7 +135,7 @@ class ProjectsController < ApplicationController
     end
     puts 'deleted'
     respond_to do |format|
-      format.html { redirect_to projects_url }
+      format.html { render :nothing => true }
       format.json { head :no_content }
       format.js   { render :layout => false }
     end
