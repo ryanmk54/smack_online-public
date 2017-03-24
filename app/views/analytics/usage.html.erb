@@ -1,53 +1,72 @@
- <!-- Body -->
+<!-- Body -->
 <div class="container-fluid main-container">
 
   <div class="top-bar lgray row">
     <h2 class="col-md-2 margin-zero">Graph Type:</h2>
+    <div id="rangecontainer" class="col-md-8 no-padding left-border right-border">
+      <div class="col-md-2">
+        <input type="radio" name="rangetype" value="daterange" checked> By Date</input><br>
+        <input type="radio" name="rangetype" value="daymonthspan"> By Span</input><br>
+      </div>
 
-    <div class="col-md-8 no-padding left-border right-border">
-        <select id='numberPicker' class="no-padding tool-select selectpicker col-md-5 margin-zero">
+      <div id='startDateDiv' class="col-md-4">
+        <label style="margin-right: 5px">Start Date:</label>
+        <input type="text" id="beginningDate" data-date-start-date='08/01/2016'
+               data-date-end-date='0d' data-provide='datepicker' >
+      </div>
+      <div id='endDateDiv' class="col-md-4 margin-zero">
+        <label style="margin-right: 5px">End Date:</label>
+        <input type="text" id="endDate" data-date-start-date='08/01/2016'
+               data-date-end-date='0d' data-provide='datepicker' >
+      </div>
+
+      <div id="numberPickerDiv" class="col-md-4">
+        <select id='numberPicker' class="no-padding tool-select selectpicker margin-zero">
           <option value="5">5</option>
           <option value="10" selected="selected">10</option>
           <option value="20">20</option>
           <option value="30">30</option>
           <option value="60">60</option>
         </select>
-
-        <select id='unitPicker' class="no-padding tool-select selectpicker col-md-5 margin-zero">
+      </div>
+      <div id="unitPickerDiv" class="col-md-4">
+        <select id='unitPicker' class="no-padding tool-select selectpicker margin-zero">
           <option value="day">Day(s)</option>
           <option value="month">Month(s)</option>
         </select>
+      </div>
+      <div class="col-md-2">
+        <button id="dateGo">Update Graph</button>
+      </div>
     </div>
-
-    <div class="col-md-2"></div>
   </div>
 
   <div class="row analytics-main-container">
     <!-- Left Sidebar -->
     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 gray height100 no-padding-left no-padding-right">
-        <ul class="list-group">
-          <li class="list-group-item active" id="usageListItem">Timespan Usage</li>
-          <li class="list-group-item" id="runtimeListItem">Project Runtimes</li>
-          <li class="list-group-item" id="geographicListItem">Geographic Usage</li>
-          <li class="list-group-item" id="userCreationListItem">User Creation</li>
-        </ul>
+      <ul class="list-group">
+        <li class="list-group-item active" id="usageListItem">Timespan Usage</li>
+        <li class="list-group-item" id="runtimeListItem">Project Runtimes</li>
+        <li class="list-group-item" id="geographicListItem">Geographic Usage</li>
+        <li class="list-group-item" id="userCreationListItem">User Creation</li>
+      </ul>
     </div>
 
     <!-- Main -->
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 height100">
       <div class="height100">
-          <div id='parent' class="height100">
-            <div id="graphContainer" style="height: 100%; width: 100%">
-              <canvas id="myChart"></canvas>
-            </div>
+        <div id='parent' class="height100">
+          <div id="graphContainer" style="height: 100%; width: 100%">
+            <canvas id="myChart"></canvas>
           </div>
+        </div>
       </div>
     </div>
 
     <!-- Right Sidebar-->
     <div class="height100 gray col-xs-2 col-sm-2 col-md-2 col-lg-2">
-        <h3 id="projectListHeader" class="white-color"></h3>
-        <ul id="projectList" class="scrollable-menu list-group height100"> </ul>
+      <h3 id="projectListHeader" class="white-color"></h3>
+      <ul id="projectList" class="scrollable-menu list-group height100"> </ul>
     </div>
   </div>
 </div>
