@@ -14,6 +14,7 @@ $().ready(function(){
 
   InputEditor.init();
   OutputEditor.init();
+  ResizeOutputEditor.init();
   FileTree.init();
   FileUpload.init();
   RunProjectForm.init();
@@ -31,4 +32,8 @@ function initOptionsMenu() {
   {
     $("#optionsMenu").html($("#" + $(this).find(":selected").val()).html());
   });
+}
+
+function shrinkOutputEditor() {
+  $("#output-editor-container").addClass("shrunk");
 }

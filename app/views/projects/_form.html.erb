@@ -7,6 +7,12 @@
     <%= render "title_form" %>
   </div>
 
+  <div id="output-status" class="flex-col-sm-4 flex-col-md-2">
+    <label> Status:
+      <input type="text" value="Not Yet Verified" class="form-control"/>
+    </label>
+  </div>
+
   <div class="flex-col-md-5 flex-col-md-nogrow flex-col-sm-grow flex-col-sm-6">
     <select class="flex-col-xs-12" id="service-selector">
       <!--THE VALUE OF THESE OPTIONS MUST MATCH THE ASSOCIATED CONFIG FILE NAME IN /PUBLIC/CONFIG/-->
@@ -45,11 +51,11 @@
     <div class="flex-col-sm-8 flex-col-md-10">
 
       <!-- Middle -->
-      <div id="editors-row" class="flex-row flex-wrap flex-align-stretch lgray">
+      <div id="editors-row" class="lgray">
 
         <!-- Left -->
-        <div class="editor-container flex-col-sm-12 flex-col-md-6">
-          <div id="inputEditor">
+        <div id="input-editor-container" class="editor-container">
+          <div id="inputEditor" class="ace-editor">
           </div>
 
           <div id="verify-status-box">
@@ -66,11 +72,17 @@
           </div>
         </div>
 
+          <div id="collapse-output-btn">
+            <span id="collapse-output-text"></span>
+          </div>
+
         <!-- Right -->
-        <div class="editor-container flex-col-sm-12 flex-col-md-6">
-          <div id="outputEditor">
+        <div id="output-editor-container" class="editor-container">
+
+          <div id="outputEditor" class="ace-editor">
           </div>
         </div>
+
       </div>
 
       <!-- Bottom -->

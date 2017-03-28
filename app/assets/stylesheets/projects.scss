@@ -10,11 +10,81 @@
 *= require jqtree
 */
 @import 'variables';
+@import 'flexbox-cols';
 
 html, 
 body {
+  min-width: 800px;
+  min-height: 600px;
   height: 100%;
   width: 100%;
+}
+
+#editors-row {
+  height: calc(100% - 52px);
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: $screen-md-min) {
+    flex-direction: row;
+  }
+
+  &.output-shrunk {
+    #collapse-output-text:before {
+      content: "^";
+    }
+    @media (min-width: $screen-md-min) {
+      #collapse-output-text:before {
+        content: "<";
+      }
+    }
+
+    #output-editor-container {
+      flex-grow: 0.001;
+      flex-grow: 0;
+    }
+  }
+}
+
+.editor-container {
+  position: relative;
+
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  transition: all 1s;
+}
+.ace-editor {
+  height: 100%;
+}
+
+#collapse-output-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgb(211,211,211);
+  border: 1px solid black;
+  border-radius: 8px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  height: 18px;
+  width: 100%;
+
+  @media (min-width: $screen-md-min) {
+    height: 100%;
+    width: 18px;
+  }
+}
+
+#collapse-output-text:before {
+  content: "V";
+
+  @media (min-width: $screen-md-min) {
+      content: ">";
+  }
 }
 
 #verify-status-box {
@@ -121,17 +191,10 @@ ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover
   color: red;
 }
 
-#editors-row {
-  height: calc(100% - 52px);
-}
 #sidebar {
   padding: 8px;
 }
 
 .project-btn {
   width: 95px;
-}
-
-.ace_editor {
-  height: 100%;
 }
