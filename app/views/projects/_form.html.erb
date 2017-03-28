@@ -7,21 +7,10 @@
     <%= render "title_form" %>
   </div>
 
-  <div id="output-status" class="flex-col-sm-4 flex-col-md-2">
+  <div id="output-status" class="flex-col-sm-8 flex-col-md-10">
     <label> Status:
-      <input type="text" value="Not Yet Verified" class="form-control"/>
     </label>
-  </div>
-
-  <div class="flex-col-md-5 flex-col-md-nogrow flex-col-sm-grow flex-col-sm-6">
-    <select class="flex-col-xs-12" id="service-selector">
-      <!--THE VALUE OF THESE OPTIONS MUST MATCH THE ASSOCIATED CONFIG FILE NAME IN /PUBLIC/CONFIG/-->
-      <option value="smack-options">Smack</option>
-      <option value="boogie-options">Boogie</option>
-    </select>
-  </div>
-  <div class="flex-col-md-1">
-    <button id="start-tutorial-btn" class="btn btn-primary project-btn">Tutorial</button>
+    <input type="text" value="Not Yet Verified" class="form-control flex-col-xs-10"/>
   </div>
 </div>
 

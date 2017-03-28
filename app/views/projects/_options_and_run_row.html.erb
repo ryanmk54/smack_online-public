@@ -30,7 +30,7 @@
   # Generate hidden options menu for each config file that will be pulled into
   # the shown options menu when the service type is changed.
   require 'json'
-  option_config_files = %w[smack-options.json boogie-options.json]
+  option_config_files = %w[smack-options.json]
   option_config_files.each do |file|
     json = File.read("#{Rails.root}/public/config/" + file)
     json = JSON.parse(json)

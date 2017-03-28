@@ -143,10 +143,29 @@ body {
 
 
 #top-row {
+  label {
+    float: left;
+  }
+
   & > div:first-child {
     padding-left: 8px;
   }
 }
+
+#output-status {
+  display: flex;
+  align-items: center;
+
+  label {
+    height: 10px;
+    padding-right: 10px;
+  }
+
+  input {
+    width: 250px;
+  }
+}
+
 
 #options-and-run-row {
   & > div:first-child {

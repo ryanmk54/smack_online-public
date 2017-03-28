@@ -27,13 +27,11 @@ function initOptionsMenu() {
   // LOGIC FOR SWITCHING OPTIONS MENUS
   // Set the options menu html to the html of the hidden field associated with
   // the value of the drop down menu value (service-selector.val == service-options.id)
-  $("#optionsMenu").html($("#" + $("#service-selector").find(":selected").val()).html());
+  $("#optionsMenu").html($("#smack-options").html());
+  /*
   $("#service-selector").change(function()
   {
     $("#optionsMenu").html($("#" + $(this).find(":selected").val()).html());
   });
-}
-
-function shrinkOutputEditor() {
-  $("#output-editor-container").addClass("shrunk");
+  */
 }
