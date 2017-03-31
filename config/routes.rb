@@ -26,6 +26,8 @@ Rails.application.routes.draw do
   post 'users/follow', to: 'users#follow'
   post 'users/unfollow', to: 'users#unfollow'
 
+  post '/projects/:id/permissions/:visibility', to: 'projects#toggle'
+
   resources(:projects,  except: [:index]) do
     member do
       post 'receive_service_output', to: 'projects#receive_service_output'

@@ -141,6 +141,23 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def toggle
+    owned_project_ids = current_user.projects.map { |proj| proj.id.to_i }
+    if owned_project_ids.include? params[:id].to_i
+      project = Project.find(params[:id])
+      if params[:visibility] == 'public'
+        project.public = true
+      end
+      if params[:visibility] == 'private'
+        project.public = false
+      end
+      project.save
+      render json: nil, status: :ok
+      return
+    end
+      render status: :forbidden
+  end
+
 
     private
 
