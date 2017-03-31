@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170217174227) do
+ActiveRecord::Schema.define(version: 20170328223153) do
 
   create_table "followers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer "follower_id"
@@ -28,13 +28,14 @@ ActiveRecord::Schema.define(version: 20170217174227) do
     t.string   "title"
     t.string   "output"
     t.integer  "eta"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
     t.string   "user_ip"
     t.string   "city"
     t.integer  "runtime"
     t.string   "state"
     t.text     "service_options", limit: 65535
+    t.boolean  "public",                        default: true
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
