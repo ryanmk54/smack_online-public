@@ -13,6 +13,10 @@
       <li class="<%= 'active' if current_page?('/community/home') %>">
         <%= link_to "Commmunity", '/community/home' %>
       </li>
+      <li>
+        <%= link_to "New Project", '#', :class => 'navbar-link', :onclick => "newProjectDialogue()"  %>
+      </li>
+
 
 <% if user_signed_in? %>
       <li class="<%= 'active' if current_page?('/profile') %>">
@@ -30,6 +34,7 @@
 <% else %>
       <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %> |
       <%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %>
+
 <% end %>
 
   </div>
