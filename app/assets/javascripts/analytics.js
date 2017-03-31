@@ -43,6 +43,7 @@ $().ready(function() {
     $("#usageListItem").click(function()
     {
         if(!$(this).hasClass('active')) {
+            $("#graphTitle").html("Number of Projects Created per Unit (Day or Month)");
             $("#rangecontainer").show();
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
@@ -56,6 +57,7 @@ $().ready(function() {
     $("#runtimeListItem").click(function()
     {
         if(!$(this).hasClass('active')) {
+            $("#graphTitle").html("Number of Projects with a Given Runtime (seconds)");
             $("#rangecontainer").hide();
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
@@ -69,6 +71,7 @@ $().ready(function() {
     $("#geographicListItem").click(function()
     {
         if(!$(this).hasClass('active')) {
+            $("#graphTitle").html("");
             $("#rangecontainer").hide();
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
@@ -77,7 +80,7 @@ $().ready(function() {
             if(geoCSV == null)
                 getGeoCSV();
             else
-                unpackGeoCSVAndDisplayChart(displayGeochart);
+                displayGeochart();
         }
     });
     
@@ -85,6 +88,7 @@ $().ready(function() {
     $("#userCreationListItem").click(function()
     {
         if(!$(this).hasClass('active')) {
+            $("#graphTitle").html("Number of Users Created per Unit (Day or Month)");
             $("#rangecontainer").show();
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
@@ -94,31 +98,17 @@ $().ready(function() {
         }
     });
     
-    $("#numberPickerDiv").hide();
-    $("#unitPickerDiv").hide();
-    $('input[type="radio"][name="rangetype"]').change(function(){
-        if(this.value == 'daterange') {
-            $("#startDateDiv").show();
-            $("#endDateDiv").show();
-            $("#numberPickerDiv").hide();
-            $("#unitPickerDiv").hide();
-        }
-        else if(this.value == 'daymonthspan') {
-            $("#startDateDiv").hide();
-            $("#endDateDiv").hide();
-            $("#numberPickerDiv").show();
-            $("#unitPickerDiv").show();
-        }
-    });
-    
-    // Set up date picker dates.
+    // Set start date to one month ago
     var monthAgo = new Date();
     monthAgo.setMonth(monthAgo.getMonth() - 1);
-    $("#beginningDate").datepicker('update', formatDateDDMMYYYY(monthAgo));
+    $("#beginningDate").datepicker('update', formatDateMMDDYYYY(monthAgo));
     $("#beginningDate").datepicker({autoclose: true});
-    var today = new Date();
-    $("#endDate").datepicker('update', formatDateDDMMYYYY(today));
     
+    // Set end date to today
+    var today = new Date();
+    $("#endDate").datepicker('update', formatDateMMDDYYYY(today));
+    
+    // Make sure the beginning date does not overlap the end date when changed
     $('#beginningDate').datepicker().on('changeDate', function(e){
         $('#beginningDate').datepicker('hide');
         var begDateVal = $('#beginningDate').val();
@@ -129,6 +119,8 @@ $().ready(function() {
         if(begTime > endTime)
             $('#endDate').datepicker('update', begDateVal);
     });
+    
+    // Make sure the end date does not overlap the start date when changed
     $('#endDate').datepicker().on('changeDate', function(e){
         $('#endDate').datepicker('hide');
         var begDateVal = $('#beginningDate').val();
@@ -185,23 +177,17 @@ function getGeoCSV()
 {
     Plotly.d3.csv('/analytics/project_location_csv', function(err, rows) {
         geoCSV = rows;
-        unpackGeoCSVAndDisplayChart();
+        displayGeochart();
     });
 }
 
-function unpackGeoCSVAndDisplayChart()
+function displayGeochart()
 {
     var locationNames = unpack(geoCSV, 'name'),
         locationCounts = unpack(geoCSV, 'pop'),
         latitudes = unpack(geoCSV, 'lat'),
         longitudes = unpack(geoCSV, 'lon')
     
-    // Pass the CSV data to the callback
-    displayGeochart(latitudes, longitudes, locationCounts, locationNames);
-}
-
-function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
-{
     //TODO: Scale locationSizes by setting a scale and dividing each size by it
     var locationSizes = [];
     var hoverTextArray = [];
@@ -247,19 +233,30 @@ function displayUsageChart(dataArray){
     var KVArray = []; // 'Key-Value Array'
     var labelArray = [];
     
-    if($('input[name=rangetype]:checked').val() == "daterange") {
+    var unit;
+    
+    if($('input[name=aggregate]:checked').val() == "day") {
         var begDate = $("#beginningDate").val();
         var endDate = $("#endDate").val();
-        // Create the list of labels for the last <span> units.
         
+        unit = "day";
+        
+        // Create the list of labels formatted DD/MM/YY
         var currentDateObject = new Date(begDate);
-        var currentDateFormatted = formatDateDDMMYY(currentDateObject);
-        var endDateFormatted = formatDateDDMMYY(new Date(endDate));
+        var currentDateFormatted = formatDateMMDDYY(currentDateObject);
+        var endDateFormatted = formatDateMMDDYY(new Date(endDate));
         while(currentDateFormatted != endDateFormatted) {
-            currentDateFormatted = formatDateDDMMYY(currentDateObject);
+            currentDateFormatted = formatDateMMDDYY(currentDateObject);
             labelArray.push(currentDateFormatted);
             KVArray[currentDateFormatted] = 0;
             currentDateObject.setDate(currentDateObject.getDate() + 1);
+        }
+        
+        // This is if the start and end date are the same
+        if(labelArray.length == 0)
+        {
+            labelArray.push(currentDateFormatted);
+            KVArray[currentDateFormatted] = 0;
         }
         
         // Count the number of data occurrences for each label
@@ -271,27 +268,33 @@ function displayUsageChart(dataArray){
                 KVArray[key] += 1;
         }
     }
-    else if($('input[name=rangetype]:checked').val() == "daymonthspan") {
-        var unit = $('#unitPicker').val();
-        var span = $('#numberPicker').val();
-        // Create the list of labels for the last <span> units.
-        for (var i = span - 1; i >= 0; i--) {
-            var formattedLabel;
-            if(unit == "day")
-                formattedLabel = generateMonthDayYearLabel(i);
-            else if(unit == "month")
-                formattedLabel = generateMonthYearLabel(i);
-            labelArray.push(formattedLabel)
-            KVArray[formattedLabel] = 0;
+    else if($('input[name=aggregate]:checked').val() == "month") {
+        var begDate = $("#beginningDate").val();
+        var endDate = $("#endDate").val();
+        unit = "month";
+    
+        // Create the list of labels formatted DD/MM/YY
+        var currentDateObject = new Date(begDate);
+        var currentDateFormatted = formatDateMMYY(currentDateObject);
+        var endDateFormatted = formatDateMMYY(new Date(endDate));
+        while(currentDateFormatted != endDateFormatted) {
+            currentDateFormatted = formatDateMMYY(currentDateObject);
+            labelArray.push(currentDateFormatted);
+            KVArray[currentDateFormatted] = 0;
+            currentDateObject.setMonth(currentDateObject.getMonth() + 1);
         }
+    
+        // This is if the start and end date are the same
+        if(labelArray.length == 0)
+        {
+            labelArray.push(currentDateFormatted);
+            KVArray[currentDateFormatted] = 0;
+        }
+        
         // Count the number of data occurrences for each label
         // and populate the key-value array accordingly
         for (var i = 0; i < dataArray.length; i++) {
-            var key;
-            if (unit == "day")
-                key = dataArray[i].created_at;
-            else if (unit == "month")
-                key = dataArray[i].created_at.substring(0, 2) + "/" + dataArray[i].created_at.substring(6);
+            var key = dataArray[i].created_at.substring(0, 2) + "/" + dataArray[i].created_at.substring(6);
             if ((key in KVArray))
                 KVArray[key] += 1;
         }
@@ -326,13 +329,13 @@ function onUsageGraphBarClick(evt)
     var label = chartConfiguration.data.labels[element[0]._index];
     
     // Generate the list header
-    var onOrIn = $('#unitPicker').val() == 'month' ? 'in' : 'on';
+    var onOrIn = $('#aggregate').val() == 'month' ? 'in' : 'on';
     //TODO: change the names of these html element ids
     type == 'user' ? $("#projectListHeader").html("Users made " + onOrIn + " " + label)
         : $("#projectListHeader").html("Public projects made " + onOrIn + " " + label);
     
     // Day and month labels have different formats
-    if($('#unitPicker').val() == 'day')
+    if($("input[name='aggregate']:checked").val() == "day")
     // Loop through the data and list items whose 'created_at' matches the label
         for(var i = 0; i < dataArray.length; i++) {
             var id = dataArray[i].id;
@@ -437,11 +440,7 @@ function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
     document.getElementsByClassName("list-group-item active")[0].id == 'userCreationListItem'
         ? type = 'Users' : type = 'Projects';
     
-    var chartTitle;
-    if($('input[name=rangetype]:checked').val() == "daterange")
-        chartTitle = 'Number of ' + type + 'Created from ' + $("#beginningDate").val() + " to " + $("#endDate").val();
-    else
-        chartTitle = 'Number of ' + type + ' Created per ' + unit[0].toUpperCase() + unit.slice(1);
+    var chartTitle = 'Number of ' + type + ' Created from ' + $("#beginningDate").val() + " to " + $("#endDate").val();
     
     chartConfiguration = {
         type: 'bar',
@@ -449,6 +448,9 @@ function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
             responsive: true,
             maintainAspectRatio: false,
             onClick: onUsageGraphBarClick,
+            legend: {
+                display: false
+            },
             scales: {
                 xAxes: [{
                     scaleLabel: {
@@ -462,8 +464,7 @@ function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
                         labelString: '# of Projects'
                     },
                     ticks: {
-                        min: 0,
-                        max: Math.max.apply(null, valueArray) + 5
+                        min: 0
                     }
                 }]
             }
@@ -471,7 +472,6 @@ function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
         data: {
             labels: labelArray,
             datasets: [{
-                label: chartTitle,
                 data: valueArray,
                 borderWidth: 1,
                 backgroundColor: colorArray
@@ -489,6 +489,9 @@ function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
             responsive: true,
             maintainAspectRatio: false,
             onClick: onRuntimeGraphBarClick,
+            legend: {
+                display: false
+            },
             scales: {
                 xAxes: [{
                     scaleLabel: {
@@ -502,8 +505,7 @@ function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
                         labelString: '# of Projects'
                     },
                     ticks: {
-                        min: 0,
-                        max: Math.max.apply(null, valueArray) + 5
+                        min: 0
                     }
                 }]
             }
@@ -511,7 +513,6 @@ function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
         data: {
             labels: labelArray,
             datasets: [{
-                label: 'Project Runtime Count in Seconds',
                 data: valueArray,
                 borderWidth: 1,
                 backgroundColor: colorArray
@@ -534,18 +535,6 @@ function resetSidebarList()
 {
     $("#projectList").html("");
     $('#projectListHeader').html("");
-}
-
-/*
- * Returns an integer between 0 and 255
- */
-function randRGBVal()
-{
-    return Math.floor((Math.random() * 255));
-}
-
-function unpack(rows, key) {
-    return rows.map(function(row) { return row[key]; });
 }
 
 function displayRuntimeGraph(dataArray)
@@ -586,7 +575,19 @@ function displayRuntimeGraph(dataArray)
     chart = new Chart(ctx, chartConfiguration);
 }
 
-function formatDateDDMMYYYY(date)
+function unpack(rows, key) {
+    return rows.map(function(row) { return row[key]; });
+}
+
+/*
+ * Returns an integer between 0 and 255
+ */
+function randRGBVal()
+{
+    return Math.floor((Math.random() * 255));
+}
+
+function formatDateMMDDYYYY(date)
 {
     var year = date.getFullYear();
     var month = date.getMonth() + 1;
@@ -598,7 +599,7 @@ function formatDateDDMMYYYY(date)
     return month + '/' + day + '/' + year;
 }
 
-function formatDateDDMMYY(date)
+function formatDateMMDDYY(date)
 {
     var year = date.getFullYear().toString().substr(2);
     var month = date.getMonth() + 1;
@@ -608,5 +609,14 @@ function formatDateDDMMYY(date)
     if(month < 10)
         month = '0' + month;
     return month + '/' + day + '/' + year;
+}
+
+function formatDateMMYY(date)
+{
+    var year = date.getFullYear().toString().substr(2);
+    var month = date.getMonth() + 1;
+    if(month < 10)
+        month = '0' + month;
+    return month + '/' + year;
 }
 
