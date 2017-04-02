@@ -13,14 +13,15 @@
       <li class="<%= 'active' if current_page?('/community/home') %>">
         <%= link_to "Commmunity", '/community/home' %>
       </li>
-      <li>
-        <%= link_to "New Project", '#', {:class => 'navbar-link', 'data-target' => "#new_project_modal", 'data-toggle' => "modal" }  %>
-      </li>
+
 
 
 <% if user_signed_in? %>
       <li class="<%= 'active' if current_page?('/profile') %>">
         <%= link_to "Home", '/profile' %>
+      </li>
+      <li>
+        <%= link_to "New Project", '#', {:class => 'navbar-link', 'data-target' => "#new_project_modal", 'data-toggle' => "modal" }  %>
       </li>
 <% end %>
 

@@ -117,7 +117,7 @@ function displayFollowers() {
         type: 'get',
         success: function(payload) {
             $('#preview-header').empty();
-            $('#preview-header').text("");1
+            $('#preview-header').text("");
             $('#preview-header').text('Followers');
             $('#search_container').empty();
             $('#preview-body').empty();

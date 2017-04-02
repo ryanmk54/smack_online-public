@@ -13,8 +13,11 @@
  *= require bootstrap.min
  *= require_self
  */
+
 @import 'variables';
 @import 'utilities';
+@import "font-awesome-sprockets";
+@import "font-awesome";
 
 .navbar {
     margin-bottom: 0;
@@ -34,10 +37,11 @@
 .modal
 {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 40%;
+  right: 40%;
   margin-left: -150px;
-  margin-top: -150px;
+  margin-right: -150px;
+  margin-top: 150px;
 }
 
 .modal-content
