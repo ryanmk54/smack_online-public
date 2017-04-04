@@ -211,6 +211,14 @@ html,body,.container {
   color: $lgray;
 }
 
+.profile-sidebar {
+  position: fixed;
+  overflow-x: hidden;
+  background-color: $light-sky-blue;
+  padding: 10px 10px 0px 10px;
+  margin: 5px 5px 5px 5px;
+}
+
 #searchbar {
   background-color: $light-sky-blue;
   color: $lgray;

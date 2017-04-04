@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     member do
       post 'receive_service_output', to: 'projects#receive_service_output'
       get 'fork', to: 'projects#fork'
+      post '',  to: 'projects#create'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
