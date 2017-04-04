@@ -1,9 +1,14 @@
 var OutputEditor = (function() {
   "use strict";
 
-  var init,
-      editor,
+  var editor,
+
+      debug,
+      init,
+      append,
+      get,
       highlightCorrespondingInputRow,
+      resize,
       set;
 
   init = function() {
@@ -18,6 +23,24 @@ var OutputEditor = (function() {
     // highlight the corresponding line in the input editor
     editor.on("changeSelection", highlightCorrespondingInputRow)
   };
+
+
+  append = function(value) {
+    editor.navigateFileEnd();
+    editor.insert('\n');
+    editor.insert(value);
+  };
+
+
+  debug = function() {
+    debugger;
+  }
+
+
+  get = function() {
+    return editor.getValue();
+  }
+
 
   highlightCorrespondingInputRow = function() {
     var cursorPos = editor.getSelection().getCursor();
@@ -44,13 +67,25 @@ var OutputEditor = (function() {
     });
   };
 
+
+  resize = function() {
+    editor.resize();
+  };
+
+
   set = function(value) {
     editor.setValue(value);
     editor.navigateTo(0,0);
+    OutputParser.showOutputModal();
   };
+
 
   return {
     init: init,
-    set: set
+    debug: debug,
+    append: append,
+    resize: resize,
+    set: set,
+    get: get
   };
 }());

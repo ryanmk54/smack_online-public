@@ -21,6 +21,9 @@ var ResizeOutputEditor = (function() {
 
   expand = function() {
     $(containerSel).removeClass(classToAdd);
+    $(containerSel).on('transitionend webkitTransitionEnd', function(e) {
+      OutputEditor.resize();
+    });
   };
 
 
@@ -39,7 +42,9 @@ var ResizeOutputEditor = (function() {
 
   return {
     init: init,
-    toggle: toggle
+    expand: expand,
+    toggle: toggle,
+    shrink: shrink
   };
 
 })();

@@ -52,7 +52,7 @@ body {
   flex-grow: 1;
   flex-shrink: 1;
   flex-basis: auto;
-  transition: all 1s;
+  transition: all 0.5s;
 }
 .ace-editor {
   height: 100%;
@@ -127,10 +127,16 @@ body {
 
 
   &.success {
+    border-color: green;
     color: green;
   }
+  &.sending {
+    border-color: rgb(79, 114, 79);
+    color: rgb(79, 114, 79);
+  }
   &.failure {
-    color: red;
+    border-color: rgb(170, 0, 0);
+    color: rgb(170, 0, 0);
   }
 }
 

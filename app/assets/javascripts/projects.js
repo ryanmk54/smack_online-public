@@ -14,6 +14,7 @@ $().ready(function(){
 
   InputEditor.init();
   OutputEditor.init();
+  OutputParser.init();
   ResizeOutputEditor.init();
   FileTree.init();
   FileUpload.init();

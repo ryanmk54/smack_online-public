@@ -5,6 +5,7 @@ var InputEditor = (function() {
 
       init,
       editor,
+      get,
       navigateTo,
       save,
       set;
@@ -17,7 +18,6 @@ var InputEditor = (function() {
     editor.session.setMode("ace/mode/c_cpp");
     editor.on('blur', save);
     editor.getSession().on('change', function(e) {
-      console.log(e);
       changed = true;
     });
     changed = false;
@@ -27,6 +27,11 @@ var InputEditor = (function() {
   navigateTo = function(rowNum, colNum) {
     editor.gotoLine(rowNum);
     editor.navigateTo(rowNum, colNum);
+  };
+
+
+  get = function() {
+    return editor.getValue();
   };
 
 
@@ -45,6 +50,7 @@ var InputEditor = (function() {
 
   return {
     init: init,
+    get: get,
     navigateTo: navigateTo,
     save: save,
     set: set
