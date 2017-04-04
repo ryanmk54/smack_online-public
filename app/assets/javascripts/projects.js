@@ -12,11 +12,10 @@
 $().ready(function(){
   "use strict";
 
-  InputEditor.init();
+  FileTree.init();
   OutputEditor.init();
   OutputParser.init();
   ResizeOutputEditor.init();
-  FileTree.init();
   FileUpload.init();
   RunProjectForm.init();
   Title.init();

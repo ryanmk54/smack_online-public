@@ -132,9 +132,13 @@ var FileTree = (function() {
     // input editor variable is called editor
     zip.file(filename).async("string")
       .then(function success(content) {
-        // use the content
-        InputEditor.set(content);
-        InputEditor.navigateTo(rowNum, colNum);
+        if (InputEditor.isInitialized()) {
+          InputEditor.set(content);
+          InputEditor.navigateTo(rowNum, colNum);
+        } else {
+          $("#inputEditor").text(content);
+          InputEditor.init();
+        }
       }, function error(e) {
         throw(e);
       });
@@ -175,12 +179,14 @@ var FileTree = (function() {
         }, function error(e) {
           throw("Unable to load project from server");
         });
+    } else {
+      InputEditor.init();
     }
   };
 
 
   return {
-    init: init,
+    init,
     getBase64,
     saveToServer,
     setCurrentFile,

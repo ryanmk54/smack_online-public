@@ -130,7 +130,7 @@ body {
     border-color: green;
     color: green;
   }
-  &.sending {
+  &.sending, &.waiting {
     border-color: rgb(79, 114, 79);
     color: rgb(79, 114, 79);
   }

@@ -2,13 +2,16 @@ var InputEditor = (function() {
   "use strict";
 
   var changed,
+      initialized,
 
       init,
+      isInitialized,
       editor,
       get,
       navigateTo,
       save,
-      set;
+      set,
+      setChanged;
 
 
   init = function() {
@@ -19,8 +22,17 @@ var InputEditor = (function() {
     editor.on('blur', save);
     editor.getSession().on('change', function(e) {
       changed = true;
+      OutputParser.setStatus("Changed since last verification");
     });
     changed = false;
+  };
+
+
+  isInitialized = function() {
+    if (initialized)
+      return true;
+    else
+      return false;
   };
 
 
@@ -49,10 +61,12 @@ var InputEditor = (function() {
 
 
   return {
-    init: init,
-    get: get,
-    navigateTo: navigateTo,
-    save: save,
-    set: set
+    init,
+    isInitialized,
+    get,
+    navigateTo,
+    save,
+    set,
+    setChanged
   };
 }());
