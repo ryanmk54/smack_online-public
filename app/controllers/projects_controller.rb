@@ -1,5 +1,6 @@
 require 'csv'
 require 'json'
+require 'digest/md5'
 
 class ProjectsController < ApplicationController
   #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
@@ -8,6 +9,7 @@ class ProjectsController < ApplicationController
   # Production SMACK server URL
   SERVICE_REQUEST_URL = 'ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started'
   PROJECT_CSV_PATH = Rails.root.join('public', 'assets', 'ProjectLocations.csv')
+  RUNTIME_THRESHOLD = 500; # Ignore projects with runtimes more than this number when calculating average runtimes for eta.
 
   Geocoder.configure(:timeout => 10000)
 
@@ -48,9 +50,17 @@ class ProjectsController < ApplicationController
     if params[:run]
       #TODO: Change config file based off of other services
       @project[:service_options] = generateOptionsString('smack-options.json')
-
+      op_hash = generateMD5ForImportantOptions('smack-options.json')
+      @project[:options_hash] = op_hash
       @project.input = params[:project][:input] # Save the input
-      @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
+      send_service_input # Make a request to the SMACK server with the new project
+
+      avg =  Project.where('options_hash = ?', op_hash).average('runtime');
+      if(avg != nil)
+        @project[:eta] = avg;
+      else
+        @project[:eta] = Project.where('runtime <= ?', RUNTIME_THRESHOLD).average('runtime');
+      end
     end
 
     # Save the new project to the database and redirect the user to 'edit'
@@ -89,7 +99,15 @@ class ProjectsController < ApplicationController
     @project[:service_options] = generateOptionsString('smack-options.json')
 
     if params[:run]
-      @project.eta = send_service_input # Make a request to the SMACK server with updated project
+      send_service_input # Make a request to the SMACK server with updated project
+      op_hash = generateMD5ForImportantOptions('smack-options.json')
+      @project[:options_hash] = op_hash
+      avg =  Project.where('options_hash = ?', op_hash).average('runtime');
+      if(avg != nil)
+        @project[:eta] = avg;
+      else
+        @project[:eta] = Project.where('runtime <= ?', RUNTIME_THRESHOLD).average('runtime');
+      end
     end
 
     respond_to do |format|
@@ -201,7 +219,35 @@ class ProjectsController < ApplicationController
     return optionsString
   end
 
-  # TODO: Needs to go to model
+  # String options have too much variability. The 'heavily weighted'
+  # options are integer, group, and boolean options.
+  def generateMD5ForImportantOptions(optionsConfigFile)
+    options = ''
+    json = File.read("#{Rails.root}/public/config/" + optionsConfigFile)
+    json = JSON.parse(json)
+    json['Group Options'].each do |group|
+      if params.include? group['name']
+        options += group['name'] + ' ' + params[group['name']] + ' '
+      end
+    end
+
+    json['Integer Options'].each do |option|
+      if params.include? option['name']
+        n = params[option['name']].to_i
+        # round to the nearest 100
+        options += option['name'] + ' ' + (n.round(-2)).to_s + ' '
+      end
+    end
+
+    json['Boolean Options'].each do |option|
+      if params.include? option['name']
+        options += option['name'] + ' '
+      end
+    end
+
+    return Digest::MD5.hexdigest(options)
+  end
+
   def updateCSV
     state = request.location.state
     city = request.location.city
