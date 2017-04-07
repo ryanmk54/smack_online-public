@@ -1,5 +1,6 @@
 @import 'variables';
-
+@import "font-awesome-sprockets";
+@import "font-awesome";
 body {
   background-color: lightgrey;
 }
@@ -14,6 +15,12 @@ body {
   width: 250px;
 }
 
+.navbar-profile {
+  background-color: $light-sky-blue;
+  height: 120px;
+  vertical-align: center;
+}
+
 .circular--square--large {
   border-radius: 50%;
   width: 250px;
@@ -24,7 +31,13 @@ body {
   box-shadow: 2px 2px 2px 2px;
 }
 
-
+.img-thumbnail {
+  display: block;
+  max-width: 100px;
+  max-height: 100px;
+  width: auto;
+  height: auto;
+}
 
 .card-project {
   width: 100%;

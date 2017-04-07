@@ -8,16 +8,7 @@ class AnalyticsController < ApplicationController
     respond_to do |format|
       format.html
       format.js
-      format.json {render json: projects, :only => [:created_at, :title, :runtime, :id]}
-    end
-  end
-
-  def project_runtimes
-    projects = Project.where('runtime = 0 or runtime != ""')
-    respond_to do |format|
-      format.html
-      format.js
-      format.json {render json: projects, :only => [:runtime, :id]}
+      format.json {render json: projects, :only => [:created_at, :title, :runtime, :id, :public]}
     end
   end
 
@@ -26,7 +17,7 @@ class AnalyticsController < ApplicationController
     respond_to do |format|
       format.html
       format.js
-      format.json {render json: users, :only => [:created_at, :email, :id]}
+      format.json {render json: users, :only => [:created_at, :username, :id]}
     end
   end
 

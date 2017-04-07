@@ -19,6 +19,10 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def fork
+    Project.find(params[:id]).fork(current_user.id)
+  end
+
   # GET /projects/new
   # Displays the initial code editor to the user.
   def new
@@ -39,7 +43,7 @@ class ProjectsController < ApplicationController
       @project = current_user.projects.create(project_params)
     end
     @project.save # Need to save before send_service_input in order to know the project id
-    current_user.projects.push @project if current_user
+   # current_user.projects.push @project if current_user
 
     if params[:run]
       #TODO: Change config file based off of other services
@@ -131,10 +135,27 @@ class ProjectsController < ApplicationController
     end
     puts 'deleted'
     respond_to do |format|
-      format.html { redirect_to projects_url }
+      format.html { render :nothing => true }
       format.json { head :no_content }
       format.js   { render :layout => false }
     end
+  end
+
+  def toggle
+    owned_project_ids = current_user.projects.map { |proj| proj.id.to_i }
+    if owned_project_ids.include? params[:id].to_i
+      project = Project.find(params[:id])
+      if params[:visibility] == 'public'
+        project.public = true
+      end
+      if params[:visibility] == 'private'
+        project.public = false
+      end
+      project.save
+      render json: nil, status: :ok
+      return
+    end
+      render status: :forbidden
   end
 
 

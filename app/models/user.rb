@@ -24,13 +24,6 @@ class User < ApplicationRecord
     self[:created_at].strftime("%D")
   end
 
-  def private_projects
-  end
-
-  def public_projects
-    # TODO
-  end
-
   def followers
     follower_ids = Follower.where(following_id: self.id).select(:follower_id).map {|entry| entry.follower_id}
     User.find(follower_ids)
@@ -50,9 +43,11 @@ class User < ApplicationRecord
     Follower.delete(entries.map{ |f| f.id})
   end
 
-
-
   def is_following user_id
     return self.followees.include? User.find(user_id)
+  end
+
+  def public_projects
+    projects.where(public: true)
   end
 end
