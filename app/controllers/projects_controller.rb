@@ -55,6 +55,7 @@ class ProjectsController < ApplicationController
       @project.input = params[:project][:input] # Save the input
       send_service_input # Make a request to the SMACK server with the new project
 
+
       avg =  Project.where('options_hash = ?', op_hash).average('runtime');
       if(avg != nil)
         @project[:eta] = avg;

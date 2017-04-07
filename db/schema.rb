@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170331175138) do
+ActiveRecord::Schema.define(version: 20170407164835) do
 
   create_table "followers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "follower_id"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20170331175138) do
     t.string   "state"
     t.text     "service_options", limit: 65535
     t.string   "options_hash"
+    t.string   "input_hash"
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
