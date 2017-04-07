@@ -75,7 +75,7 @@ RunProjectForm = (function() {
 
 
   submitWithUpdatedBase64 = function(event) {
-    if (InputEditor.get().length == 0) {
+    if (InputEditor.get().trim().length == 0) {
       OutputEditor.set("There is no code to send to the server");
       return;
     }

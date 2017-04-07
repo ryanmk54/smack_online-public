@@ -28,6 +28,7 @@ var OutputParser = (function() {
       case "sending":
       case "waiting":
         return "glyphicon glyphicon-info-sign";
+      case "no-code":
       case "failure":
         return "glyphicon glyphicon-remove-sign";
       default:
@@ -91,6 +92,7 @@ var OutputParser = (function() {
     var successText = "SMACK found no errors";
     var sendingText = "Sending code to server";
     var waitingText = "Estimated time remaining:";
+    var noCodeText = "no code";
     if (output.length == 0) {
       return "empty";
     }
@@ -102,6 +104,9 @@ var OutputParser = (function() {
     }
     if (output.indexOf(waitingText) != -1) {
       return "waiting";
+    }
+    if (output.indexOf(noCodeText) != -1) {
+      return "no-code";
     }
     return "failure";
   };
@@ -115,6 +120,8 @@ var OutputParser = (function() {
       return "No errors found";
     } else if (status == "sending") {
       return "Sending code to SMACK";
+    } else if (status == "no-code") {
+      return "There is no code to send to SMACK";
     } else if (status == "waiting") {
       return "Waiting for a response from SMACK";
     } else {

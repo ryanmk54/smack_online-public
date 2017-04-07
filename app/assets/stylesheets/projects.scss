@@ -103,6 +103,8 @@ body {
 
   background-color: rgba(26, 28, 29, 0.9);
   color: white;
+
+  cursor: pointer;
 }
 
 #verify-status-header {
@@ -134,7 +136,7 @@ body {
     border-color: rgb(79, 114, 79);
     color: rgb(79, 114, 79);
   }
-  &.failure {
+  &.failure, &.no-code {
     border-color: rgb(170, 0, 0);
     color: rgb(170, 0, 0);
   }
@@ -145,6 +147,7 @@ body {
   top: 4px;
   right: 4px;
   color: lightgray;
+  cursor: pointer;
 }
 
 
@@ -168,7 +171,7 @@ body {
   }
 
   input {
-    width: 250px;
+    width: 300px;
   }
 }
 
