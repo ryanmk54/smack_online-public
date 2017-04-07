@@ -39,12 +39,24 @@ class ProjectsController < ApplicationController
   # Creates a new project, makes a request to the SMACK server,
   # and saves the input to the file system as a Base64 string.
   def create
+    puts project_params.to_h
     if current_user == nil
-      @project = Project.new(project_params)
+      @project = Project.new( project_params )
     else
-      @project = current_user.projects.create(project_params)
+      @project = current_user.projects.create project_params
+      @project.save
     end
-    @project.save # Need to save before send_service_input in order to know the project id
+
+    if project_params.has_key? :input
+      @project.input= Base64.encode64 params[:project][:input].tempfile.open.read
+    else
+      @project.input= ''
+    end
+
+
+
+
+     # Need to save before send_service_input in order to know the project id
    # current_user.projects.push @project if current_user
 
     if params[:run]
@@ -78,7 +90,6 @@ class ProjectsController < ApplicationController
         format.html { render :new }
       end
     end
-
     updateCSV
   end
 
@@ -140,8 +151,8 @@ class ProjectsController < ApplicationController
     # Get params and associate :output with the project with id :id
     @project.output = params[:output]
     @project[:runtime] = params[:time_elapsed]
-    @project[:eta] = 0;
-    @project.save;
+    @project[:eta] = 0
+    @project.save
   end
 
   # DELETE /projects/:id
@@ -158,6 +169,23 @@ class ProjectsController < ApplicationController
       format.json { head :no_content }
       format.js   { render :layout => false }
     end
+  end
+
+  def toggle
+    owned_project_ids = current_user.projects.map { |proj| proj.id.to_i }
+    if owned_project_ids.include? params[:id].to_i
+      project = Project.find(params[:id])
+      if params[:visibility] == 'public'
+        project.public = true
+      end
+      if params[:visibility] == 'private'
+        project.public = false
+      end
+      project.save
+      render json: nil, status: :ok
+      return
+    end
+      render status: :forbidden
   end
 
 
@@ -185,7 +213,8 @@ class ProjectsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def project_params
-    params.require(:project).permit(:title, :input)
+    puts params.to_h
+    params.require(:project).permit(:title, :input, :public)
   end
 
 

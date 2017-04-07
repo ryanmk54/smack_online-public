@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get 'analytics/users_created'
   get 'users/projects', to: 'users#projects'
 
+  get 'users/projects', to: 'users#projects'
   get 'users/projects/:id', to: 'users#projects'
   get 'users/followers', to: 'users#followers'
   get 'users/following', to: 'users#followees'
@@ -25,10 +26,13 @@ Rails.application.routes.draw do
   post 'users/follow', to: 'users#follow'
   post 'users/unfollow', to: 'users#unfollow'
 
+  post '/projects/:id/permissions/:visibility', to: 'projects#toggle'
+
   resources(:projects,  except: [:index]) do
     member do
       post 'receive_service_output', to: 'projects#receive_service_output'
       get 'fork', to: 'projects#fork'
+      post '',  to: 'projects#create'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

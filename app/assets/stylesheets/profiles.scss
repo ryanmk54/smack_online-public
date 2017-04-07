@@ -1,5 +1,6 @@
 @import 'variables';
-
+@import "font-awesome-sprockets";
+@import "font-awesome";
 body {
   background-color: lightgrey;
 }
@@ -208,6 +209,14 @@ html,body,.container {
 
 .nav-pills a {
   color: $lgray;
+}
+
+.profile-sidebar {
+  position: fixed;
+  overflow-x: hidden;
+  background-color: $light-sky-blue;
+  padding: 10px 10px 0px 10px;
+  margin: 5px 5px 5px 5px;
 }
 
 #searchbar {

@@ -28,8 +28,8 @@ ActiveRecord::Schema.define(version: 20170407164835) do
     t.string   "title"
     t.string   "output"
     t.integer  "eta"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
     t.string   "user_ip"
     t.string   "city"
     t.integer  "runtime"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20170407164835) do
     t.text     "service_options", limit: 65535
     t.string   "options_hash"
     t.string   "input_hash"
+    t.boolean  "public",                        default: true
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

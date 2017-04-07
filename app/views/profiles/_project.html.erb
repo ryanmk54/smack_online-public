@@ -1,41 +1,55 @@
 <div id="project-preview-<%= project.id%>">
   <div class="card card-project card-project-preview"  >
-    <div class="col-sm-6">
-      <div class="card-title">
-      <strong>
-        <h2>
-          <%= project.title %>
-        </h2>
-      </strong>
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="card-title" style="text-overflow: ellipsis;">
+          <h3>
+            <strong>
+              <%= project.title %>
+            </strong>
+          </h3>
         </div>
+      </div>
+      <div class="project_options" style="visibility: hidden;">
+        <div class="col-sm-2" style="align-content: center;">
+          <h3>
+            <a href="<%= edit_project_path(project)%>">
+              <div class="glyphicon glyphicon-folder-open"></div>
+            </a>
+          </h3>
+
+        </div>
+
+        <div class="col-sm-2">
+          <h3>
+            <a href="<%= edit_project_path(project)%>">
+              <div class="glyphicon glyphicon-play" style="color: green;"></div>
+            </a>
+          </h3>
+
+        </div>
+
+        <div class="col-sm-2">
+          <h3>
+            <a href="#" onclick="delete_project(<%= project.id %>)">
+              <div class="glyphicon glyphicon-remove" style="color: red;"></div>
+            </a>
+          </h3>
+        </div>
+
+        <div class="col-sm-2">
+          <h3>
+            <a href="#" >
+              <% if project.public %>
+                  <i id="project-<%= project.id%>-visibility" class="fa fa-unlock-alt" onclick="makeProjectPrivate(<%=project.id %>)" style="color: black;"></i>
+              <% else %>
+                  <i id="project-<%= project.id%>-visibility" class="glyphicon glyphicon-lock" onclick="makeProjectPublic(<%=project.id %>)" aria-hidden="true"></i>
+              <% end %>
+            </a>
+          </h3>
+        </div>
+      </div>
     </div>
-    <div class="project_options" style="visibility: hidden;">
-      <div class="col-sm-2" style="align-content: center;">
-        <h2>
-          <a href="<%= edit_project_path(project)%>">
-            <div class="glyphicon glyphicon-folder-open"></div>
-          </a>
-        </h2>
 
-        </a>
-      </div>
-
-      <div class="col-sm-2">
-        <h2>
-          <a href=""<%= edit_project_path(project)%>">
-          <div class="glyphicon glyphicon-play" style="color: green;"></div>
-          </a>
-        </h2>
-
-      </div>
-
-      <div class="col-sm-2">
-        <h2>
-          <a href="#" onclick="delete_project(<%= project.id %>)">
-            <div class="glyphicon glyphicon-remove" style="color: red;"></div>
-          </a>
-        </h2>
-      </div>
-    </div>
   </div>
 </div>

@@ -20,22 +20,19 @@ function displayNewProjectButton() {
         type: 'get',
         success: function(payload) {
             $('#preview-header').html('');
+            $('#preview-header').empty();
             $('#preview-header').append(payload);
         }
     })
 }
-
-
 
 function displayProjects() {
     $.ajax({
         url: '/users/projects',
         type: 'get',
         success: function(payload) {
-            // $('#preview-header').text('Projects');
             $('#search_container').empty();
             $('#preview-body').empty();
-
             $('#preview-body').html(payload);
 
             $('.card-project').hover(
@@ -58,6 +55,8 @@ function displayFollowing() {
         url: '/users/following',
         type: 'get',
         success: function(payload) {
+            $('#preview-header').empty();
+            $('#preview-header').text("");
             $('#preview-header').text("Users I'm Following");
             $('#search_container').empty();
             $('#preview-body').empty();
@@ -117,6 +116,8 @@ function displayFollowers() {
         url: '/users/followers',
         type: 'get',
         success: function(payload) {
+            $('#preview-header').empty();
+            $('#preview-header').text("");
             $('#preview-header').text('Followers');
             $('#search_container').empty();
             $('#preview-body').empty();
@@ -169,7 +170,9 @@ function displayPeerProjects(peer_id) {
         url: '/users/projects/' + peer_id,
         type: 'get',
         success: function(payload) {
-            // $('#preview-header').text('Projects');
+            $('#preview-header').empty();
+            $('#preview-header').text('Projects');
+            $('#preview-header').text('Projects');
             $('#search_container').empty();
             $('#preview-body').empty();
 
@@ -206,9 +209,18 @@ $(document).ready(function() {
     });
 
     $('#show_followers').click(function() {
-        // hide_followers();
-        displayFollowers()
+        displayFollowers();
     });
+
+    $('#show_peer_followers').click(function() {
+        // hide_followers();
+        displayFollowers();
+    });
+
+    $('#show_peer_following').click(function() {
+        displayFollowing();
+    });
+
 
 
     $('#show_following').click(function() {
@@ -219,5 +231,36 @@ $(document).ready(function() {
         displaySearchBar();
     });
 });
+
+function makeProjectPrivate() {
+
+}
+
+function makeProjectPublic(project_id) {
+    $.ajax({
+        url: '/projects/'+ project_id + '/permissions/public',
+        type: 'post',
+        success: function(payload) {
+            $('#project-' + project_id + '-visibility').removeClass('glyphicon glyphicon-lock');
+            $('#project-' + project_id + '-visibility').addClass('fa fa-unlock-alt');
+            $('#project-' + project_id + '-visibility').attr('onclick', 'makeProjectPrivate(' + project_id + ')');
+            $('#project-' + project_id + '-visibility').animate('highlight', {}, 30000);
+        }
+    });
+
+}
+
+function makeProjectPrivate(project_id) {
+    $.ajax({
+        url: '/projects/'+ project_id + '/permissions/private',
+        type: 'post',
+        success: function(payload) {
+            $('#project-' + project_id + '-visibility').removeClass('fa fa-unlock-alt');
+            $('#project-' + project_id + '-visibility').addClass('glyphicon glyphicon-lock');
+            $('#project-' + project_id + '-visibility').attr('onclick', 'makeProjectPublic(' + project_id + ')');
+            $('#project-' + project_id + '-visibility').animate('highlight', {}, 30000);
+        }
+    });
+}
 
 

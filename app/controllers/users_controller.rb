@@ -4,7 +4,7 @@ class UsersController < ApplicationController
     if params[:id].nil?
       render partial: 'profiles/project', collection: current_user.projects
     else
-      render partial: 'profiles/peer_project', collection: User.find(params[:id]).projects, as: 'project'
+      render partial: 'profiles/peer_project', collection: User.find(params[:id]).public_projects, as: 'project'
     end
   end
 
