@@ -1,0 +1,40 @@
+<div class="col-md-6" >
+  <div class="card-user-search" >
+      <!--<div class="card-block">-->
+        <div class="card-title">
+          <div class="row" >
+            <div class="col-sm-6">
+              <%= image_tag src=user.avatar.url, :class => 'img-thumbnail', :alt => 'Avatar' %>
+            </div>
+            <div class="col-sm-6">
+              <strong><h2><%= user.username %></h2></strong>
+              <br/>
+              <div class="card-footer" style="align-text: center;">
+                <% if @user.is_following user.id %>
+                    <p>
+                      <button id="follow_button_<%=user.id%>" class="btn btn-danger" onclick = unfollow(<%= user.id.to_s %>) >unfollow <div class="glyphicon glyphicon-minus-sign"> </div></button>
+                    </p>
+
+                <% else %>
+                    <p>
+                      <button id="follow_button_<%=user.id%>" class="btn btn-success" onclick = follow(<%= user.id.to_s %>) >follow <div class="glyphicon glyphicon-plus"> </div></button>
+                    </p>
+
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-body" style="margin-top: 20px;">
+          <strong>Member Since: </strong>
+          <br/>
+          <strong>Projects Run: </strong>
+        </div>
+
+
+
+    <!--</div>-->
+  </div>
+  </div>
+

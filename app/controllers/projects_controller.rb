@@ -33,7 +33,11 @@ class ProjectsController < ApplicationController
   # Creates a new project, makes a request to the SMACK server,
   # and saves the input to the file system as a Base64 string.
   def create
-    @project = Project.new(project_params)
+    if current_user == nil
+      @project = Project.new(project_params)
+    else
+      @project = current_user.projects.create(project_params)
+    end
     @project.save # Need to save before send_service_input in order to know the project id
     current_user.projects.push @project if current_user
 
