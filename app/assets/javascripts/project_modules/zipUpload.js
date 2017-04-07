@@ -68,6 +68,7 @@ var FileUpload = (function() {
     zip.loadAsync(zipUpload.files[0])
       .then(function success(zip) {
         FileTree.init(zip);
+        OutputParser.setStatus("Not yet verified");
       }, function error(e) {
         throw("Unable to load zip files");
       });

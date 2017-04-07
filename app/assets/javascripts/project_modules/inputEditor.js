@@ -22,7 +22,6 @@ var InputEditor = (function() {
     editor.on('blur', save);
     editor.getSession().on('change', function(e) {
       changed = true;
-      OutputParser.setStatus("Changed since last verification");
     });
     changed = false;
   };

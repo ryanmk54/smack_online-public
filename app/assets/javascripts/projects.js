@@ -13,6 +13,7 @@ $().ready(function(){
   "use strict";
 
   FileTree.init();
+  InputEditor.init();
   OutputEditor.init();
   OutputParser.init();
   ResizeOutputEditor.init();

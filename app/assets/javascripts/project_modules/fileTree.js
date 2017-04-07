@@ -23,7 +23,7 @@ var FileTree = (function() {
 
   getBase64 = function() {
     return zip.generateAsync({type: "base64"});
-  }
+  };
 
 
   init = function(_zip) {
@@ -129,16 +129,10 @@ var FileTree = (function() {
     var currentFileElement = document.getElementById(currentFileName);
     currentFileElement.classList.add("current-file");
 
-    // input editor variable is called editor
     zip.file(filename).async("string")
       .then(function success(content) {
-        if (InputEditor.isInitialized()) {
-          InputEditor.set(content);
-          InputEditor.navigateTo(rowNum, colNum);
-        } else {
-          $("#inputEditor").text(content);
-          InputEditor.init();
-        }
+        InputEditor.set(content);
+        InputEditor.navigateTo(rowNum, colNum);
       }, function error(e) {
         throw(e);
       });
@@ -179,8 +173,6 @@ var FileTree = (function() {
         }, function error(e) {
           throw("Unable to load project from server");
         });
-    } else {
-      InputEditor.init();
     }
   };
 
