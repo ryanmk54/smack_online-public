@@ -23,7 +23,7 @@ var FileTree = (function() {
 
   getBase64 = function() {
     return zip.generateAsync({type: "base64"});
-  }
+  };
 
 
   init = function(_zip) {
@@ -129,10 +129,8 @@ var FileTree = (function() {
     var currentFileElement = document.getElementById(currentFileName);
     currentFileElement.classList.add("current-file");
 
-    // input editor variable is called editor
     zip.file(filename).async("string")
       .then(function success(content) {
-        // use the content
         InputEditor.set(content);
         InputEditor.navigateTo(rowNum, colNum);
       }, function error(e) {
@@ -180,7 +178,7 @@ var FileTree = (function() {
 
 
   return {
-    init: init,
+    init,
     getBase64,
     saveToServer,
     setCurrentFile,

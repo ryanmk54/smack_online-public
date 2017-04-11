@@ -10,18 +10,171 @@
 *= require jqtree
 */
 @import 'variables';
+@import 'flexbox-cols';
 
 html, 
 body {
+  min-width: 800px;
+  min-height: 600px;
   height: 100%;
   width: 100%;
 }
 
+#editors-row {
+  height: calc(100% - 52px);
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: $screen-md-min) {
+    flex-direction: row;
+  }
+
+  &.output-shrunk {
+    #collapse-output-text:before {
+      content: "^";
+    }
+    @media (min-width: $screen-md-min) {
+      #collapse-output-text:before {
+        content: "<";
+      }
+    }
+
+    #output-editor-container {
+      flex-grow: 0.001;
+      flex-grow: 0;
+    }
+  }
+}
+
+.editor-container {
+  position: relative;
+
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  transition: all 0.5s;
+}
+.ace-editor {
+  height: 100%;
+}
+
+#collapse-output-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgb(211,211,211);
+  border: 1px solid black;
+  border-radius: 8px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  height: 18px;
+  width: 100%;
+
+  @media (min-width: $screen-md-min) {
+    height: 100%;
+    width: 18px;
+  }
+}
+
+#collapse-output-text:before {
+  content: "V";
+
+  @media (min-width: $screen-md-min) {
+      content: ">";
+  }
+}
+
+#verify-status-box {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 350px;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: space-between;
+
+  margin: 6px;
+  padding: 18px;
+  border-radius: 4px;
+
+  background-color: rgba(26, 28, 29, 0.9);
+  color: white;
+
+  cursor: pointer;
+}
+
+#verify-status-header {
+  font-size: 24px;
+}
+
+#verify-status-icon-box {
+  float: right;
+  width: 75px;
+  height: 75px;
+  margin-left: 24px;
+
+  border: 6px solid green;
+  border-radius: 48px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+  font-size: 48px;
+
+
+  &.success {
+    border-color: green;
+    color: green;
+  }
+  &.sending, &.waiting {
+    border-color: rgb(79, 114, 79);
+    color: rgb(79, 114, 79);
+  }
+  &.failure, &.no-code {
+    border-color: rgb(170, 0, 0);
+    color: rgb(170, 0, 0);
+  }
+}
+
+#verify-status-close-icon {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  color: lightgray;
+  cursor: pointer;
+}
+
+
 #top-row {
+  label {
+    float: left;
+  }
+
   & > div:first-child {
     padding-left: 8px;
   }
 }
+
+#output-status {
+  display: flex;
+  align-items: center;
+
+  label {
+    height: 10px;
+    padding-right: 10px;
+  }
+
+  input {
+    width: 300px;
+  }
+}
+
 
 #options-and-run-row {
   & > div:first-child {
@@ -66,17 +219,10 @@ ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover
   color: red;
 }
 
-#editors-row {
-  height: calc(100% - 52px);
-}
 #sidebar {
   padding: 8px;
 }
 
 .project-btn {
   width: 95px;
-}
-
-.ace_editor {
-  height: 100%;
 }

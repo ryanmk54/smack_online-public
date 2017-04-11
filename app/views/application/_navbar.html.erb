@@ -14,6 +14,11 @@
         <%= link_to "Commmunity", '/community/home' %>
       </li>
 
+<% if controller_name == "projects" %>
+      <li id="start-tutorial-btn">
+        <a href="#">Tutorial</a>
+      </li>
+<% end %>
 
 
 <% if user_signed_in? %>

@@ -2,12 +2,16 @@ var InputEditor = (function() {
   "use strict";
 
   var changed,
+      initialized,
 
       init,
+      isInitialized,
       editor,
+      get,
       navigateTo,
       save,
-      set;
+      set,
+      setChanged;
 
 
   init = function() {
@@ -17,16 +21,28 @@ var InputEditor = (function() {
     editor.session.setMode("ace/mode/c_cpp");
     editor.on('blur', save);
     editor.getSession().on('change', function(e) {
-      console.log(e);
       changed = true;
     });
     changed = false;
   };
 
 
+  isInitialized = function() {
+    if (initialized)
+      return true;
+    else
+      return false;
+  };
+
+
   navigateTo = function(rowNum, colNum) {
     editor.gotoLine(rowNum);
     editor.navigateTo(rowNum, colNum);
+  };
+
+
+  get = function() {
+    return editor.getValue();
   };
 
 
@@ -44,9 +60,12 @@ var InputEditor = (function() {
 
 
   return {
-    init: init,
-    navigateTo: navigateTo,
-    save: save,
-    set: set
+    init,
+    isInitialized,
+    get,
+    navigateTo,
+    save,
+    set,
+    setChanged
   };
 }());
