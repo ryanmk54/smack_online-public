@@ -123,7 +123,9 @@ var OutputParser = (function() {
     } else if (status == "no-code") {
       return "There is no code to send to SMACK";
     } else if (status == "waiting") {
-      return "Waiting for a response from SMACK";
+      var output = OutputEditor.get();
+      // used to say "Waiting for a response from SMACK"
+      return output;
     } else {
       return "Errors found. Click to view error log";
     }
