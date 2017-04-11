@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170407164835) do
+ActiveRecord::Schema.define(version: 20170331175138) do
 
   create_table "followers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "follower_id"
@@ -35,9 +35,8 @@ ActiveRecord::Schema.define(version: 20170407164835) do
     t.integer  "runtime"
     t.string   "state"
     t.text     "service_options", limit: 65535
-    t.string   "options_hash"
-    t.string   "input_hash"
     t.boolean  "public",                        default: true
+    t.string   "options_hash"
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -62,9 +61,9 @@ ActiveRecord::Schema.define(version: 20170407164835) do
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, length: { confirmation_token: 128 }, using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true, length: { email: 128 }, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, length: { reset_password_token: 128 }, using: :btree
   end
 
 end
