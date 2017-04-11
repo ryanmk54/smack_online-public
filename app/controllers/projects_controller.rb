@@ -1,5 +1,6 @@
 require 'csv'
 require 'json'
+require 'digest/md5'
 
 class ProjectsController < ApplicationController
   #protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json'}
@@ -8,6 +9,7 @@ class ProjectsController < ApplicationController
   # Production SMACK server URL
   SERVICE_REQUEST_URL = 'ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started'
   PROJECT_CSV_PATH = Rails.root.join('public', 'assets', 'ProjectLocations.csv')
+  RUNTIME_THRESHOLD = 500; # Ignore projects with runtimes more than this number when calculating average runtimes for eta.
 
   Geocoder.configure(:timeout => 10000)
 
@@ -37,20 +39,41 @@ class ProjectsController < ApplicationController
   # Creates a new project, makes a request to the SMACK server,
   # and saves the input to the file system as a Base64 string.
   def create
+    puts project_params.to_h
     if current_user == nil
-      @project = Project.new(project_params)
+      @project = Project.new( project_params )
     else
-      @project = current_user.projects.create(project_params)
+      @project = current_user.projects.create project_params
+      @project.save
     end
-    @project.save # Need to save before send_service_input in order to know the project id
+
+    if project_params.has_key? :input
+      @project.input= Base64.encode64 params[:project][:input].tempfile.open.read
+    else
+      @project.input= ''
+    end
+
+
+
+
+     # Need to save before send_service_input in order to know the project id
    # current_user.projects.push @project if current_user
 
     if params[:run]
       #TODO: Change config file based off of other services
       @project[:service_options] = generateOptionsString('smack-options.json')
-
+      op_hash = generateMD5ForImportantOptions('smack-options.json')
+      @project[:options_hash] = op_hash
       @project.input = params[:project][:input] # Save the input
-      @project[:eta] = send_service_input # Make a request to the SMACK server with the new project
+      send_service_input # Make a request to the SMACK server with the new project
+
+
+      avg =  Project.where('options_hash = ?', op_hash).average('runtime');
+      if(avg != nil)
+        @project[:eta] = avg;
+      else
+        @project[:eta] = Project.where('runtime <= ?', RUNTIME_THRESHOLD).average('runtime');
+      end
     end
 
     # Save the new project to the database and redirect the user to 'edit'
@@ -67,7 +90,6 @@ class ProjectsController < ApplicationController
         format.html { render :new }
       end
     end
-
     updateCSV
   end
 
@@ -89,7 +111,15 @@ class ProjectsController < ApplicationController
     @project[:service_options] = generateOptionsString('smack-options.json')
 
     if params[:run]
-      @project.eta = send_service_input # Make a request to the SMACK server with updated project
+      send_service_input # Make a request to the SMACK server with updated project
+      op_hash = generateMD5ForImportantOptions('smack-options.json')
+      @project[:options_hash] = op_hash
+      avg =  Project.where('options_hash = ?', op_hash).average('runtime');
+      if(avg != nil)
+        @project[:eta] = avg;
+      else
+        @project[:eta] = Project.where('runtime <= ?', RUNTIME_THRESHOLD).average('runtime');
+      end
     end
 
     respond_to do |format|
@@ -121,8 +151,8 @@ class ProjectsController < ApplicationController
     # Get params and associate :output with the project with id :id
     @project.output = params[:output]
     @project[:runtime] = params[:time_elapsed]
-    @project[:eta] = 0;
-    @project.save;
+    @project[:eta] = 0
+    @project.save
   end
 
   # DELETE /projects/:id
@@ -183,7 +213,8 @@ class ProjectsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def project_params
-    params.require(:project).permit(:title, :input)
+    puts params.to_h
+    params.require(:project).permit(:title, :input, :public)
   end
 
 
@@ -218,7 +249,35 @@ class ProjectsController < ApplicationController
     return optionsString
   end
 
-  # TODO: Needs to go to model
+  # String options have too much variability. The 'heavily weighted'
+  # options are integer, group, and boolean options.
+  def generateMD5ForImportantOptions(optionsConfigFile)
+    options = ''
+    json = File.read("#{Rails.root}/public/config/" + optionsConfigFile)
+    json = JSON.parse(json)
+    json['Group Options'].each do |group|
+      if params.include? group['name']
+        options += group['name'] + ' ' + params[group['name']] + ' '
+      end
+    end
+
+    json['Integer Options'].each do |option|
+      if params.include? option['name']
+        n = params[option['name']].to_i
+        # round to the nearest 100
+        options += option['name'] + ' ' + (n.round(-2)).to_s + ' '
+      end
+    end
+
+    json['Boolean Options'].each do |option|
+      if params.include? option['name']
+        options += option['name'] + ' '
+      end
+    end
+
+    return Digest::MD5.hexdigest(options)
+  end
+
   def updateCSV
     state = request.location.state
     city = request.location.city

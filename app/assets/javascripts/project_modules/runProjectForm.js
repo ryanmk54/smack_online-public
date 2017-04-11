@@ -8,10 +8,13 @@ RunProjectForm = (function() {
       requestOutputFromServer,
       startPollingServerForOutput,
       submitWithUpdatedBase64,
+      startTimer,
+      intervalId,
       timer;
 
   init = function() {
     pollDelay = 0;
+    timer = -1;
     $(document).on('click', '#run_button', submitWithUpdatedBase64);
     $(document).on('ajax:beforeSend', '#run-project-form', addRunField);
     $(document).on('ajax:complete', '#run-project-form', startPollingServerForOutput);
@@ -36,6 +39,7 @@ RunProjectForm = (function() {
       return;
     }
     else {
+      timer = -1;
       requestOutputFromServer();
     }
   };
@@ -51,12 +55,18 @@ RunProjectForm = (function() {
         url: url,
         success: function(data, textStatus, jqXHR) {
           console.log(data.eta);
-          pollDelay = data.eta;
+          pollDelay = data.eta*250; // eta is in seconds, poll every 1/4th of the eta
           if (data.eta == 0) {
             OutputEditor.set(data.output);
+            clearInterval(intervalId);
           }
           else {
-            OutputEditor.set("Estimated time remaining: " + data.eta + "ms");
+            if(timer == -1)
+            {
+              OutputEditor.set("Estimated time remaining: " + data.eta + " Seconds");
+              timer = data.eta;
+              startTimer();
+            }
             requestOutputFromServer();
           }
         },
@@ -70,9 +80,21 @@ RunProjectForm = (function() {
           throw(errorThrown);
         }
       });
-    });
+    }, pollDelay)
   }
 
+  startTimer = function() {
+    intervalId = setInterval(function()
+    {
+      if(timer != 0) {
+        timer--;
+        OutputEditor.set("Estimated time remaining: " + timer + " Seconds");
+      }
+      else {
+        clearInterval(intervalId);
+      }
+    }, 1000);
+  };
 
   submitWithUpdatedBase64 = function(event) {
     if (InputEditor.get().trim().length == 0) {
@@ -90,7 +112,6 @@ RunProjectForm = (function() {
   };
 
   addRunField = function(event, xhr, settings) {
-    //debugger;
     settings.data += "&run=run";
   }
 
