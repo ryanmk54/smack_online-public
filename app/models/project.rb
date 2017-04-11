@@ -73,24 +73,32 @@ class Project < ApplicationRecord
   end
 
   def output=(value)
+    # If there is no ID associated with the project, create one by saving the project.
     if self.id == nil
       self.save
     end
 
     output_path = Rails.root.join('public', 'system', 'projects', 'output', self.id.to_s)
-
     # Delete the output file if value is nil
     if value == nil
       File.delete(output_path) if File.exist?(output_path)
       return nil
     else # Otherwise write the output value to file
       file = File.open(output_path, 'w')
-      file.write(value)
+      file.write(formatOutput(value))
       file.close
     end
   end
 
   def ajax_json
     (self.to_json only: [:eta, :output, :id]).html_safe
+  end
+
+  def formatOutput(output)
+    formatted = ''
+    output.each_line do |line|
+      formatted += line.gsub(/\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/[0-9]+\//, '');
+    end
+    return formatted;
   end
 end
