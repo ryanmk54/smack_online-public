@@ -71,12 +71,68 @@ ul.jqtree-tree li.jqtree_common:not(.jqtree-folder) div:not(.current-file):hover
 }
 #sidebar {
   padding: 8px;
+  overflow: hidden;
 }
-
 .project-btn {
   width: 95px;
 }
 
 .ace_editor {
   height: 100%;
+}
+
+.newproject {
+  font-size: 2em;
+}
+
+.sidebar-row {
+  align-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 8px;
+  padding-right: 0;
+
+}
+
+
+.sidebar-row > a {
+  color: #f5f5f5;
+
+}
+
+.fa {
+  color: #f5f5f5;
+}
+
+.sidebar-row:hover {
+  background-color: #f5f5f5;
+}
+
+.sidebar-row:hover > a {
+  color: #333;
+}
+ .sidebar-row:hover > a > i {
+   color: #333;
+ }
+
+
+
+.newprojectoption {
+  text-align: center;
+  align-content: center;
+  align-items: center;
+}
+
+.newprojectoption .fa {
+  text-align: center;
+  align-content: center;
+}
+#sidebar-overflow {
+  background-color : #f5f5f5;
+  padding: 16px;
+}
+
+#project_upload_form {
+  padding-bottom: 8px;
+  background-color : #f5f5f5;
 }

@@ -16,6 +16,12 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.json
   def show
+    # if it is a private project, authenticate the user 
+    if !project.public
+      if !authenticate_user_for_project(params[:id])
+        render :status => :forbidden, :text => "You are not authorized"
+      end
+    end
     respond_to do |format|
       format.json
     end
@@ -310,5 +316,16 @@ class ProjectsController < ApplicationController
         file << [state, 1, request.location.latitude, request.location.longitude]
       end
     end
+  end
+
+  def authenticate_user_for_project project_id
+    if current_user is nil
+      return false
+    else
+      if current_user.projects.map { |project| project.id }.include? project_id
+        return true
+      end
+    end
+    return false
   end
 end

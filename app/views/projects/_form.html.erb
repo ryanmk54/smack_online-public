@@ -26,11 +26,34 @@
       <div id="upload-project-container"
            title="Upload a zip file containing your source code">
         <div class="field white-color">
-          <%= label_tag :input_upload, "Upload Project" %>
-          <%= file_field_tag :input_upload, accept: ".zip, application/zip", 
+          <%= label_tag :create_new_project, "Upload Project" %>
+          <div class="row sidebar-row" id="git_project_option">
+            <a href="#" class="newprojectoption"  onclick="return displayGitForm()">
+              <i class="fa fa-github fa-4x"></i>
+              <br/>
+              <strong><h3>upload from git</h3></strong>
+            </a>
+          </div>
+          <div class="row sidebar-row" id="upload_project_option">
+            <a href="#" class="newprojectoption" onclick="return displayUploadForm()">
+              <i class="fa fa-upload fa-4x"></i>
+              <br/>
+              <strong> <h3>upload local file</h3></strong>
+            </a>
+            <br/>
+          </div>
+          <div class="row sidebar-row" id="start_from_scratch_option">
+            <a class="newprojectoption" data-toggle="collapse" data-target="start_from_scratch_option">
+              <i class="fa fa-code fa-4x"></i>
+              <br/>
+              <strong><h3>start from scratch</h3></strong>
+            </a>
+          </div>
+          <%= file_field_tag :input_upload, accept: ".zip, application/zip",
               class: 'white-color' %>
           <span id="input_upload_status"></span>
         </div>
+
       </div>
 
       <div id="file-list">
@@ -39,6 +62,54 @@
         <%= render "file_tree_form" %>
       </div>
 
+    </div>
+    <div id="sidebar-overflow" class="collapse sidebar">
+      <div class="flex-col-sm-4 flex-col-md2 " style="background-color: #f5f5f5">
+          <div id="project_upload_form" multipart="true" style="visibility: hidden;">
+            <%= form_tag '/projects', multipart: true, :html => {onsubmit: 'return preprocessProjectUpload()'} do %>
+                <div class="form-group" >
+                  <label for="titleInput1">Title</label>
+                  <input type="text" id="titleInput1" name="project[title]">
+                </div>
+                <div class="form-group">
+                  <label for="file_input">Upload File</label>
+                  <%= file_field_tag :file_input, class: 'white-color', accept: '.zip', name: "project[input]" %>
+                  <!--<input type="file" accept="/text" class="form-control-file" id="fileInput" name="project[input]" >-->
+                </div>
+                <div class="form-group">
+                  <label class="radio-inline"><input type="radio" name="project[public]" value="true">Public</label>
+                  <label class="radio-inline"><input type="radio" name="project[public]" value="false">Private</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Project</button>
+            <% end %>
+          </div>
+
+          <div id="project_git_form" style="visibility: hidden;">
+            <form id="new_project" action="/projects" method="post" >
+              <div class="form-group" >
+                <label for="titleInput2">Title</label>
+                <input type="text" id="titleInput2">
+              </div>
+              <div class="form-group">
+                <label for="url">url:</label>
+                <input type="text" id="urlInput">
+              </div>
+              <div class="form-group">
+                <label for="gitUsername">git username</label>
+                <input type="text" id="username">
+              </div>
+              <div class="form-group">
+                <label for="gitPassword">git password</label>
+                <input type="password" id="gitPassword">
+              </div>
+              <div class="form-group">
+                <!--<label class="radio-inline"><input type="radio" name="public">Public</label>-->
+                <!--<label class="radio-inline"><input type="radio" name="private">Private</label>-->
+              </div>
+              <button  onclick="createProject(this)" class="btn btn-primary">Create Project</button>
+            </form>
+          </div>
+      </div>
     </div>
 
     <!-- Main -->
