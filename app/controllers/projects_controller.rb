@@ -64,7 +64,7 @@ class ProjectsController < ApplicationController
       send_service_input # Make a request to the SMACK server with the new project
 
 
-      avg =  Project.where('options_hash = ?', op_hash).average('runtime');
+      avg =  Project.where('options_hash = ? and runtime <= ?', op_hash, RUNTIME_THRESHOLD).average('runtime');
       if(avg != nil)
         @project[:eta] = (avg == 0) ? 1 : avg; #if it is expected to run for 0 seconds make the eta 1 second
       else
@@ -111,7 +111,7 @@ class ProjectsController < ApplicationController
       send_service_input # Make a request to the SMACK server with updated project
       op_hash = generateMD5ForImportantOptions('smack-options.json')
       @project[:options_hash] = op_hash
-      avg = Project.where('options_hash = ?', op_hash).average('runtime');
+      avg =  Project.where('options_hash = ? and runtime <= ?', op_hash, RUNTIME_THRESHOLD).average('runtime');
       if(avg != nil)
         @project[:eta] = (avg == 0) ? 1 : avg; #if it is expected to run for 0 seconds make the eta 1 second
       else
