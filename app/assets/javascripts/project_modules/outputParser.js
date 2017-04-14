@@ -53,7 +53,7 @@ var OutputParser = (function() {
         "</div>" +
         "</div>";
     var verifyStatusBoxEl = $(verifyStatusBox);
-    verifyStatusBoxEl.on('click', null, getStatusClass() == "success", handleVerifyStatusBox);
+    verifyStatusBoxEl.on('click', null, handleVerifyStatusBox);
     closeVerifyStatusBox();
     $("#input-editor-container").append(verifyStatusBoxEl);
     $("#verify-status-close-icon").on('click', closeVerifyStatusBox);
@@ -67,11 +67,7 @@ var OutputParser = (function() {
 
 
   handleVerifyStatusBox = function(event) {
-    if (event.data) {
-      closeVerifyStatusBox();
-    } else {
-      ResizeOutputEditor.expand();
-    }
+    ResizeOutputEditor.expand();
   }
 
 
