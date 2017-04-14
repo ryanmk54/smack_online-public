@@ -21,7 +21,7 @@ var OutputEditor = (function() {
     editor.navigateTo(0,0);
 
     // highlight the corresponding line in the input editor
-    editor.on("changeSelection", highlightCorrespondingInputRow)
+    editor.on("changeSelection", highlightCorrespondingInputRow);
   };
 
 
@@ -48,8 +48,8 @@ var OutputEditor = (function() {
     contentInRow = contentInRow.trim();
 
     var matchStrings = [
-      /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*)\((\d*),(\d*)\)/,
-      /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*):(\d*):(\d*)/
+      /(.*)\((\d*),(\d*)\)/,
+      /(.*):(\d*):(\d*)/
     ];
 
     matchStrings.forEach(function(matchString) {

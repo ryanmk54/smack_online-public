@@ -63,7 +63,7 @@ RunProjectForm = (function() {
           else {
             if(timer == -1)
             {
-              OutputEditor.set("Estimated time remaining: " + data.eta + " Seconds");
+              OutputEditor.set("Estimated time remaining: " + data.eta + " second(s)");
               timer = data.eta;
               startTimer();
             }
@@ -88,7 +88,7 @@ RunProjectForm = (function() {
     {
       if(timer != 0) {
         timer--;
-        OutputEditor.set("Estimated time remaining: " + timer + " Seconds");
+        OutputEditor.set("Estimated time remaining: " + timer + " second(s)");
       }
       else {
         clearInterval(intervalId);

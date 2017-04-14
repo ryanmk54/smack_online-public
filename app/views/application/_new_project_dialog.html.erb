@@ -53,28 +53,16 @@
         </div>
 
         <div id="project_git_form" class="collapse" style="text-align: left; width: 100%; padding: 10px;">
-          <form class="new_project form-horizontal" id="new_project" action="/projects" method="post" >
-            <div class="form-group" >
-              <label for="titleInput2">Title</label>
-              <input type="text" id="titleInput2">
-            </div>
-            <div class="form-group">
-              <label for="url">url:</label>
-              <input type="text" id="urlInput">
-            </div>
-            <div class="form-group">
-              <label for="gitUsername">git username</label>
-              <input type="text" id="username">
-            </div>
-            <div class="form-group">
-              <label for="gitPassword">git password</label>
-              <input type="password" id="gitPassword">
-            </div>
-            <div class="form-group">
-              <!--<label class="radio-inline"><input type="radio" name="public">Public</label>-->
-              <!--<label class="radio-inline"><input type="radio" name="private">Private</label>-->
-            </div>
-            <button type="submit" class="btn btn-primary">Create Project</button>
+
+          <br />
+          <h3>Enter GitHub Username:</h3>
+
+          <input type="text" name="ghusername" id="ghusername">
+
+          <a href="#" id="ghsubmitbtn">Submit</a>
+
+          <div id="ghapidata" class="clearfix"></div>
+
           </form>
         </div>
       </div>
