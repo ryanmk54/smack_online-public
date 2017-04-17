@@ -186,13 +186,28 @@ class ProjectsController < ApplicationController
       render status: :forbidden
   end
 
+  def run
+     @project = Project.find(params[:id])
+     response = RestClient.post(SERVICE_REQUEST_URL,
+     {
+         :id => @project[:id],
+         :options => @project[:service_options],
+         :input => @project.input
+     }.to_json, {content_type: :json, accept: :json})
+     # Set the project's eta to the SMACK server's predicted processing time
+    render json: {eta: JSON.parse(response.body)['eta']  }
+  end
+
     private
 
   # Sends post request to verification service.
   # Returns: eta
   def send_service_input
     # Send the request
+
     base64Input = params[:project][:input]
+
+
     response = RestClient.post(SERVICE_REQUEST_URL,
     {
         :id => @project[:id],

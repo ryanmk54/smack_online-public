@@ -50,4 +50,8 @@ class User < ApplicationRecord
   def public_projects
     projects.where(public: true)
   end
+
+  def running_projects
+    projects.where(output: 'pending')
+  end
 end

@@ -263,4 +263,70 @@ function makeProjectPrivate(project_id) {
     });
 }
 
+function runFromProfilePage(project_id) {
+    // create project form
+    // send form as ajax request
+    $.ajax({
+        type: 'post',
+        url: '/projects/' + project_id + '/run',
+        data: { project: {
+                    id: project_id,
+
+                     options: {}
+        }}}).success(function(payload) {
+        // receive the eta
+        var eta = payload.eta;
+        displayProgressBar(project_id, eta);
+    });
+    // create progress bar
+    // notify if test passes or fails
+};
+
+function displayProgressBar(project_id, eta) {
+    $('#project-preview-' + project_id + ' > div >  .card-footer').addClass('in');
+    $('#progress-' + project_id).attr('aria-max-value', eta)
+    eta = parseFloat(eta);
+    var time_elapsed = 0.0;
+
+    var tick = setInterval(function() {
+        time_elapsed += 1;
+        var ratio = parseFloat(time_elapsed) / parseFloat(eta);
+        $('#progress-' + project_id).css('width', parseInt(ratio * 100) + '%');
+        if(parseInt(ratio) == 1) {
+            clearInterval(tick);
+            displayStatus(project_id);
+
+        }
+    }, 1000);
+
+}
+
+function displayStatus(project_id) {
+    $.ajax({
+        url: '/projects/' + project_id + '.json',
+        type: 'get',
+    }).success(function(payload) {
+
+        if(payload.output == "pending") { displayStatus(project_id) }
+        else {
+            var successText = "SMACK found no errors";
+            if(payload.output.search(successText) != -1) {
+                $('#progress-' + project_id ).parent().parent().html(
+                    "<strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-ok-sign' style='color: limegreen'></div>");
+            }
+            else {
+                $('#progress-' + project_id ).parent().parent().html(
+                    "<h2><strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-warning--sign' style='color: red'></div></h2>");
+            }
+        }
+    });
+}
+
+
+// function updateProgressBar(project_id, start_eta) {
+//     project_id += 1;
+//     ratio =
+
+// }
+
 
