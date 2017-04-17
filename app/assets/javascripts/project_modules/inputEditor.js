@@ -16,6 +16,7 @@ var InputEditor = (function() {
 
   init = function() {
     editor = ace.edit("inputEditor");
+    editor.setAutoScrollEditorIntoView(true);
     editor.$blockScrolling = Infinity;
     editor.setTheme("ace/theme/clouds");
     editor.session.setMode("ace/mode/c_cpp");
