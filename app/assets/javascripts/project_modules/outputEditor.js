@@ -49,8 +49,8 @@ var OutputEditor = (function() {
     contentInRow = contentInRow.trim();
 
     var matchStrings = [
-      /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*)\((\d*),(\d*)\)/,
-      /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*):(\d*):(\d*)/
+      /(.*)\((\d*),(\d*)\)/,
+      /([A-z.]*):(\d*):(\d*)/
     ];
 
     matchStrings.forEach(function(matchString) {

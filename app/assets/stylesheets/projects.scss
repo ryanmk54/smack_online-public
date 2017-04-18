@@ -14,8 +14,12 @@
 
 html, 
 body {
-  min-width: 800px;
-  min-height: 600px;
+  /* Size of the Google Nexus 6 
+     This is about the smallest it can be and 
+     look good with both panels open */
+  min-width: 732px;
+  min-height: 412px;
+
   height: 100%;
   width: 100%;
 }
@@ -24,12 +28,28 @@ body {
   height: calc(100% - 52px);
   display: flex;
   flex-direction: column;
+    /* Start out for small viewports and add support for larger viewports */
 
   @media (min-width: $screen-md-min) {
     flex-direction: row;
   }
 
+  .editor-container {
+    position: relative;
+    height: calc(50% - 18px);
+    width: 100%;
+    @media (min-width: $screen-md-min) {
+      height: 100%;
+      width: 50%;
+    }
+
+
+    flex-shrink: 1;
+    transition: all 0.5s;
+  }
+
   &.output-shrunk {
+    /* The resize button when the output editor is shrunk */
     #collapse-output-text:before {
       content: "^";
     }
@@ -39,20 +59,21 @@ body {
       }
     }
 
+    #input-editor-container {
+      height: 100%;
+      width: 100%;
+    }
     #output-editor-container {
-      flex-grow: 0;
+      height: 0;
+      width: calc(100% - 18px);
+      @media (min-width: $screen-md-min) {
+        height: 100%;
+        width: 0px;
+      }
     }
   }
 }
 
-.editor-container {
-  position: relative;
-
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: auto;
-  transition: all 0.5s;
-}
 .ace-editor {
   height: 100%;
   width: 100%;
