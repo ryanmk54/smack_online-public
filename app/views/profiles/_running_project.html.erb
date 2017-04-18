@@ -1,23 +1,26 @@
 <div id="running-project-<%= project.id%>">
   <div class="card card-project card-project-preview"  >
     <div class="row">
-      <div class="col-sm-4">
+      <div class="col-sm-12">
         <div class="card-title" style="text-overflow: ellipsis;">
-          <h3>
+          <h4>
             <strong>
               <%= project.title %>
             </strong>
-          </h3>
+          </h4>
         </div>
       </div>
+      <div class= "col-sm-12">
+        <strong> started at: <%= project.time_started %>
+      </div>
     </div>
-    <div id="status-<%= project.id%>">
-      <div class="progress">
+    <div id="status-<%= project.id%>" style="margin-left: 8px">
+      <div class="progress"> 
         <div id="progress-<%= project.id%>" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
         </div>
       </div>
     </div>
-    <div class="card-footer">
+    <div class="card-footer" style="margin-left: 8px">
       <button onclick="return cancelProject(<%= project.id %>);" class="btn btn-warning cancel_project" id="cancel-<%= project.id%>" class="btn btn-danger"> Cancel </button>
     </div>
   </div>

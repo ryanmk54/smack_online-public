@@ -71,11 +71,11 @@ function ProjectObserver() {
                     var successText = "SMACK found no errors";
                     if (payload.output.search(successText) != -1) {
                         $('#status-' + project_id).html(
-                            "<strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-ok-sign' style='color: limegreen'></div>");
+                            "<h4><strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-ok-sign' style='color: limegreen'></h4>");
                     }
                     else {
                         $('#status-' + project_id).html(
-                            "<h2><strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-warning-sign' style='color: red'></div></h2>");
+                            "<h4><strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-warning-sign' style='color: red'></div></h4>");
                     }
                 }
             })
