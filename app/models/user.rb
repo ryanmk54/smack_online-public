@@ -50,4 +50,14 @@ class User < ApplicationRecord
   def public_projects
     projects.where(public: true)
   end
+
+  def running_projects
+    running_projects = []
+    self.projects.each do |p|
+      if p.output == 'pending'
+        running_projects.push p
+      end
+    end
+    running_projects
+  end
 end

@@ -10,21 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170331175138) do
+ActiveRecord::Schema.define(version: 20170417194355) do
 
-  create_table "followers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "followers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer "follower_id"
     t.integer "following_id"
   end
 
-  create_table "project_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "project_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer "project_id", null: false
     t.integer "user_id",    null: false
     t.index ["project_id", "user_id"], name: "index_project_users_on_project_id_and_user_id", using: :btree
     t.index ["user_id", "project_id"], name: "index_project_users_on_user_id_and_project_id", using: :btree
   end
 
-  create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "title"
     t.string   "output"
     t.integer  "eta"
@@ -37,9 +37,10 @@ ActiveRecord::Schema.define(version: 20170331175138) do
     t.text     "service_options", limit: 65535
     t.boolean  "public",                        default: true
     t.string   "options_hash"
+    t.datetime "time_started"
   end
 
-  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
@@ -61,9 +62,9 @@ ActiveRecord::Schema.define(version: 20170331175138) do
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, length: { confirmation_token: 128 }, using: :btree
-    t.index ["email"], name: "index_users_on_email", unique: true, length: { email: 128 }, using: :btree
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, length: { reset_password_token: 128 }, using: :btree
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
 end
