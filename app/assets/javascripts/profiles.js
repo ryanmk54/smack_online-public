@@ -99,12 +99,14 @@ function ProjectObserver() {
     this.updateProgress = function(project_id) {
         var id = project_id;
         var progress = null;
+        var output = null;
         $.ajax({
             url: '/projects/' + project_id + '/progress',
             type: 'get'
         }).success(function(payload) {
             progress = payload.progress;
-            if (parseInt(progress) == 1) {
+            output = payload.output;
+            if (parseInt(progress) == 1 && output != 'pending' ) {
                 observer.running_projects.delete(id);
                 observer.finished_projects.add(id);
                 dispatchEvent(onProjectFinished);

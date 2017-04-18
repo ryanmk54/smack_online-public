@@ -205,15 +205,13 @@ class ProjectsController < ApplicationController
   end
 
   def progress
-    prog = Project.find(params[:id]).progress
-    puts prog
-    render json: {progress: prog }
+    @project = Project.find(params[:id])
+    render json: {progress: @project.progress, output: @project.output}
   end
 
   def cancel
     @project = Project.find(params[:id])
     @project.output = nil
-
   end
 
     private
