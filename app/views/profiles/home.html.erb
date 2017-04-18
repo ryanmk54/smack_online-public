@@ -41,16 +41,13 @@
       <h2 id="preview-header" class="panel-header" style="padding-left: 15px;" ><strong></strong></h2>
       <div id="preview-body" style="height: 100%; overflow-y: scroll; border-radius: 15px; padding: 15px;"></div>
     </div>
-
-    <div class="col-md-3 no-float" style="padding-top: 15px; background-color: lightgrey">
-      <h2> Active Projects</h2>
-      <div class="running_projects">
-        <%= render partial: 'profiles/running_project', collection: @user.running_projects, as: 'project' %>
+      <div class="col-md-3 no-float" style="padding-top: 15px; text-align: center;">
+        <h2 style="color: #f3f3f3;"> Active Projects</h2>
+        <div class="running_projects">
+          <%= render partial: 'profiles/running_project', collection: @user.running_projects, as: 'project' %>
+        </div>
       </div>
-
-    </div>
   </div>
-
 </div>
 
 
