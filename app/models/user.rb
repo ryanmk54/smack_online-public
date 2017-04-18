@@ -52,6 +52,13 @@ class User < ApplicationRecord
   end
 
   def running_projects
-    projects.where(output: 'pending')
+    running_projects = []
+    self.projects.each do |p|
+      if p.output == 'pending'
+        running_projects.push p
+      end
+    end
+
+    running_projects
   end
 end

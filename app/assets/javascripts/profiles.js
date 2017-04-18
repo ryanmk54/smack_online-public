@@ -4,6 +4,119 @@
 //= require tree.jquery
 
 
+
+var observer = null;
+
+$(function() {
+    observer = new ProjectObserver();
+    setInterval(function() { observer.updateRunningProjectStatus(); }, 1000);
+
+    var start_projects = $('.running_projects').children().toArray();
+    var ids = [];
+    for(var i = 0; i < start_projects.length; i++) {
+        ids.push(parseID(start_projects[i].id));
+    };
+    ids.forEach(function(id) { observer.addRunningProject(id) });
+
+
+});
+
+function cancelProject(id) {
+    var id =  id;
+    $.ajax({
+        url: 'projects/' + id + '/cancel',
+        type: 'get'
+    }).success(function(){
+        observer.removeRunningProject(id);
+        $('#running-project-' + id).remove();
+    });
+}
+
+
+
+function parseID(str) {
+    return parseInt(str.replace( /^\D+/g, ''));
+}
+
+
+function onRunProject(project_id) {
+    $.ajax({
+        type: 'post',
+        url: '/projects/' + project_id + '/run',
+        data: { project: {
+            id: project_id,
+            options: {}
+        }}}).success(function(payload) {
+        observer.addRunningProject(project_id);
+        $('.running_projects').append(payload);
+
+    });
+};
+
+
+function ProjectObserver() {
+
+    this.running_projects = new Set();
+    this.finished_projects = new Set();
+
+    var onProjectFinished = new Event('onProjectFinished');
+
+    addEventListener('onProjectFinished', function (e) {
+        finished_projects.forEach(function (project_id) {
+            $.ajax({
+                url: '/projects/' + project_id + '.json',
+                type: 'get',
+            }).success(function (payload) {
+                if (payload.output != 'pending') {
+                    var successText = "SMACK found no errors";
+                    if (payload.output.search(successText) != -1) {
+                        $('#progress-' + project_id).parent().parent().html(
+                            "<strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-ok-sign' style='color: limegreen'></div>");
+                    }
+                    else {
+                        $('#progress-' + project_id).parent().parent().html(
+                            "<h2><strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-warning--sign' style='color: red'></div></h2>");
+                    }
+                }
+            })
+        })
+    });
+
+    this.removeRunningProject = function(project_id) {
+        this.running_projects.delete(project_id)
+    }
+
+    this.addRunningProject = function(project_id) {
+        this.running_projects.add(project_id);
+    }
+
+    this.updateRunningProjectStatus = function() {
+        this.running_projects.forEach(function(project_id) {
+            observer.updateProgress(project_id)
+        });
+    }
+
+    this.updateProgress = function(project_id) {
+        var id = project_id;
+        var progress = null;
+        $.ajax({
+            url: '/projects/' + project_id + '/progress',
+            type: 'get'
+        }).success(function(payload) {
+            progress = payload.progress;
+            if (parseInt(progress == 1)) {
+                this.running_projects.delete(id);
+                this.finished_projects.add(id);
+                dispatchEvent(onProjectFinished);
+            }
+            $("#progress-" + project_id).css('width', parseInt(progress * 100) + '%');
+        })
+    }
+}
+
+
+
+
 function delete_project(project_id) {
     $.ajax({
         url: '/projects/' + project_id,
@@ -262,71 +375,3 @@ function makeProjectPrivate(project_id) {
         }
     });
 }
-
-function runFromProfilePage(project_id) {
-    // create project form
-    // send form as ajax request
-    $.ajax({
-        type: 'post',
-        url: '/projects/' + project_id + '/run',
-        data: { project: {
-                    id: project_id,
-
-                     options: {}
-        }}}).success(function(payload) {
-        // receive the eta
-        var eta = payload.eta;
-        displayProgressBar(project_id, eta);
-    });
-    // create progress bar
-    // notify if test passes or fails
-};
-
-function displayProgressBar(project_id, eta) {
-    $('#project-preview-' + project_id + ' > div >  .card-footer').addClass('in');
-    $('#progress-' + project_id).attr('aria-max-value', eta)
-    eta = parseFloat(eta);
-    var time_elapsed = 0.0;
-
-    var tick = setInterval(function() {
-        time_elapsed += 1;
-        var ratio = parseFloat(time_elapsed) / parseFloat(eta);
-        $('#progress-' + project_id).css('width', parseInt(ratio * 100) + '%');
-        if(parseInt(ratio) == 1) {
-            clearInterval(tick);
-            displayStatus(project_id);
-
-        }
-    }, 1000);
-
-}
-
-function displayStatus(project_id) {
-    $.ajax({
-        url: '/projects/' + project_id + '.json',
-        type: 'get',
-    }).success(function(payload) {
-
-        if(payload.output == "pending") { displayStatus(project_id) }
-        else {
-            var successText = "SMACK found no errors";
-            if(payload.output.search(successText) != -1) {
-                $('#progress-' + project_id ).parent().parent().html(
-                    "<strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-ok-sign' style='color: limegreen'></div>");
-            }
-            else {
-                $('#progress-' + project_id ).parent().parent().html(
-                    "<h2><strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-warning--sign' style='color: red'></div></h2>");
-            }
-        }
-    });
-}
-
-
-// function updateProgressBar(project_id, start_eta) {
-//     project_id += 1;
-//     ratio =
-
-// }
-
-

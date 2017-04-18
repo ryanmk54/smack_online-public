@@ -12,6 +12,7 @@ class Project < ApplicationRecord
   def set_visibility(visibility)
     self.public = visibility
   end
+
   def fork user_id
     user = User.find(user_id)
     project = user.projects.create
@@ -100,5 +101,15 @@ class Project < ApplicationRecord
       formatted += line.gsub(/\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/[0-9]+\//, '');
     end
     return formatted;
+  end
+
+  def progress
+    time_elapsed = ((DateTime.now - self.time_started.to_datetime) * 24 * 60 * 60).to_f
+    if self.eta.nil?
+      progress = (time_elapsed / 500.to_f).to_f
+    else
+      progress = (time_elapsed / self.eta.to_f).to_f
+    end
+    progress
   end
 end

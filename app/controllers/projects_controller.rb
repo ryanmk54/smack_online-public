@@ -56,6 +56,7 @@ class ProjectsController < ApplicationController
     # Need to save before send_service_input in order to know the project id
     # current_user.projects.push @project if current_user
     if params[:run]
+
       #TODO: Change config file based off of other services
       @project[:service_options] = generateOptionsString('smack-options.json')
       op_hash = generateMD5ForImportantOptions('smack-options.json')
@@ -188,6 +189,9 @@ class ProjectsController < ApplicationController
 
   def run
      @project = Project.find(params[:id])
+     @project.time_started = DateTime.now
+     @project.output = 'pending'
+     @project.save
      response = RestClient.post(SERVICE_REQUEST_URL,
      {
          :id => @project[:id],
@@ -195,7 +199,20 @@ class ProjectsController < ApplicationController
          :input => @project.input
      }.to_json, {content_type: :json, accept: :json})
      # Set the project's eta to the SMACK server's predicted processing time
-    render json: {eta: JSON.parse(response.body)['eta']  }
+    render partial: 'profiles/running_project', locals: { project: @project }
+    # render json: {eta: JSON.parse(response.body)['eta']  }
+  end
+
+  def progress
+    prog = Project.find(params[:id]).progress
+    puts prog
+    render json: {progress: prog }
+  end
+
+  def cancel
+    @project = Project.find(params[:id])
+    @project.output = nil
+
   end
 
     private
