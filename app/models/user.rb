@@ -58,7 +58,6 @@ class User < ApplicationRecord
         running_projects.push p
       end
     end
-
     running_projects
   end
 end

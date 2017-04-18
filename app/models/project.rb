@@ -104,12 +104,11 @@ class Project < ApplicationRecord
   end
 
   def progress
-    time_elapsed = ((DateTime.now - self.time_started.to_datetime) * 24 * 60 * 60).to_f
-    if self.eta.nil?
-      progress = (time_elapsed / 500.to_f).to_f
-    else
-      progress = (time_elapsed / self.eta.to_f).to_f
+    if self.eta = 0
+      return 1
     end
+    time_elapsed = ((DateTime.now - self.time_started.to_datetime) * 24 * 60 * 60).to_f
+    progress = (time_elapsed / self.eta.to_f).to_f
     progress
   end
 end

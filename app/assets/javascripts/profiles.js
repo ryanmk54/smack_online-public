@@ -62,7 +62,7 @@ function ProjectObserver() {
     var onProjectFinished = new Event('onProjectFinished');
 
     addEventListener('onProjectFinished', function (e) {
-        finished_projects.forEach(function (project_id) {
+        observer.finished_projects.forEach(function (project_id) {
             $.ajax({
                 url: '/projects/' + project_id + '.json',
                 type: 'get',
@@ -70,12 +70,12 @@ function ProjectObserver() {
                 if (payload.output != 'pending') {
                     var successText = "SMACK found no errors";
                     if (payload.output.search(successText) != -1) {
-                        $('#progress-' + project_id).parent().parent().html(
+                        $('#status-' + project_id).html(
                             "<strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-ok-sign' style='color: limegreen'></div>");
                     }
                     else {
-                        $('#progress-' + project_id).parent().parent().html(
-                            "<h2><strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-warning--sign' style='color: red'></div></h2>");
+                        $('#status-' + project_id).html(
+                            "<h2><strong> Status:  </strong> <div class='glyphicon glyphicon glyphicon-warning-sign' style='color: red'></div></h2>");
                     }
                 }
             })
@@ -104,9 +104,9 @@ function ProjectObserver() {
             type: 'get'
         }).success(function(payload) {
             progress = payload.progress;
-            if (parseInt(progress == 1)) {
-                this.running_projects.delete(id);
-                this.finished_projects.add(id);
+            if (parseInt(progress) == 1) {
+                observer.running_projects.delete(id);
+                observer.finished_projects.add(id);
                 dispatchEvent(onProjectFinished);
             }
             $("#progress-" + project_id).css('width', parseInt(progress * 100) + '%');

@@ -191,6 +191,7 @@ class ProjectsController < ApplicationController
      @project = Project.find(params[:id])
      @project.time_started = DateTime.now
      @project.output = 'pending'
+     @project.eta = Project.where('runtime <= ?', RUNTIME_THRESHOLD).average('runtime').to_i
      @project.save
      response = RestClient.post(SERVICE_REQUEST_URL,
      {
