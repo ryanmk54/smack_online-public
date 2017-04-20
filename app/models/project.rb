@@ -18,6 +18,7 @@ class Project < ApplicationRecord
     project = user.projects.create
     project.title = self.title
     project.eta = self.eta
+    project.input = self.input
     project.service_options = self.service_options
     project.save
   end
