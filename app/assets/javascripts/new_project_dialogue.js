@@ -147,7 +147,7 @@ $(function() {
 
                                                     var editor = ace.edit("inputEditor");
 
-                                                    editor.setValue(xmlHttp.responseText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'));
+                                                    editor.setValue(xmlHttp.responseText);
                                                     $('#new_project_modal').modal('toggle')
 
 
