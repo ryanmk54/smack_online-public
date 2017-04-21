@@ -56,6 +56,7 @@ class ProjectsController < ApplicationController
     # Need to save before send_service_input in order to know the project id
     # current_user.projects.push @project if current_user
     if params[:run]
+
       #TODO: Change config file based off of other services
       @project[:service_options] = generateOptionsString('smack-options.json')
       op_hash = generateMD5ForImportantOptions('smack-options.json')
@@ -186,18 +187,49 @@ class ProjectsController < ApplicationController
       render status: :forbidden
   end
 
+  def run
+     @project = Project.find(params[:id])
+     @project.time_started = DateTime.now
+     @project.output = 'pending'
+     @project.eta = Project.where('runtime <= ?', RUNTIME_THRESHOLD).average('runtime').to_i
+     @project.save
+     response = RestClient.post(SERVICE_REQUEST_URL,
+     {
+         :id => @project[:id],
+         :options => @project[:service_options],
+         :input => @project.input
+     }.to_json, {content_type: :json, accept: :json})
+     # Set the project's eta to the SMACK server's predicted processing time
+    render partial: 'profiles/running_project', locals: { project: @project }
+    # render json: {eta: JSON.parse(response.body)['eta']  }
+  end
+
+  def progress
+    @project = Project.find(params[:id])
+    render json: {progress: @project.progress, output: @project.output}
+  end
+
+  def cancel
+    @project = Project.find(params[:id])
+    @project.output = nil
+  end
+
     private
 
   # Sends post request to verification service.
   # Returns: eta
   def send_service_input
     # Send the request
+
     base64Input = params[:project][:input]
+
+
     response = RestClient.post(SERVICE_REQUEST_URL,
     {
-        :id => @project[:id],
-        :options => @project[:service_options],
-        :input => base64Input
+        id: @project[:id],
+        options: @project[:service_options],
+        input: base64Input,
+        return_port: ENV["PORT"]
     }.to_json, {content_type: :json, accept: :json})
     # Set the project's eta to the SMACK server's predicted processing time
     return JSON.parse(response.body)['eta']

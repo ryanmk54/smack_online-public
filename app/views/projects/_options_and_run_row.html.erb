@@ -14,7 +14,7 @@
       <div hidden>
         <%= f.text_field :input, value: @project.input %>
       </div>
-      <%= f.submit "Run", name: :run, type: :button, id: :run_button,
+      <%= f.submit "Verify", name: :run, type: :button, id: :run_button,
                    class: "btn btn-default btn-primary run-button" %>
     <% end %>
     <%= form_for @project, remote: true, format: :json, html: {id: "poll-form"} do end%>

@@ -53,7 +53,7 @@ var OutputParser = (function() {
         "</div>" +
         "</div>";
     var verifyStatusBoxEl = $(verifyStatusBox);
-    verifyStatusBoxEl.on('click', null, getStatusClass() == "success", handleVerifyStatusBox);
+    verifyStatusBoxEl.on('click', null, handleVerifyStatusBox);
     closeVerifyStatusBox();
     $("#input-editor-container").append(verifyStatusBoxEl);
     $("#verify-status-close-icon").on('click', closeVerifyStatusBox);
@@ -67,11 +67,7 @@ var OutputParser = (function() {
 
 
   handleVerifyStatusBox = function(event) {
-    if (event.data) {
-      closeVerifyStatusBox();
-    } else {
-      ResizeOutputEditor.expand();
-    }
+    ResizeOutputEditor.expand();
   }
 
 
@@ -123,7 +119,9 @@ var OutputParser = (function() {
     } else if (status == "no-code") {
       return "There is no code to send to SMACK";
     } else if (status == "waiting") {
-      return "Waiting for a response from SMACK";
+      var output = OutputEditor.get();
+      // used to say "Waiting for a response from SMACK"
+      return output;
     } else {
       return "Errors found. Click to view error log";
     }

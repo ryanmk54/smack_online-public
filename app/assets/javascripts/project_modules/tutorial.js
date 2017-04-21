@@ -1,7 +1,6 @@
 var Tutorial = (function() {
   "use strict";
 
-  const capstoneName = "SMACK Online";
   var createTour,
       init;
 
@@ -11,13 +10,8 @@ var Tutorial = (function() {
       storage: false,
       steps: [
       {
-        element: "#service-selector",
-        title: "Welcome to " + capstoneName + "!",
-        content: "Select the service you would like to use"
-      },
-      {
         element: "#project_title",
-        title: "Naming your project",
+        title: "Welcome to SMACK Online!",
         content: "Give your project a descriptive title that will be shown on the community page"
       },
       {

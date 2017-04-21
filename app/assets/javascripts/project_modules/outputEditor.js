@@ -13,6 +13,7 @@ var OutputEditor = (function() {
 
   init = function() {
     editor = ace.edit("outputEditor");
+    editor.setAutoScrollEditorIntoView(true);
     editor.$blockScrolling = Infinity;
     editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/c_cpp");
@@ -21,7 +22,7 @@ var OutputEditor = (function() {
     editor.navigateTo(0,0);
 
     // highlight the corresponding line in the input editor
-    editor.on("changeSelection", highlightCorrespondingInputRow);
+    editor.on("changeSelection", highlightCorrespondingInputRow)
   };
 
 
@@ -49,7 +50,7 @@ var OutputEditor = (function() {
 
     var matchStrings = [
       /(.*)\((\d*),(\d*)\)/,
-      /(.*):(\d*):(\d*)/
+      /([A-z.]*):(\d*):(\d*)/
     ];
 
     matchStrings.forEach(function(matchString) {
