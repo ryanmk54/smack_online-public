@@ -350,7 +350,7 @@ function onUsageGraphBarClick(evt)
                 else {
                     var username = dataArray[i].username
                     var listLabel = username == "" || username == null ? id : dataArray[i].username;
-                    $("#projectList").append("<li><a href = '/users/" + id + "'>" + listLabel + "</a></li>");
+                    $("#projectList").append("<li><a href = '/profile/" + id + "'>" + listLabel + "</a></li>");
                 }
             }
         }
