@@ -117,6 +117,11 @@ class Project < ApplicationRecord
     return formatted;
   end
 
+  # returns the id of the user that owns this project
+  def owner
+    ProjectUser.where(project_id: self.id).first.user_id
+  end
+
   # Returns the time-to-completion progress for the SMACK process associated with this project as a decimal.
   # When the progress is 1, the process for this project is completed.
   def progress

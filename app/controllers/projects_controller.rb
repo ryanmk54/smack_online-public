@@ -57,7 +57,6 @@ class ProjectsController < ApplicationController
     # current_user.projects.push @project if current_user
     if params[:run]
 
-      #TODO: Change config file based off of other services
       @project[:service_options] = generateOptionsString('smack-options.json')
       op_hash = generateMD5ForImportantOptions('smack-options.json')
       @project[:options_hash] = op_hash
@@ -220,12 +219,7 @@ class ProjectsController < ApplicationController
   # Returns: eta
   def send_service_input
     # Send the request
-
     base64Input = params[:project][:input]
-
-
-    puts "server port"
-    puts request.port
     response = RestClient.post(SERVICE_REQUEST_URL,
     {
         id: @project[:id],
@@ -248,7 +242,9 @@ class ProjectsController < ApplicationController
     params.require(:project).permit(:title, :input, :public)
   end
 
-
+  # Looks at the service options config file and creates
+  # an options string to be passed to the command-line
+  # service.
   def generateOptionsString(optionsConfigFile)
     optionsString = ''
     json = File.read("#{Rails.root}/public/config/" + optionsConfigFile)
@@ -280,8 +276,13 @@ class ProjectsController < ApplicationController
     return optionsString
   end
 
-  # String options have too much variability. The 'heavily weighted'
+  # Creates an MD5 checksum hash for the options. This
+  # is used to estimate the runtime for projects with the
+  # same options.
+  # String options have too much variability. The hashed
   # options are integer, group, and boolean options.
+  # Ineger options are rounded to the nearest 100 to
+  # prevent too much variablility.
   def generateMD5ForImportantOptions(optionsConfigFile)
     options = ''
     json = File.read("#{Rails.root}/public/config/" + optionsConfigFile)
@@ -309,6 +310,9 @@ class ProjectsController < ApplicationController
     return Digest::MD5.hexdigest(options)
   end
 
+  # Increments a 'location counter' in the
+  # geograph CSV file, or creates a new entry
+  # for a location that does not yet exist.
   def updateCSV
     state = request.location.state
     city = request.location.city
