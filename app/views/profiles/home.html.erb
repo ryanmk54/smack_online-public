@@ -5,8 +5,9 @@
   <div class="row">
     <div class="col-md-3 no-float" style="padding-top: 15px; background-color: lightgrey">
 	    <div class="profile-sidebar card">
-		    <div class="row" style="align-content: center">	    
-			    <%= image_tag @user.avatar.url(:thumb), :class => 'circular--square--large' %></div>
+		    <div class="center-box">	    
+			    <%= image_tag @user.avatar.url(:thumb), :class => 'circular--square--large' %>
+                    </div>
         <h2 style="color: #f3f3f3;"><%= @user.username %></h2>
         <h2 style="color: #f3f3f3;"><%= @user.email %></h2>
 

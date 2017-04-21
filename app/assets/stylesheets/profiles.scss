@@ -21,6 +21,11 @@ body {
   vertical-align: center;
 }
 
+.center-box {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .circular--square--large {
   border-radius: 50%;
   width: 250px;
@@ -29,6 +34,10 @@ body {
   border-color: black;
   margin-bottom: 10px;
   box-shadow: 2px 2px 2px 2px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f3f3f3;
 }
 
 .img-thumbnail {
