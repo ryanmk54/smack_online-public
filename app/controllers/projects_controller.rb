@@ -195,9 +195,10 @@ class ProjectsController < ApplicationController
     base64Input = params[:project][:input]
     response = RestClient.post(SERVICE_REQUEST_URL,
     {
-        :id => @project[:id],
-        :options => @project[:service_options],
-        :input => base64Input
+        id: @project[:id],
+        options: @project[:service_options],
+        input: base64Input,
+        return_port: ENV["PORT"]
     }.to_json, {content_type: :json, accept: :json})
     # Set the project's eta to the SMACK server's predicted processing time
     return JSON.parse(response.body)['eta']
