@@ -96,6 +96,9 @@ class ProjectsController < ApplicationController
   def edit
     @base64_input = @project.input
     @output = @project.output
+    puts "port stuff"
+    puts Rack::Server.new.options
+    puts request.port
   end
 
   # PATCH/PUT /projects/1
@@ -224,12 +227,14 @@ class ProjectsController < ApplicationController
     base64Input = params[:project][:input]
 
 
+    puts "server port"
+    puts request.port
     response = RestClient.post(SERVICE_REQUEST_URL,
     {
         id: @project[:id],
         options: @project[:service_options],
         input: base64Input,
-        return_port: ENV["PORT"]
+        return_port: request.port
     }.to_json, {content_type: :json, accept: :json})
     # Set the project's eta to the SMACK server's predicted processing time
     return JSON.parse(response.body)['eta']
