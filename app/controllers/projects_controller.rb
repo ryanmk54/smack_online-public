@@ -96,9 +96,6 @@ class ProjectsController < ApplicationController
   def edit
     @base64_input = @project.input
     @output = @project.output
-    puts "port stuff"
-    puts Rack::Server.new.options
-    puts request.port
   end
 
   # PATCH/PUT /projects/1
