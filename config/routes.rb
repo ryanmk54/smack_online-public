@@ -27,6 +27,9 @@ Rails.application.routes.draw do
   post 'users/unfollow', to: 'users#unfollow'
 
   post '/projects/:id/permissions/:visibility', to: 'projects#toggle'
+  post '/projects/:id/run', to: 'projects#run'
+  get '/projects/:id/progress', to: 'projects#progress'
+  get '/projects/:id/cancel', to: 'projects#cancel'
 
   resources(:projects,  except: [:index]) do
     member do
