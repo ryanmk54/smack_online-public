@@ -40,6 +40,9 @@ function parseID(str) {
 
 
 function onRunProject(project_id) {
+    if(observer.running_projects.has(project_id)) {
+        return;
+    }
     $.ajax({
         type: 'post',
         url: '/projects/' + project_id + '/run',
