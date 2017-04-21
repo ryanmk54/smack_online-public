@@ -54,6 +54,11 @@ function onRunProject(project_id) {
 };
 
 
+/*
+    dynamically updates the progress for active projects
+    on the user's profile page
+
+ */
 function ProjectObserver() {
 
     this.running_projects = new Set();
@@ -118,7 +123,13 @@ function ProjectObserver() {
 
 
 
+/*
+    DELETE /projects/:project_id
 
+    makes an AJAX request to delete the project for the user,
+    then makes an AJAX request to reload the user's projects
+    from the server.
+ */
 function delete_project(project_id) {
     $.ajax({
         url: '/projects/' + project_id,
@@ -129,6 +140,11 @@ function delete_project(project_id) {
     });
 }
 
+/*
+    GET /users/newProject
+
+    Makes an AJAX request to load a project button
+ */
 function displayNewProjectButton() {
     $.ajax({
         url: '/users/newProject',
@@ -141,6 +157,12 @@ function displayNewProjectButton() {
     })
 }
 
+/*
+    GET /users/projects
+
+    Makes an AJAX request to load all of the user's projects
+    on the profile page.
+ */
 function displayProjects() {
     $.ajax({
         url: '/users/projects',
@@ -165,6 +187,13 @@ function displayProjects() {
     });
 }
 
+
+/*
+    GET /users/following
+
+    Displays information about all of the users that
+    the logged-in user is following
+ */
 function displayFollowing() {
     $.ajax({
         url: '/users/following',
@@ -180,6 +209,11 @@ function displayFollowing() {
     });
 }
 
+
+/*
+    UI embellishment for highlighting a project
+    when a the user's mouse hovers over a particular project
+ */
 function highlightProject() {
     $('.card-project').hover(
 
@@ -194,6 +228,10 @@ function highlightProject() {
 
 }
 
+/*
+    Dynamically sets the onclick action to either "follow" or
+    "unfollow" for a particular user when clicked
+ */
 function toggleFollowUnfollowButton(follower_id) {
     var button = $('button#follow_button_' + follower_id);
     if(button.hasClass("btn-danger")) {
@@ -208,6 +246,15 @@ function toggleFollowUnfollowButton(follower_id) {
 
 }
 
+/*
+    POST /users/follow/
+    data: { user_id: integer }
+
+    Sends an AJAX request that adds the user associated with
+    follower_id for to be followed by the logged in user.
+
+    Toggles the button's action from "follow" to "unfollow" on callback
+ */
 function follow(follower_id) {
     $.ajax({
         url: '/users/follow',
@@ -217,6 +264,16 @@ function follow(follower_id) {
     });
 }
 
+
+/*
+    POST /users/unfollow/
+    data: { user_id: integer }
+
+    Sends an AJAX request that adds the user associated with
+    follower_id for to be followed by the logged in user.
+
+    Toggles the button's action from "unfollow" to "follow" on callback
+ */
 function unfollow(follower_id) {
     $.ajax({
         url: '/users/unfollow',
@@ -226,6 +283,13 @@ function unfollow(follower_id) {
     });
 }
 
+
+/*
+    GET /users/followers
+
+    Sends an AJAX request to dynamically load the User's followers
+    on the profile page
+ */
 function displayFollowers() {
     $.ajax({
         url: '/users/followers',
@@ -241,6 +305,10 @@ function displayFollowers() {
     });
 }
 
+/*
+    Returns the text input from the search box on the
+    user's home page
+ */
 function parameterizeSearchForm() {
     var parameters = {
         username: $('input#search_by_username').val()
@@ -248,6 +316,11 @@ function parameterizeSearchForm() {
     return parameters;
 }
 
+/*
+    GET /users/searchbar
+
+    Sends an AJAX Request to display the user search bar
+ */
 function displaySearchBar() {
     $.ajax({
         url: 'users/searchbar',
@@ -265,6 +338,13 @@ function displaySearchBar() {
     });
 }
 
+
+/*
+    POST /users/search
+
+    Sends an AJAX Request to return a list of users,
+    based on input from the search bar
+ */
 function submitSearchForm() {
     $.ajax({
         url: '/users/search',
@@ -280,6 +360,11 @@ function submitSearchForm() {
 
 }
 
+/*
+    GET /users/projects/:id
+
+    Sends an AJAX request to display projects as 'peer projects'
+ */
 function displayPeerProjects(peer_id) {
     $.ajax({
         url: '/users/projects/' + peer_id,
@@ -308,6 +393,12 @@ function displayPeerProjects(peer_id) {
     });
 }
 
+/*
+    GET /projects/:id/fork
+
+    Makes an AJAX request to create a project for the logged-in user
+    that is a copy of another user's project
+ */
 function forkProject(project_id) {
     $.ajax({
        url: '/projects/' + project_id + '/fork',
@@ -351,6 +442,13 @@ function makeProjectPrivate() {
 
 }
 
+
+/*
+    POST /projects/:id/permissions/public
+
+    Sends an AJAX request to the server to make the
+    specified project public
+ */
 function makeProjectPublic(project_id) {
     $.ajax({
         url: '/projects/'+ project_id + '/permissions/public',
@@ -365,6 +463,12 @@ function makeProjectPublic(project_id) {
 
 }
 
+/*
+ POST /projects/:id/permissions/private
+
+ Sends an AJAX request to the server to make the
+ specified project private
+ */
 function makeProjectPrivate(project_id) {
     $.ajax({
         url: '/projects/'+ project_id + '/permissions/private',

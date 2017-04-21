@@ -5,14 +5,19 @@ class Project < ApplicationRecord
   has_many :project_users
   has_many :users, through: :project_users
 
+  # returns the time that this project was created
   def created_at
     self[:created_at].strftime("%D")
   end
 
+  # sets this project's 'public' attribute to either
+  # true or false
   def set_visibility(visibility)
     self.public = visibility
   end
 
+  # creates a project for the user associated with user_id
+  # that is an exact copy of this project
   def fork user_id
     user = User.find(user_id)
     project = user.projects.create
@@ -23,6 +28,8 @@ class Project < ApplicationRecord
     project.save
   end
 
+  # returns the input for this project. This is what will
+  # be the input for the SMACK process
   def input
     if self.id == nil
       return nil
@@ -39,6 +46,7 @@ class Project < ApplicationRecord
     end
   end
 
+  # Sets the input for this project
   # MUST FIRST SAVE PROJECT BEFORE CALLING THIS SO THE ID IS POPULATED
   def input=(value)
     if value == nil
@@ -55,6 +63,10 @@ class Project < ApplicationRecord
     file.close
   end
 
+  # returns the output given by the SMACK process for this project.
+  # if a SMACK process has yet to be executed, the output is nil
+  # if there is a SMACK process currently running for this project,
+  # then the output is 'pending'
   def output
     if self.id == nil
       return nil
@@ -74,6 +86,7 @@ class Project < ApplicationRecord
     return output
   end
 
+  # Sets the output for this project
   def output=(value)
     # If there is no ID associated with the project, create one by saving the project.
     if self.id == nil
@@ -104,6 +117,8 @@ class Project < ApplicationRecord
     return formatted;
   end
 
+  # Returns the time-to-completion progress for the SMACK process associated with this project as a decimal.
+  # When the progress is 1, the process for this project is completed.
   def progress
     if self.eta = 0
       return 1
