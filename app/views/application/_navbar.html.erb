@@ -14,9 +14,19 @@
         <%= link_to "Commmunity", '/community/home' %>
       </li>
 
+<% if controller_name == "projects" %>
+      <li id="start-tutorial-btn">
+        <a href="#">Tutorial</a>
+      </li>
+<% end %>
+
+
 <% if user_signed_in? %>
       <li class="<%= 'active' if current_page?('/profile') %>">
         <%= link_to "Home", '/profile' %>
+      </li>
+      <li>
+        <%= link_to "New Project", '#', {:class => 'navbar-link', 'data-target' => "#new_project_modal", 'data-toggle' => "modal" }  %>
       </li>
 <% end %>
 
@@ -30,9 +40,11 @@
 <% else %>
       <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %> |
       <%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %>
+
 <% end %>
 
   </div>
 </nav>
+<%= render partial: 'new_project_dialog.html' %>
 
 <%= render 'flash' %>

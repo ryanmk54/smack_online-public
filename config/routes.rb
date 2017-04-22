@@ -27,11 +27,15 @@ Rails.application.routes.draw do
   post 'users/unfollow', to: 'users#unfollow'
 
   post '/projects/:id/permissions/:visibility', to: 'projects#toggle'
+  post '/projects/:id/run', to: 'projects#run'
+  get '/projects/:id/progress', to: 'projects#progress'
+  get '/projects/:id/cancel', to: 'projects#cancel'
 
   resources(:projects,  except: [:index]) do
     member do
       post 'receive_service_output', to: 'projects#receive_service_output'
       get 'fork', to: 'projects#fork'
+      post '',  to: 'projects#create'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

@@ -31,6 +31,9 @@ $col-12: percentage(12/12);
 .flex-align-stretch {
   align-items: stretch;
 }
+.flex-grow {
+  flex-grow: 1;
+}
 
 .flex-col-xs-1, .flex-col-xs-2,  .flex-col-xs-3,  .flex-col-xs-4,
 .flex-col-xs-5, .flex-col-xs-6,  .flex-col-xs-7,  .flex-col-xs-8,

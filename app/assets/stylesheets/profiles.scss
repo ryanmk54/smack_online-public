@@ -21,6 +21,11 @@ body {
   vertical-align: center;
 }
 
+.center-box {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .circular--square--large {
   border-radius: 50%;
   width: 250px;
@@ -29,6 +34,10 @@ body {
   border-color: black;
   margin-bottom: 10px;
   box-shadow: 2px 2px 2px 2px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f3f3f3;
 }
 
 .img-thumbnail {
@@ -210,6 +219,38 @@ html,body,.container {
 .nav-pills a {
   color: $lgray;
 }
+.centering-box{
+  position: relative;
+  border: 2px solid black;
+  text-align: center;
+  font-size: 100px;
+  display:block;
+  width: 100%;
+}
+
+.profile-sidebar {
+  position: fixed;
+  overflow-x: hidden;
+  background-color: $light-sky-blue;
+  padding: 10px 10px 0px 10px;
+  margin: 5px 5px 5px 5px;
+  box-shadow: #F0FFFF 2px 2px 2px 2px;
+}
+
+.profile-active-projects {
+  float: right;
+  position: fixed;
+  overflow: auto;
+  background-color: $light-sky-blue;
+  padding: 15px 15px 15px 15px;
+  margin: 5px 5px 5px 5px;
+  margin-top: 80px;
+  margin-bottom: 10vh;
+  height: 80vh;
+  width: 20vw;
+  box-shadow: 5px 5px 5px 5px;
+}
+
 
 #searchbar {
   background-color: $light-sky-blue;
@@ -228,6 +269,7 @@ html,body,.container {
 #search_container {
   background-color: $lgray;
 }
+
 .card-user-search {
   margin-top: 15px;
   margin-left: 15%;

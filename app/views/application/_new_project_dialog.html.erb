@@ -1,0 +1,77 @@
+<%= javascript_include_tag 'new_project_dialogue' %>
+  <div id="new_project_modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class=" modal-title" style="text-align: center">
+          create a new project
+        </h2>
+
+      </div>
+      <div class="modal-body" style="text-align: center; margin-top: 10px; padding-bottom: 10px; padding-top: 10px; overflow-y: hidden;">
+        <div id="new_project_options" style="padding-bottom: 10px;">
+          <div class="col-md-4" >
+            <a data-toggle="collapse" data-target="#project_git_form" onclick="displayGitForm()">
+              <i class="fa fa-github fa-3x"></i>
+              <br/>
+              <strong>upload from git</strong>
+            </a>
+          </div>
+          <div class="col-md-4">
+            <a data-toggle="collapse" data-target="#project_upload_form" onclick="displayUploadForm()">
+              <i class="fa fa-upload fa-3x"></i>
+              <br/>
+              <strong> upload local file</strong>
+            </a>
+          </div>
+          <div class="col-md-4">
+            <a data-toggle="collapse" data-target="start_from_scratch">
+              <i class="fa fa-code fa-3x"></i>
+              <br/>
+              <strong>start from scratch</strong>"
+            </a>
+          </div>
+        </div>
+        <br/>
+
+        <div id="project_upload_form"  class="collapse" style="text-align: left; width: 100%; margin-top: 10%; padding: 10px;" multipart="true">
+          <%= form_tag '/projects', multipart: true, :html => {onsubmit: 'return preprocessProjectUpload()'} do %>
+            <div class="form-group" >
+              <label for="titleInput1">Title</label>
+              <input type="text" id="titleInput1" name="project[title]">
+            </div>
+            <div class="form-group">
+              <label for="file_input">Upload File</label>
+              <%= file_field_tag :file_input, class: 'white-color', accept: '.zip', name: "project[input]" %>
+              <!--<input type="file" accept="/text" class="form-control-file" id="fileInput" name="project[input]" >-->
+            </div>
+            <div class="form-group">
+              <label class="radio-inline"><input type="radio" name="project[public]" value="true">Public</label>
+              <label class="radio-inline"><input type="radio" name="project[public]" value="false">Private</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Project</button>
+          <% end %>
+        </div>
+
+        <div id="project_git_form" class="collapse" style="text-align: left; width: 100%; padding: 10px;">
+
+          <br />
+          <h3>Enter GitHub Username:</h3>
+
+          <input type="text" name="ghusername" id="ghusername">
+
+          <a href="#" id="ghsubmitbtn">Submit</a>
+
+          <div id="ghapidata" class="clearfix"></div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+
+
+
+

@@ -1,13 +1,19 @@
 var OutputEditor = (function() {
   "use strict";
 
-  var init,
-      editor,
+  var editor,
+
+      debug,
+      init,
+      append,
+      get,
       highlightCorrespondingInputRow,
+      resize,
       set;
 
   init = function() {
     editor = ace.edit("outputEditor");
+    editor.setAutoScrollEditorIntoView(true);
     editor.$blockScrolling = Infinity;
     editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/c_cpp");
@@ -19,14 +25,32 @@ var OutputEditor = (function() {
     editor.on("changeSelection", highlightCorrespondingInputRow)
   };
 
+
+  append = function(value) {
+    editor.navigateFileEnd();
+    editor.insert('\n');
+    editor.insert(value);
+  };
+
+
+  debug = function() {
+    debugger;
+  }
+
+
+  get = function() {
+    return editor.getValue();
+  }
+
+
   highlightCorrespondingInputRow = function() {
     var cursorPos = editor.getSelection().getCursor();
     var contentInRow = editor.getSession().getLine(cursorPos.row);
     contentInRow = contentInRow.trim();
 
     var matchStrings = [
-      /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*)\((\d*),(\d*)\)/,
-      /\/home\/ubuntu\/src\/smack_server\/public\/system\/projects\/\d*\/(.*):(\d*):(\d*)/
+      /(.*)\((\d*),(\d*)\)/,
+      /([A-z.]*):(\d*):(\d*)/
     ];
 
     matchStrings.forEach(function(matchString) {
@@ -44,13 +68,25 @@ var OutputEditor = (function() {
     });
   };
 
+
+  resize = function() {
+    editor.resize();
+  };
+
+
   set = function(value) {
     editor.setValue(value);
     editor.navigateTo(0,0);
+    OutputParser.showOutputModal();
   };
+
 
   return {
     init: init,
-    set: set
+    debug: debug,
+    append: append,
+    resize: resize,
+    set: set,
+    get: get
   };
 }());

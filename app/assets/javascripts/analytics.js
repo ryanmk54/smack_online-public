@@ -7,11 +7,8 @@
 //= require Chart
 //= require plotly
 
-// Default span for '# projects per span' graphs
-DEFAULT_SPAN = 20;
-
 GEOGRAPH_BUBBLE_SCALE = 10;
-MAX_GEOGRAPH_BUBBLE_SIZE = 100;
+MAX_GEOGRAPH_BUBBLE_SIZE = 50;
 MIN_GEOGRPAH_BUBBLE_SIZE = 5;
 
 var chart;
@@ -22,12 +19,12 @@ var geoCSV;
 
 $().ready(function() {
     
-    // Set initial graph and menu value to DEFAULT_SPAN
-    $("#numberPicker").val(DEFAULT_SPAN);
-    
+    // The project usage chart is the page 'landing' graph
     getProjectsFromServerIfNotCached(displayUsageChart);
-    
-    // Set action 'Update Graph' Button
+    resetSidebarList();
+  
+    // Set action for 'Update Graph' Button
+    // Resets sidebar and canvas, then re-displays graph
     $("#dateGo").click(function()
     {
         resetSidebarList();
@@ -39,10 +36,11 @@ $().ready(function() {
             getUsersFromServerIfNotCached(displayUsageChart)
     });
     
-    // Set action for the unit drop-down
+    // Change to the 'project usage' graph when the side menu usageListItem is clicked
     $("#usageListItem").click(function()
     {
         if(!$(this).hasClass('active')) {
+            $("#graphTitle").html("Number of Projects Created per Unit (Day or Month)");
             $("#rangecontainer").show();
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
@@ -52,10 +50,11 @@ $().ready(function() {
         }
     });
     
-    // Set action for the unit drop-down
+    // Change to the 'runtime' graph when the side menu runtimeListItem is clicked
     $("#runtimeListItem").click(function()
     {
         if(!$(this).hasClass('active')) {
+            $("#graphTitle").html("Number of Projects with a Given Runtime (seconds)");
             $("#rangecontainer").hide();
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
@@ -64,11 +63,12 @@ $().ready(function() {
             getProjectsFromServerIfNotCached(displayRuntimeGraph);
         }
     });
-    
-    // Set action for the unit drop-down
+  
+    // Change to the 'geographic usage' graph when the side menu geographicListItem is clicked
     $("#geographicListItem").click(function()
     {
         if(!$(this).hasClass('active')) {
+            $("#graphTitle").html("");
             $("#rangecontainer").hide();
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
@@ -77,14 +77,15 @@ $().ready(function() {
             if(geoCSV == null)
                 getGeoCSV();
             else
-                unpackGeoCSVAndDisplayChart(displayGeochart);
+                displayGeochart();
         }
     });
-    
-    // Set action for the unit drop-down
+  
+    // Change to the 'user creation' graph when the side menu userCreationListItem is clicked
     $("#userCreationListItem").click(function()
     {
         if(!$(this).hasClass('active')) {
+            $("#graphTitle").html("Number of Users Created per Unit (Day or Month)");
             $("#rangecontainer").show();
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
@@ -94,31 +95,17 @@ $().ready(function() {
         }
     });
     
-    $("#numberPickerDiv").hide();
-    $("#unitPickerDiv").hide();
-    $('input[type="radio"][name="rangetype"]').change(function(){
-        if(this.value == 'daterange') {
-            $("#startDateDiv").show();
-            $("#endDateDiv").show();
-            $("#numberPickerDiv").hide();
-            $("#unitPickerDiv").hide();
-        }
-        else if(this.value == 'daymonthspan') {
-            $("#startDateDiv").hide();
-            $("#endDateDiv").hide();
-            $("#numberPickerDiv").show();
-            $("#unitPickerDiv").show();
-        }
-    });
-    
-    // Set up date picker dates.
+    // Set start date to one month ago
     var monthAgo = new Date();
     monthAgo.setMonth(monthAgo.getMonth() - 1);
-    $("#beginningDate").datepicker('update', formatDateDDMMYYYY(monthAgo));
+    $("#beginningDate").datepicker('update', formatDateMMDDYYYY(monthAgo));
     $("#beginningDate").datepicker({autoclose: true});
-    var today = new Date();
-    $("#endDate").datepicker('update', formatDateDDMMYYYY(today));
     
+    // Set end date to today
+    var today = new Date();
+    $("#endDate").datepicker('update', formatDateMMDDYYYY(today));
+    
+    // Make sure the beginning date does not overlap the end date when changed
     $('#beginningDate').datepicker().on('changeDate', function(e){
         $('#beginningDate').datepicker('hide');
         var begDateVal = $('#beginningDate').val();
@@ -126,9 +113,13 @@ $().ready(function() {
         $('#endDate').datepicker('setStartDate', begDateVal);
         begTime = (new Date(begDateVal)).getTime();
         endTime = (new Date(endDateVal)).getTime();
+  
+        // If they do overlap, change them to make them equal
         if(begTime > endTime)
             $('#endDate').datepicker('update', begDateVal);
     });
+    
+    // Make sure the end date does not overlap the start date when changed
     $('#endDate').datepicker().on('changeDate', function(e){
         $('#endDate').datepicker('hide');
         var begDateVal = $('#beginningDate').val();
@@ -136,11 +127,18 @@ $().ready(function() {
         $('#beginningDate').datepicker('setEndDate', endDateVal);
         begTime = (new Date(begDateVal)).getTime();
         endTime = (new Date(endDateVal)).getTime();
+      
+        // If they do overlap, change them to make them equal
         if(begTime > endTime)
             $('#beginningDate').datepicker('update', endDateVal);
     });
 });
 
+/*
+ * Projects are grabbed from /analytics/usage and then cached
+ *  in currentProjectChartDataArray. The callback is called with
+ * the returned projects as the data argument
+ */
 function getProjectsFromServerIfNotCached(callback)
 {
     if(currentProjectChartDataArray.length != 0)
@@ -161,6 +159,11 @@ function getProjectsFromServerIfNotCached(callback)
         });
 }
 
+/*
+ * Users are grabbed from /analytics/users_created and then cached
+ * in currentUserChartDataArray. The callback is called with
+ * the returned users as the data argument
+ */
 function getUsersFromServerIfNotCached(callback)
 {
     if(currentUserChartDataArray.length != 0)
@@ -181,31 +184,32 @@ function getUsersFromServerIfNotCached(callback)
         });
 }
 
+/*
+ * Pulls the geographic data csv file form the server then
+ * displays the geographic usage chart.
+ */
 function getGeoCSV()
 {
     Plotly.d3.csv('/analytics/project_location_csv', function(err, rows) {
         geoCSV = rows;
-        unpackGeoCSVAndDisplayChart();
+        displayGeochart();
     });
 }
 
-function unpackGeoCSVAndDisplayChart()
+/*
+ * Grabs formatted data from geoCSV, and displays
+ * the geographic bubble chart.
+ */
+function displayGeochart()
 {
     var locationNames = unpack(geoCSV, 'name'),
         locationCounts = unpack(geoCSV, 'pop'),
         latitudes = unpack(geoCSV, 'lat'),
         longitudes = unpack(geoCSV, 'lon')
     
-    // Pass the CSV data to the callback
-    displayGeochart(latitudes, longitudes, locationCounts, locationNames);
-}
-
-function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
-{
-    //TODO: Scale locationSizes by setting a scale and dividing each size by it
+    // Scale the bubble chart bubbles
     var locationSizes = [];
     var hoverTextArray = [];
-    var stateSizes = [];
     for (var i = 0; i < locationCounts.length; i++) {
         if(locationCounts[i] / GEOGRAPH_BUBBLE_SCALE < MIN_GEOGRPAH_BUBBLE_SIZE)
             locationSizes.push(MIN_GEOGRPAH_BUBBLE_SIZE)
@@ -216,6 +220,7 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
         hoverTextArray.push(locationNames[i] + " # Projects: " + locationCounts[i]);
     }
     
+    // Passed to Plotly.plot for plotly magic
     var data = [{
         type: 'scattergeo',
         locationmode: 'USA-states',
@@ -226,6 +231,7 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
         marker: { size: locationSizes }
     }];
     
+    // Also passed to Ploltly.plot for plotly magic
     var layout = {
         title: 'Number of SMACK Projects Made Per State/Province',
         showlegend: false,
@@ -239,27 +245,81 @@ function displayGeochart(latitudes, longitudes, locationCounts, locationNames)
 }
 
 /*
- * Takes data input and displays it according to the given
- * span and unit.
+ * Displays project runtime graph
+ */
+function displayRuntimeGraph(dataArray)
+{
+  var KVArray = []; // 'Key-Value Array'
+  var labelArray = [];
+  
+  // Count the number of data occurrences for each label
+  // and populate the key-value array accordingly
+  for (var i = 0; i < dataArray.length; i++) {
+    var key = dataArray[i].runtime
+    if ((key in KVArray))
+      KVArray[key] += 1;
+    else if(key != null)
+      KVArray[key] = 1;
+  }
+  
+  // Only keep the non-empty runtimes
+  var max = Math.max.apply(null, Object.keys(KVArray));
+  for (var i = 0; i <= max; i++)
+    if(KVArray[i] != null)
+      labelArray.push(i);
+  
+  // This is necessary to 'sort' the KVArray
+  // Create random color array while we're at it
+  var valueArray = [];
+  var colorArray = [];
+  for (var i = 0; i < labelArray.length; i++) {
+    var value = KVArray[labelArray[i]];
+    if(value != undefined)
+      valueArray.push(KVArray[labelArray[i]]);
+    else valueArray.push(0)
+    colorArray[i] = "rgb(" + randRGBVal() + "," + randRGBVal() + "," + randRGBVal() + ")";
+  }
+  
+  var canvas = document.getElementById("myChart");
+  var ctx = canvas.getContext("2d");
+  setChartConfigurationForRuntime(labelArray, valueArray, colorArray);
+  chart = new Chart(ctx, chartConfiguration);
+}
+
+/*
+ * Takes data input and displays it according to date span
+ * and aggregation option
  */
 function displayUsageChart(dataArray){
     
     var KVArray = []; // 'Key-Value Array'
     var labelArray = [];
     
-    if($('input[name=rangetype]:checked').val() == "daterange") {
+    var unit;
+    
+    if($('input[name=aggregate]:checked').val() == "day") {
         var begDate = $("#beginningDate").val();
         var endDate = $("#endDate").val();
-        // Create the list of labels for the last <span> units.
         
+        unit = "day";
+        
+        // Create the list of labels formatted DD/MM/YY
+        // Iterated by day
         var currentDateObject = new Date(begDate);
-        var currentDateFormatted = formatDateDDMMYY(currentDateObject);
-        var endDateFormatted = formatDateDDMMYY(new Date(endDate));
+        var currentDateFormatted = formatDateMMDDYY(currentDateObject);
+        var endDateFormatted = formatDateMMDDYY(new Date(endDate));
         while(currentDateFormatted != endDateFormatted) {
-            currentDateFormatted = formatDateDDMMYY(currentDateObject);
+            currentDateFormatted = formatDateMMDDYY(currentDateObject);
             labelArray.push(currentDateFormatted);
             KVArray[currentDateFormatted] = 0;
             currentDateObject.setDate(currentDateObject.getDate() + 1);
+        }
+        
+        // This is if the start and end date are the same
+        if(labelArray.length == 0)
+        {
+            labelArray.push(currentDateFormatted);
+            KVArray[currentDateFormatted] = 0;
         }
         
         // Count the number of data occurrences for each label
@@ -271,27 +331,34 @@ function displayUsageChart(dataArray){
                 KVArray[key] += 1;
         }
     }
-    else if($('input[name=rangetype]:checked').val() == "daymonthspan") {
-        var unit = $('#unitPicker').val();
-        var span = $('#numberPicker').val();
-        // Create the list of labels for the last <span> units.
-        for (var i = span - 1; i >= 0; i--) {
-            var formattedLabel;
-            if(unit == "day")
-                formattedLabel = generateMonthDayYearLabel(i);
-            else if(unit == "month")
-                formattedLabel = generateMonthYearLabel(i);
-            labelArray.push(formattedLabel)
-            KVArray[formattedLabel] = 0;
+    else if($('input[name=aggregate]:checked').val() == "month") {
+        var begDate = $("#beginningDate").val();
+        var endDate = $("#endDate").val();
+        unit = "month";
+    
+        // Create the list of labels formatted MM/YY
+        // Iterated by month
+        var currentDateObject = new Date(begDate);
+        var currentDateFormatted = formatDateMMYY(currentDateObject);
+        var endDateFormatted = formatDateMMYY(new Date(endDate));
+        while(currentDateFormatted != endDateFormatted) {
+            currentDateFormatted = formatDateMMYY(currentDateObject);
+            labelArray.push(currentDateFormatted);
+            KVArray[currentDateFormatted] = 0;
+            currentDateObject.setMonth(currentDateObject.getMonth() + 1);
         }
+    
+        // This is if the start and end date are the same
+        if(labelArray.length == 0)
+        {
+            labelArray.push(currentDateFormatted);
+            KVArray[currentDateFormatted] = 0;
+        }
+        
         // Count the number of data occurrences for each label
         // and populate the key-value array accordingly
         for (var i = 0; i < dataArray.length; i++) {
-            var key;
-            if (unit == "day")
-                key = dataArray[i].created_at;
-            else if (unit == "month")
-                key = dataArray[i].created_at.substring(0, 2) + "/" + dataArray[i].created_at.substring(6);
+            var key = dataArray[i].created_at.substring(0, 2) + "/" + dataArray[i].created_at.substring(6);
             if ((key in KVArray))
                 KVArray[key] += 1;
         }
@@ -313,6 +380,11 @@ function displayUsageChart(dataArray){
     
 }
 
+/*
+ * When a bar on a 'usage' bar graph is clicked, it displays a list of the
+ * data associated with that bar. This list can be of users or projects.
+ * Each list item is clickable and links to the specific data item's page.
+ */
 function onUsageGraphBarClick(evt)
 {
     // Either the user creation graph or project creation graph was clicked
@@ -326,13 +398,13 @@ function onUsageGraphBarClick(evt)
     var label = chartConfiguration.data.labels[element[0]._index];
     
     // Generate the list header
-    var onOrIn = $('#unitPicker').val() == 'month' ? 'in' : 'on';
+    var onOrIn = $('#aggregate').val() == 'month' ? 'in' : 'on';
     //TODO: change the names of these html element ids
     type == 'user' ? $("#projectListHeader").html("Users made " + onOrIn + " " + label)
         : $("#projectListHeader").html("Public projects made " + onOrIn + " " + label);
     
     // Day and month labels have different formats
-    if($('#unitPicker').val() == 'day')
+    if($("input[name='aggregate']:checked").val() == "day")
     // Loop through the data and list items whose 'created_at' matches the label
         for(var i = 0; i < dataArray.length; i++) {
             var id = dataArray[i].id;
@@ -347,7 +419,7 @@ function onUsageGraphBarClick(evt)
                 else {
                     var username = dataArray[i].username
                     var listLabel = username == "" || username == null ? id : dataArray[i].username;
-                    $("#projectList").append("<li><a href = '/users/" + id + "'>" + listLabel + "</a></li>");
+                    $("#projectList").append("<li><a href = '/profile/" + id + "'>" + listLabel + "</a></li>");
                 }
             }
         }
@@ -377,6 +449,11 @@ function onUsageGraphBarClick(evt)
         }
 }
 
+/*
+ * When a bar on the runtime bar graph is clicked, it displays a list of the
+ * projects associated with that bar. Each listed item is clickable and links
+ * to the specific data item's page.
+ */
 function onRuntimeGraphBarClick(evt)
 {
     resetSidebarList();
@@ -400,55 +477,20 @@ function onRuntimeGraphBarClick(evt)
     }
 }
 
-
 /*
- * Generate a month/day/year string, e.g 03/17/94
- * for the day i days before today
+ * Sets chart.js configuration specifically for user/project usage charts
  */
-function generateMonthDayYearLabel(daysPrevious) {
-    var date = moment().subtract(daysPrevious, 'days').date();
-    var month = moment().subtract(daysPrevious, 'days').month() + 1;
-    var year = moment().subtract(daysPrevious, 'days').year().toString().substring(2);
-    if (date < 10)
-        date = "0" + date;
-    if (month < 10)
-        month = "0" + month;
-    return month + "/" + date + "/" + year;
-}
-
-/*
- * Generate a month/year string, e.g 03/94
- * for the month i months before today
- */
-function generateMonthYearLabel(monthsPrevious) {
-    var month = moment().subtract(monthsPrevious, 'months').month() + 1;
-    var year = moment().subtract(monthsPrevious, 'months').year().toString().substring(2);
-    if (month < 10)
-        month = "0" + month;
-    if (year < 10)
-        year = "0" + year;
-    return month + "/" + year;
-}
-
-
-function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
+function setChartConfigurationForUsage(labelArray, valueArray, colorArray)
 {
-    var type;
-    document.getElementsByClassName("list-group-item active")[0].id == 'userCreationListItem'
-        ? type = 'Users' : type = 'Projects';
-    
-    var chartTitle;
-    if($('input[name=rangetype]:checked').val() == "daterange")
-        chartTitle = 'Number of ' + type + 'Created from ' + $("#beginningDate").val() + " to " + $("#endDate").val();
-    else
-        chartTitle = 'Number of ' + type + ' Created per ' + unit[0].toUpperCase() + unit.slice(1);
-    
     chartConfiguration = {
         type: 'bar',
         options: {
             responsive: true,
             maintainAspectRatio: false,
             onClick: onUsageGraphBarClick,
+            legend: {
+                display: false
+            },
             scales: {
                 xAxes: [{
                     scaleLabel: {
@@ -462,8 +504,7 @@ function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
                         labelString: '# of Projects'
                     },
                     ticks: {
-                        min: 0,
-                        max: Math.max.apply(null, valueArray) + 5
+                        min: 0
                     }
                 }]
             }
@@ -471,7 +512,6 @@ function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
         data: {
             labels: labelArray,
             datasets: [{
-                label: chartTitle,
                 data: valueArray,
                 borderWidth: 1,
                 backgroundColor: colorArray
@@ -480,15 +520,20 @@ function setChartConfigurationForUsage(labelArray, valueArray, colorArray, unit)
     }
 }
 
+/*
+ * Sets chart.js configuration specifically for runtime chart
+ */
 function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
 {
-    
     chartConfiguration = {
         type: 'bar',
         options: {
             responsive: true,
             maintainAspectRatio: false,
             onClick: onRuntimeGraphBarClick,
+            legend: {
+                display: false
+            },
             scales: {
                 xAxes: [{
                     scaleLabel: {
@@ -502,8 +547,7 @@ function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
                         labelString: '# of Projects'
                     },
                     ticks: {
-                        min: 0,
-                        max: Math.max.apply(null, valueArray) + 5
+                        min: 0
                     }
                 }]
             }
@@ -511,7 +555,6 @@ function setChartConfigurationForRuntime(labelArray, valueArray, colorArray)
         data: {
             labels: labelArray,
             datasets: [{
-                label: 'Project Runtime Count in Seconds',
                 data: valueArray,
                 borderWidth: 1,
                 backgroundColor: colorArray
@@ -530,10 +573,21 @@ function resetCanvas()
     $('#graphContainer').append('<canvas id="myChart"><canvas>');
 }
 
+/*
+ * Resets the sidebar header and list to the defaults.
+ */
 function resetSidebarList()
 {
     $("#projectList").html("");
-    $('#projectListHeader').html("");
+    var isGeograph = $('#geographicListItem').hasClass('active');
+    if(isGeograph)
+      $('#projectListHeader').html("");
+    else
+      $('#projectListHeader').html("Click bar graph bars to list data");
+}
+
+function unpack(rows, key) {
+    return rows.map(function(row) { return row[key]; });
 }
 
 /*
@@ -544,49 +598,10 @@ function randRGBVal()
     return Math.floor((Math.random() * 255));
 }
 
-function unpack(rows, key) {
-    return rows.map(function(row) { return row[key]; });
-}
-
-function displayRuntimeGraph(dataArray)
-{
-    var KVArray = []; // 'Key-Value Array'
-    var labelArray = [];
-    
-    // Count the number of data occurrences for each label
-    // and populate the key-value array accordingly
-    for (var i = 0; i < dataArray.length; i++) {
-        var key = dataArray[i].runtime
-        if ((key in KVArray))
-            KVArray[key] += 1;
-        else if(key != null)
-            KVArray[key] = 1;
-    }
-    
-    var max = Math.max.apply(null, Object.keys(KVArray));
-    for (var i = 0; i <= max; i++)
-        if(KVArray[i] != null)
-            labelArray.push(i);
-    
-    // This is necessary to 'sort' the KVArray
-    // Create random color array while we're at it
-    var valueArray = [];
-    var colorArray = [];
-    for (var i = 0; i < labelArray.length; i++) {
-        var value = KVArray[labelArray[i]];
-        if(value != undefined)
-            valueArray.push(KVArray[labelArray[i]]);
-        else valueArray.push(0)
-        colorArray[i] = "rgb(" + randRGBVal() + "," + randRGBVal() + "," + randRGBVal() + ")";
-    }
-    
-    var canvas = document.getElementById("myChart");
-    var ctx = canvas.getContext("2d");
-    setChartConfigurationForRuntime(labelArray, valueArray, colorArray);
-    chart = new Chart(ctx, chartConfiguration);
-}
-
-function formatDateDDMMYYYY(date)
+/*
+ * Takes date object and returns it as a string in MM/DD/YYYY format
+ */
+function formatDateMMDDYYYY(date)
 {
     var year = date.getFullYear();
     var month = date.getMonth() + 1;
@@ -598,7 +613,10 @@ function formatDateDDMMYYYY(date)
     return month + '/' + day + '/' + year;
 }
 
-function formatDateDDMMYY(date)
+/*
+ * Takes date object and returns it as a string in MM/DD/YY format
+ */
+function formatDateMMDDYY(date)
 {
     var year = date.getFullYear().toString().substr(2);
     var month = date.getMonth() + 1;
@@ -608,5 +626,17 @@ function formatDateDDMMYY(date)
     if(month < 10)
         month = '0' + month;
     return month + '/' + day + '/' + year;
+}
+
+/*
+ * Takes date object and returns it as a string in MM/YYYY format
+ */
+function formatDateMMYY(date)
+{
+    var year = date.getFullYear().toString().substr(2);
+    var month = date.getMonth() + 1;
+    if(month < 10)
+        month = '0' + month;
+    return month + '/' + year;
 }
 
