@@ -1,51 +1,68 @@
 //= require tree.jquery
 
 /**
- * External Variables: InputEditor
- *
+ * File tree that is on the side of the Editor
  */
 var FileTree = (function() {
   "use strict";
 
-  var zip,
-      jqtree,
-      currentFileName,
+  var zip,              // zip var returned by jszip
+      jqtree,           // jqtree returned by jqtree
+      currentFileName,  // current highlighted filename
 
-      getBase64,
-      init,
-      initJqTree,
-      loadFileTree,
-      setCurrentFile,
-      setValueOfCurrentFile,
-      saveToServer,
-      tryLoadFromBase64Input;
+      // Methods
+      getBase64,              // returns the base64 from the zip
+      init,                   // initializes the FileTree
+      initJqTree,             // initializes the jqTree
+      loadFileTree,           // loads the file tree with the contents of zip
+      setCurrentFile,         // sets the current filename to the given file
+      setValueOfCurrentFile,  // sets the contents of the current file
+      saveToServer,           // sends the zip's base64 to the server
+      tryLoadFromBase64Input; // loads the filetree from base64, if there is any
 
 
+  /** Returns the contents of the filetree as base64 */
   getBase64 = function() {
     return zip.generateAsync({type: "base64"});
   };
 
 
+  /** 
+   * Initializes the filetree
+   * This method needs to be called before anything else
+   */
   init = function(_zip) {
     initJqTree();
 
+    // If a zip is passed in, use that instead
     if (_zip) {
       zip = _zip;
       loadFileTree();
     }
+    // Otherwise, load from bas64input
     else {
       tryLoadFromBase64Input();
     }
   };
 
 
+  /**
+   * Initialize the jqTree
+   */
   initJqTree = function() {
     jqtree = $('#file-list');
     jqtree.tree({
       data: {},
+        // start empty
       autoOpen: 1,
+        // automatically open nodes when added
+
+      // Don't use the selection feature of contextMenu feature
       selectable: false,
       useContextMenu: false,
+
+
+      // Add an the filepath as the id to the nodes
       onCreateLi: function(node, $li) {
         //$li.attr('id', node.relativePath);
         $li.find('.jqtree_common').attr('id', node.relativePath);
@@ -53,24 +70,34 @@ var FileTree = (function() {
       }
     });
 
+    // Set the current file to the file that was clicked on
     jqtree.on('click', 'li .jqtree_common:not(.jqtree-folder)', function(e) {
       setCurrentFile( $(e.target).attr('id') );
     });
   };
 
 
+  /**
+   * Loads the file tree
+   * 
+   * Iterates through the zip and loads the jqtree
+   */
   loadFileTree = function() {
     var data = [];
     var dataPosStack = [data];
     var dirPrefixStack  = [""];
 
     var firstFile = "";
+
+    // Iterate through the zip
     zip.forEach(function (relativePath, file) {
       var curNode = {
         name: file.name,
         relativePath: relativePath,
         dir: file.dir
       }
+
+      // Use a stack to keep track of the directory hierarchy
       var lastDirPrefix = dirPrefixStack[dirPrefixStack.length - 1];
       if (file.dir && !relativePath.startsWith(lastDirPrefix)) {
         dataPosStack.pop();
@@ -79,6 +106,8 @@ var FileTree = (function() {
         lastDirPrefix = dirPrefixStack[dirPrefixStack.length - 1];
           // update lastDirPrefix
       }
+
+      // Only show the filename, not the whole filepath
       if (relativePath.startsWith(lastDirPrefix)) {
         curNode.name = curNode.name.replace(lastDirPrefix, "");
       }
@@ -101,7 +130,10 @@ var FileTree = (function() {
       }
     });
 
+    // add the files to the jqtree
     jqtree.tree('loadData', data);
+
+    // set the current file to the first file
     setCurrentFile(firstFile);
   }
 
@@ -129,6 +161,7 @@ var FileTree = (function() {
     var currentFileElement = document.getElementById(currentFileName);
     currentFileElement.classList.add("current-file");
 
+    // Unzip the current file and set the contents of the Input Editor to it
     zip.file(filename).async("string")
       .then(function success(content) {
         InputEditor.set(content);
@@ -139,21 +172,34 @@ var FileTree = (function() {
   };
 
 
+  /**
+   * Sets the content of the current file to the given value
+   */
   setValueOfCurrentFile = function(value, save) {
+    // If a zip exists, set the current file
     if (zip) {
       zip.file(currentFileName, value);
     }
+
+    // else create a zip with a file called main.c
     else {
       zip = new JSZip();
       zip.file("main.c", value);
     }
 
+    // save to server if they passed the save parameter
     if (save) {
       saveToServer();
     }
   };
 
 
+  /**
+   * Saves the contents of this filetree to the server
+   *
+   * Generates a base64 representation of the backing zip
+   * and send it to the server
+   */
   saveToServer = function() {
     zip.generateAsync({type: "base64"})
       .then(function (content) {
@@ -163,8 +209,18 @@ var FileTree = (function() {
   };
 
 
+  /**
+   * Loads the filetree from base64 input if there is any
+   *
+   * If this project has input, 
+   * the zip is loaded from the input,
+   * then the filetree is loaded from the zip
+   */
   tryLoadFromBase64Input = function() {
+    // Get the base64
     var base64 = $("#project_input").val();
+
+    // Only load the filetree if the base64 contains data
     if (base64) {
       zip = JSZip();
       zip.loadAsync(base64, {base64: true})
@@ -177,6 +233,7 @@ var FileTree = (function() {
   };
 
 
+  // These are our public methods
   return {
     init,
     getBase64,

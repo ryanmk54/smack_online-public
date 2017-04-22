@@ -9,6 +9,7 @@
 //= require_tree ./project_modules
 
 
+/** Loads all the project modules */
 $().ready(function(){
   "use strict";
 

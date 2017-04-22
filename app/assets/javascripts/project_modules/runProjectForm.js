@@ -1,3 +1,7 @@
+/**
+ * Project that is responsible for 
+ * running the project and polling
+ */
 RunProjectForm = (function() {
   "use strict";
 
@@ -12,6 +16,7 @@ RunProjectForm = (function() {
       intervalId,
       timer;
 
+  /** Initializes the Module */
   init = function() {
     pollDelay = 0;
     timer = -1;
@@ -21,6 +26,7 @@ RunProjectForm = (function() {
   };
 
 
+  /** Starts polling if there isn't already a request pending */
   startPollingServerForOutput = function(event, xhr, status) {
     if (status == "error") {
       if (xhr.status == 500) {
@@ -45,6 +51,7 @@ RunProjectForm = (function() {
   };
 
 
+  /** Sends a request to the ouput server */
   requestOutputFromServer = function() {
     var url = document.getElementById('poll-form').action;
     setTimeout(function() {
@@ -83,6 +90,7 @@ RunProjectForm = (function() {
     }, pollDelay)
   }
 
+  /** Function that counts down to say the estimated time remaining */
   startTimer = function() {
     intervalId = setInterval(function()
     {
@@ -96,6 +104,7 @@ RunProjectForm = (function() {
     }, 1000);
   };
 
+  /** Saves the content of the Input editor */
   submitWithUpdatedBase64 = function(event) {
     if (InputEditor.get().trim().length == 0) {
       OutputEditor.set("There is no code to send to the server");
@@ -111,10 +120,12 @@ RunProjectForm = (function() {
     return false;
   };
 
+  /** Adds the run field so the verification will happen */
   addRunField = function(event, xhr, settings) {
     settings.data += "&run=run";
   }
 
+  /** Public methods */
   return {
     init: init
   };
