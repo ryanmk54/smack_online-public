@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :receive_service_output]
 
   # Production SMACK server URL
-  SERVICE_REQUEST_HOST = env['SERVICE_REQUEST_HOST']
+  SERVICE_REQUEST_HOST = ENV['SMACK_SERVER_HOST']
   PROJECT_CSV_PATH = Rails.root.join('public', 'assets', 'ProjectLocations.csv')
   RUNTIME_THRESHOLD = 500; # Ignore projects with runtimes more than this number when calculating average runtimes for eta.
 
