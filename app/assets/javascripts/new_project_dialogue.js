@@ -23,12 +23,15 @@ function displayGitForm() {
 // Code for GitHub import, added by Jake
 // GitHub API tutorial followed at:  http://blog.teamtreehouse.com/code-a-simple-github-api-webapp-using-jquery-ajax
 $(function() {
+    // on click of the submit button, load the respositories for the entered username
     $('#ghsubmitbtn').on('click', function(e) 
     {
         e.preventDefault();
         $('#ghapidata').html('<p>Loading...</p>');
 
         var username = $('#ghusername').val();
+
+        // GitHub API base URLS
         var requri = 'https://api.github.com/users/' + username;
         var repouri = 'https://api.github.com/users/' + username + '/repos';
 
@@ -97,9 +100,9 @@ $(function() {
 
                                     list_subdirectories = json;
 
-                                    outputRepoList2();
+                                    listSubdirectories();
 
-                                    function outputRepoList2() 
+                                    function listSubdirectories() 
                                     {
 
                                         if (list_subdirectories.length == 0) {
@@ -130,6 +133,7 @@ $(function() {
                                         $(this).on('click', function(e) 
                                         {
 
+                                            // On selection of directory, display its contents. On selection of file, place contents in editor.
                                             function displayContentsOrOpen(repo_name, selected, type) 
                                             {
 
@@ -147,7 +151,9 @@ $(function() {
 
                                                     var editor = ace.edit("inputEditor");
 
+                                                    // Place the selected code from GitHub in the editor
                                                     editor.setValue(xmlHttp.responseText);
+                                                    // Close the new project modal
                                                     $('#new_project_modal').modal('toggle')
 
 
@@ -192,6 +198,7 @@ $(function() {
                                                             {
                                                                 $(this).on('click', function(e) 
                                                                 {
+                                                                    // Recursively add this function to each level of the subdirectory/file listing
                                                                     displayContentsOrOpen(repo_name, this, $(this).attr('type'));
                                                                 });
                                                             });
