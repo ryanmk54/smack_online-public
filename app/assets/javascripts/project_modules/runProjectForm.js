@@ -92,6 +92,7 @@ RunProjectForm = (function() {
       }
       else {
         clearInterval(intervalId);
+        OutputEditor.set("This is taking longer than expected . . .");
       }
     }, 1000);
   };

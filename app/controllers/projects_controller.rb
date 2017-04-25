@@ -147,7 +147,12 @@ class ProjectsController < ApplicationController
   # Saves the output to the file_system
   def receive_service_output
     # Get params and associate :output with the project with id :id
-    @project.output = params[:output]
+    if params[:output] != nil && params[:output] != ''
+      @project.output = params[:output]
+    else
+      @project.output = 'SMACK did not return any output.';
+    end
+
     @project[:runtime] = params[:time_elapsed]
     @project[:eta] = 0
     @project.save

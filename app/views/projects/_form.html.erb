@@ -21,9 +21,8 @@
       <div id="upload-project-container"
            title="Upload a zip file containing your source code">
         <div class="field white-color">
-          <%= label_tag :input_upload, "Upload Project" %>
-          <%= file_field_tag :input_upload, accept: ".zip, application/zip", 
-              class: 'white-color' %>
+          <%= link_to "Upload Project", '#', {:class => 'navbar-link', 'data-target' => "#new_project_modal", 'data-toggle' => "modal" }  %>
+
           <span id="input_upload_status"></span>
         </div>
       </div>
