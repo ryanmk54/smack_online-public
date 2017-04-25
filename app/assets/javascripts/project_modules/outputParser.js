@@ -102,6 +102,7 @@ var OutputParser = (function() {
     var successText = "SMACK found no errors";
     var sendingText = "Sending code to server";
     var waitingText = "Estimated time remaining:";
+    var longerThanExpected = "This is taking longer than expected";
     var noCodeText = "no code";
     if (output.length == 0) {
       return "empty";
@@ -113,6 +114,9 @@ var OutputParser = (function() {
       return "sending";
     }
     if (output.indexOf(waitingText) != -1) {
+      return "waiting";
+    }
+    if (output.indexOf(longerThanExpected) != -1) {
       return "waiting";
     }
     if (output.indexOf(noCodeText) != -1) {
