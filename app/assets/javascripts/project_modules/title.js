@@ -11,6 +11,7 @@ var Title = (function() {
       submitForm,
       submitOnBlur;
 
+  /** Initializes  the Title form */
   init = function() {
     // Reset the title form if this is a new project
     var titleEl = document.getElementById("project_title");
@@ -27,17 +28,20 @@ var Title = (function() {
   };
 
 
+  /** Returns the title */
   get = function(value) {
     return $('#project_title').val();
   };
 
 
+  /** Sets the title */
   set = function(value) {
     document.getElementById("project_title").value = value;
     submitForm();
   };
 
 
+  /** Sets the title only if there isn't a title yet */
   setIfEmpty = function(value) {
     if ( get() ) {
       return;
@@ -46,17 +50,20 @@ var Title = (function() {
   }
 
 
+  /** Saves the  title to the server */
   submitForm = function() {
     var titleEl = document.getElementById("project_title");
     $.rails.handleRemote($(titleEl.form));
   }
 
 
+  /** Submits the title form */
   submitOnBlur = function(event) {
     submitForm();
   }
 
 
+  /** Submits the title form only if it has changed */
   onlySubmitIfChanged = function(event) {
     var titleEl = document.getElementById("project_title");
     var currentValue = titleEl.value;
@@ -68,6 +75,7 @@ var Title = (function() {
     return true;
   };
 
+  /** Public methods */
   return {
     init: init,
     get: get,

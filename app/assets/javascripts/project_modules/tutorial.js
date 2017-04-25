@@ -39,6 +39,7 @@ var Tutorial = (function() {
   init = function() {
     var tour = createTour();
     $("#start-tutorial-btn").on('click', function(){ tour.start(true) });
+      // Start the tutorial when they click the start tutorial button
   };
 
   return {

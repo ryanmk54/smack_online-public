@@ -1,9 +1,11 @@
+// Replaces the create forms with edit forms
 $("#options-and-run-row").replaceWith("<%= j render partial: "options_and_run_row" %>");
 $("#project_title_form").replaceWith("<%= j render partial: "title_form" %>");
 $("#file_tree_form").replaceWith("<%= j render partial: "file_tree_form" %>");
 $(".selectpicker").selectpicker();
 initOptionsMenu();
 
+// Updates the Url
 <% prev_url = url_for controller: 'projects', action: 'edit', id: @project.id %>
 var stateObj = { prev: "<%= prev_url %>" };
 window.history.pushState(stateObj, "<%= @project.title %>", "<%= prev_url %>");

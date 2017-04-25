@@ -32,22 +32,33 @@ body {
 
   @media (min-width: $screen-md-min) {
     flex-direction: row;
+      /* The editors should be side by side if the screen is big enough */
   }
 
   .editor-container {
     position: relative;
+    
+    /* When the editors are stacked, the height should be 50% - size of button */
     height: calc(50% - 18px);
     width: 100%;
+      /* full width */
+
+
+    /* When they are side by size make it half with */
     @media (min-width: $screen-md-min) {
       height: 100%;
       width: 50%;
     }
 
 
+    /* Shrink the editors automatically */
     flex-shrink: 1;
+
+    /* make the transition smooth */
     transition: all 0.5s;
   }
 
+  /* Show the correct arrow depending on if it is shrunk or not */
   &.output-shrunk {
     /* The resize button when the output editor is shrunk */
     #collapse-output-text:before {
@@ -59,6 +70,7 @@ body {
       }
     }
 
+    /* Set the correct size depending of if it is shrunk or not */
     #input-editor-container {
       height: 100%;
       width: 100%;
@@ -74,11 +86,13 @@ body {
   }
 }
 
+/* Maximize the ace editors */
 .ace-editor {
   height: 100%;
   width: 100%;
 }
 
+/* Styles for the button to toggle the size of the output editor */
 #collapse-output-btn {
   display: flex;
   align-items: center;
@@ -100,6 +114,7 @@ body {
   }
 }
 
+/* Show the correct output when the output isn't shrunk */
 #collapse-output-text:before {
   content: "V";
 
@@ -108,6 +123,7 @@ body {
   }
 }
 
+/* Styles for the Output Notification */
 #verify-status-box {
   position: absolute;
   top: 0;
@@ -172,6 +188,7 @@ body {
 }
 
 
+/* Row that shows the title */
 #top-row {
   label {
     float: left;
@@ -182,6 +199,7 @@ body {
   }
 }
 
+/* Status text box */
 #output-status {
   display: flex;
   align-items: center;
@@ -197,6 +215,7 @@ body {
 }
 
 
+/* row with the options and verify button */
 #options-and-run-row {
   & > div:first-child {
     margin: 8px;
@@ -210,6 +229,7 @@ body {
   overflow: hidden;
 }
 
+/* Project file list */
 #file-list {
   margin-right: -15px;
 }

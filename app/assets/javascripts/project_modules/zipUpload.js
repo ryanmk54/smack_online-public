@@ -1,6 +1,4 @@
-/**
- * External Variables: Title
- */
+/** File Upload form module */
 var FileUpload = (function() {
   "use strict";
 
@@ -13,11 +11,13 @@ var FileUpload = (function() {
       loadFileTreeFromZipUpload,
       tryLoadFileTreeFromZipUpload;
 
+  /** clears any errors */
   clearZipError = function() {
     displayZipError("");
   }
 
 
+  /** Set the zip error */
   displayZipError = function(errorMessage) {
     var errorSpanElement = document.getElementById("input_upload_status");
     errorSpanElement.textContent = errorMessage;
@@ -28,6 +28,7 @@ var FileUpload = (function() {
   }
 
 
+  /** Initializes the File Upload form */
   init = function() {
     zipUpload = document.getElementById("input_upload");
 
@@ -88,6 +89,7 @@ var FileUpload = (function() {
     }
   }
 
+  /** Public methods */
   return {
     init: init
   }

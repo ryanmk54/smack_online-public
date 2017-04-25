@@ -1,15 +1,16 @@
 var ResizeOutputEditor = (function() {
   "use strict";
 
-  var classToAdd,
-      containerSel,
-      btnSel,
+  var classToAdd,   // Class that gets added to change the state
+      containerSel, // Element the class is added to
+      btnSel,       // Selector for the Resize button
 
-      init,
-      expand,
-      shrink,
-      toggle;
+      init,         // Initializes the Output Editor Resizer
+      expand,       // Expands the output editor
+      shrink,       // Shrinks the output editor
+      toggle;       // Toggles the output editor
 
+  /** Initializes the Output Editor Resizer */
   init = function() {
     containerSel = "#editors-row";
     classToAdd = "output-shrunk";
@@ -19,6 +20,7 @@ var ResizeOutputEditor = (function() {
   };
 
 
+  /** Expands the Output Editor */
   expand = function() {
     $(containerSel).removeClass(classToAdd);
     $(containerSel).on('transitionend webkitTransitionEnd', function(e) {
@@ -27,10 +29,12 @@ var ResizeOutputEditor = (function() {
   };
 
 
+  /** Shrinks the Output Editor */
   shrink = function() {
     $(containerSel).addClass(classToAdd);
   }
 
+  /** Toggle the Output Editor */
   toggle = function() {
     if( $(containerSel).hasClass(classToAdd) ){
       expand();
@@ -40,6 +44,7 @@ var ResizeOutputEditor = (function() {
     }
   };
 
+  /** Public Methods */
   return {
     init: init,
     expand: expand,

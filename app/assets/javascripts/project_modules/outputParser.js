@@ -1,5 +1,8 @@
-/**
- * External Variables: OutputEditor
+/** 
+ * Shows OutputNotifications 
+ * and the status
+ * based on the contents of
+ * the OutputEditor
  */
 var OutputParser = (function() {
   "use strict";
@@ -15,11 +18,13 @@ var OutputParser = (function() {
       setStatus,
       updateStatus;
 
+  /** Initializes the OutputParser */
   init = function() {
     updateStatus();
   };
 
 
+  /** Returns the icon class to show the correct icon in the notification */
   getIconClass = function() {
     var status = getStatusClass();
     switch(status) {
@@ -37,6 +42,7 @@ var OutputParser = (function() {
   }
 
 
+  /** Shows the Output notification */
   showOutputModal = function() {
     var description = getDescription();
     var verifyStatusBox = "" +
@@ -61,16 +67,19 @@ var OutputParser = (function() {
   };
 
 
+  /** Closes the Output Nofication */
   closeVerifyStatusBox = function() {
     $("#verify-status-box").remove();
   }
 
 
+  /** Open the Output Editor when the the user clicks on the notification */
   handleVerifyStatusBox = function(event) {
     ResizeOutputEditor.expand();
   }
 
 
+  /** Returns the header of the Output Notification */
   getHeader = function() {
     var status = getStatusClass();
     if (status == "success") {
@@ -83,6 +92,11 @@ var OutputParser = (function() {
   };
 
 
+  /** 
+   * Returns the status of the verification
+   * This is used throughout the rest of this module
+   * to know what to return
+   */
   getStatusClass = function() {
     var output = OutputEditor.get();
     var successText = "SMACK found no errors";
@@ -112,6 +126,7 @@ var OutputParser = (function() {
   };
 
 
+  /** Returns the description of the Output Notification */
   getDescription = function() {
     var status = getStatusClass();
     if (status == "empty") {
@@ -124,7 +139,6 @@ var OutputParser = (function() {
       return "There is no code to send to SMACK";
     } else if (status == "waiting") {
       var output = OutputEditor.get();
-      // used to say "Waiting for a response from SMACK"
       return output;
     } else {
       return "Errors found. Click to view error log";
@@ -132,16 +146,22 @@ var OutputParser = (function() {
   };
 
 
+  /** 
+   * Sets the status of the status text box
+   * Used to say Not Yet Verified
+   */
   setStatus = function(text) {
     $("#project-status").val(text);
   }
 
 
+  /** Sets the status to the same thing as the description */
   updateStatus = function() {
     setStatus(getDescription());
   }
 
 
+  /** Public methods */
   return {
     init,
     getDescription,

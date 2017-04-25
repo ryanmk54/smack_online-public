@@ -2,15 +2,18 @@ var OutputEditor = (function() {
   "use strict";
 
   var editor,
+        // The backing variable
 
-      debug,
-      init,
-      append,
-      get,
+      debug,  // turns on the debugger so I have access to all private variables
+      init,   // initializes the OutputEditor
+      append, // appends text to the Output
+      get,    // returns the text of the output
       highlightCorrespondingInputRow,
-      resize,
-      set;
+        // highlights the corresponding row in the InputEditor
+      resize, // calls resize, which makes stuff show up
+      set;    // sets the content of the OutputEditor
 
+  /** Initializes the OutputEditor */
   init = function() {
     editor = ace.edit("outputEditor");
     editor.setAutoScrollEditorIntoView(true);
@@ -26,6 +29,7 @@ var OutputEditor = (function() {
   };
 
 
+  /** Appends text to the Output */
   append = function(value) {
     editor.navigateFileEnd();
     editor.insert('\n');
@@ -33,26 +37,34 @@ var OutputEditor = (function() {
   };
 
 
+  /** Starts the debugger, which gives access to all private variables */
   debug = function() {
     debugger;
   }
 
 
+  /** Returns the contents of the editor */
   get = function() {
     return editor.getValue();
   }
 
 
+  /** Highlights the corresponding row in the Input editor */
   highlightCorrespondingInputRow = function() {
     var cursorPos = editor.getSelection().getCursor();
     var contentInRow = editor.getSession().getLine(cursorPos.row);
     contentInRow = contentInRow.trim();
 
+    /* Regex specific to the SMACK output 
+     * If the format of the SMACK output changes,
+     * these might need to change
+     */
     var matchStrings = [
       /(.*)\((\d*),(\d*)\)/,
       /([A-z.]*):(\d*):(\d*)/
     ];
 
+    // Check if either of the strings match
     matchStrings.forEach(function(matchString) {
       var match = contentInRow.match(matchString);
       if (match) {
@@ -63,17 +75,22 @@ var OutputEditor = (function() {
         rowNum -= 1;
           // rows are zero based
 
+        // Set the current file to the file they clicked on
         FileTree.setCurrentFile(fileName, rowNum, colNum);
       }
     });
   };
 
 
+  // Resize the editor to make it show up
   resize = function() {
     editor.resize();
   };
 
 
+  /**
+   * Set the contents of the editor
+   */
   set = function(value) {
     editor.setValue(value);
     editor.navigateTo(0,0);
@@ -81,6 +98,7 @@ var OutputEditor = (function() {
   };
 
 
+  /** Public Methods */
   return {
     init: init,
     debug: debug,

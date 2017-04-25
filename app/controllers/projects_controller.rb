@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :receive_service_output]
 
   # Production SMACK server URL
-  SERVICE_REQUEST_URL = 'ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000/job_started'
+  SERVICE_REQUEST_HOST = ENV['SMACK_SERVER_HOST']
   PROJECT_CSV_PATH = Rails.root.join('public', 'assets', 'ProjectLocations.csv')
   RUNTIME_THRESHOLD = 500; # Ignore projects with runtimes more than this number when calculating average runtimes for eta.
 
@@ -225,7 +225,7 @@ class ProjectsController < ApplicationController
   def send_service_input
     # Send the request
     base64Input = params[:project][:input]
-    response = RestClient.post(SERVICE_REQUEST_URL,
+    response = RestClient.post("#{SERVICE_REQUEST_HOST}/job_started",
     {
         id: @project[:id],
         options: @project[:service_options],
