@@ -47,10 +47,10 @@ class ProjectsController < ApplicationController
       @project.save
     end
 
+    puts "project_input"
+    puts @project.input
     if project_params.has_key? :input
-      @project.input= Base64.encode64 params[:project][:input].tempfile.open.read
-    else
-      @project.input= ''
+      @project.input= params[:project][:input]
     end
 
     # Need to save before send_service_input in order to know the project id
