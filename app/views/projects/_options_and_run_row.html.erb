@@ -2,8 +2,7 @@
 <div id="options-and-run-row" class="lgray h-form-row flex-row">
   <!-- Bottom Left -->
   <div class="flex-col-sm-9 flex-col-sm-grow flex-col-md-6 flex-col-md-nogrow">
-    <%= form_for(@project, remote: true, format: :js, 
-                 html: {id: "run-project-form"}) do |f| %>
+    <%= form_for(@project, remote: true, format: :js, html: {id: "project_form"}) do |f| %>
       <!--Placeholder for options menu-->
       <div class="btn-group" id="optionsMenu">
         <button data-toggle="dropdown" class="btn btn-default btn-primary dropdown-toggle">
@@ -13,6 +12,10 @@
       </div>
       <div hidden>
         <%= f.text_field :input, value: @project.input %>
+        <%= f.text_field :title %>
+        <%= f.radio_button :public, true  %>
+        <%= f.radio_button :public, false %>
+        <input id=run_flag name=run value=true disabled/>
       </div>
       <%= f.submit "Verify", name: :run, type: :button, id: :run_button,
                    class: "btn btn-default btn-primary run-button" %>

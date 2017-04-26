@@ -11,18 +11,19 @@ RunProjectForm = (function() {
       pollDelay,
       requestOutputFromServer,
       startPollingServerForOutput,
-      submitWithUpdatedBase64,
+      submit,
+      submitAndRun,
       startTimer,
       intervalId,
       timer;
+
 
   /** Initializes the Module */
   init = function() {
     pollDelay = 0;
     timer = -1;
-    $(document).on('click', '#run_button', submitWithUpdatedBase64);
-    $(document).on('ajax:beforeSend', '#run-project-form', addRunField);
-    $(document).on('ajax:complete', '#run-project-form', startPollingServerForOutput);
+    $(document).on('click', '#run_button', submitAndRun);
+    $(document).on('ajax:complete', '#project-form.edit_project', startPollingServerForOutput);
   };
 
 
@@ -46,14 +47,16 @@ RunProjectForm = (function() {
     }
     else {
       timer = -1;
-      requestOutputFromServer();
+      var url = document.getElementById('poll_form').action;
+      requestOutputFromServer(url);
     }
   };
 
 
   /** Sends a request to the ouput server */
-  requestOutputFromServer = function() {
-    var url = document.getElementById('poll-form').action;
+  requestOutputFromServer = function(url) {
+    console.log("requuesting output from server");
+    console.log(url);
     setTimeout(function() {
       $.ajax({
         type: "GET",
@@ -74,7 +77,7 @@ RunProjectForm = (function() {
               timer = data.eta;
               startTimer();
             }
-            requestOutputFromServer();
+            requestOutputFromServer(url);
           }
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -105,29 +108,40 @@ RunProjectForm = (function() {
     }, 1000);
   };
 
+  submit = function(event) {
+    document.getElementById("run_flag").disabled = true;
+    FileTree.getBase64()
+      .then(function (content) {
+        $("#project_form #project_input").val(content);
+        $.rails.handleRemote($("#project_form"));
+        console.log("form action");
+        console.log($("#project_form")[0].action);
+      });
+  }
+
   /** Saves the content of the Input editor */
-  submitWithUpdatedBase64 = function(event) {
+  submitAndRun = function(event) {
     if (InputEditor.get().trim().length == 0) {
       OutputEditor.set("There is no code to send to the server");
       return;
     }
+    document.getElementById("run_flag").disabled = false;
     OutputEditor.set("Sending code to server");
     InputEditor.save();
     FileTree.getBase64()
       .then(function (content) {
-        $("#run-project-form #project_input").val(content);
-        $.rails.handleRemote($("#run-project-form"));
+        $("#project_form #project_input").val(content);
+        $.rails.handleRemote($("#project_form"));
+        console.log("form action");
+        console.log($("#project_form")[0].action);
       });
     return false;
   };
 
-  /** Adds the run field so the verification will happen */
-  addRunField = function(event, xhr, settings) {
-    settings.data += "&run=run";
-  }
-
   /** Public methods */
   return {
-    init: init
+    init: init,
+    requestOutputFromServer: requestOutputFromServer,
+    submit: submit,
   };
 }());

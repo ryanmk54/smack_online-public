@@ -17,7 +17,6 @@ var FileTree = (function() {
       loadFileTree,           // loads the file tree with the contents of zip
       setCurrentFile,         // sets the current filename to the given file
       setValueOfCurrentFile,  // sets the contents of the current file
-      saveToServer,           // sends the zip's base64 to the server
       tryLoadFromBase64Input; // loads the filetree from base64, if there is any
 
 
@@ -175,37 +174,16 @@ var FileTree = (function() {
   /**
    * Sets the content of the current file to the given value
    */
-  setValueOfCurrentFile = function(value, save) {
+  setValueOfCurrentFile = function(value) {
     // If a zip exists, set the current file
-    if (zip) {
+    if (currentFileName) {
       zip.file(currentFileName, value);
     }
 
     // else create a zip with a file called main.c
     else {
-      zip = new JSZip();
       zip.file("main.c", value);
     }
-
-    // save to server if they passed the save parameter
-    if (save) {
-      saveToServer();
-    }
-  };
-
-
-  /**
-   * Saves the contents of this filetree to the server
-   *
-   * Generates a base64 representation of the backing zip
-   * and send it to the server
-   */
-  saveToServer = function() {
-    zip.generateAsync({type: "base64"})
-      .then(function (content) {
-        $("#file_tree_form #project_input").val(content);
-        $.rails.handleRemote($("#file_tree_form"));
-      });
   };
 
 
@@ -229,6 +207,8 @@ var FileTree = (function() {
         }, function error(e) {
           throw("Unable to load project from server");
         });
+    } else {
+      zip = JSZip();
     }
   };
 
@@ -237,7 +217,6 @@ var FileTree = (function() {
   return {
     init,
     getBase64,
-    saveToServer,
     setCurrentFile,
     setValueOfCurrentFile
   };

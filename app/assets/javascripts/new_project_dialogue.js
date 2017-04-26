@@ -11,6 +11,33 @@ function displayUploadForm() {
     $('#project_upload_form').toggle(true);
 }
 
+function submitProjectUploadForm() {
+    // Apply the title
+    var visibleTitleEl = document.getElementById("title");
+    var projectFormTitleEl = document.getElementById("project_title");
+    var projectUploadTitle = $("#project_upload_form #titleInput1").val();
+    visibleTitleEl.value = projectUploadTitle;
+    projectFormTitleEl.value = projectUploadTitle;
+
+    // Apply the zip
+    var zipUpload = document.getElementById("file_input");
+    var zip = new JSZip();
+    zip.loadAsync(zipUpload.files[0])
+      .then(function success(zip) {
+        FileTree.init(zip);
+        OutputParser.setStatus("Not yet verified");
+      }, function error(e) {
+        throw("Unable to load zip files");
+      });
+
+    // Apply project public or private
+    var pubPriv = document.querySelector("#project_upload_form input[name='project[public]']:checked").value;
+    var elId = "project_public_" + pubPriv;
+    document.getElementById(elId).checked = true;
+    $("#project_upload_form").toggle(false);
+}
+
+
 /*
     Modifies the DOM to display the form for uploading a project
     from a github repository in the "new project" modal
@@ -23,6 +50,8 @@ function displayGitForm() {
 // Code for GitHub import, added by Jake
 // GitHub API tutorial followed at:  http://blog.teamtreehouse.com/code-a-simple-github-api-webapp-using-jquery-ajax
 $(function() {
+  $("#upload_project_button").on("click", submitProjectUploadForm);
+
     // on click of the submit button, load the respositories for the entered username
     $('#ghsubmitbtn').on('click', function(e) 
     {

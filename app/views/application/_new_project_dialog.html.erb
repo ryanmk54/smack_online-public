@@ -27,7 +27,7 @@
         <br/>
 
         <div id="project_upload_form"  class="collapse" style="text-align: left; width: 100%; margin-top: 10%; padding: 10px;" multipart="true">
-          <%= form_tag '/projects', multipart: true, :html => {onsubmit: 'return preprocessProjectUpload()'} do %>
+          <form>
             <div class="form-group" >
               <label for="titleInput1">Title</label>
               <input type="text" id="titleInput1" name="project[title]">
@@ -41,8 +41,8 @@
               <label class="radio-inline"><input type="radio" name="project[public]" value="true">Public</label>
               <label class="radio-inline"><input type="radio" name="project[public]" value="false">Private</label>
             </div>
-            <button type="submit" class="btn btn-primary">Create Project</button>
-          <% end %>
+            <button id="upload_project_button" type="button" data-target="#new_project_modal" data-toggle="modal" class="btn btn-primary">Upload Project</button>
+          </form>
         </div>
 
         <!-- GitHub Import Section of the New Project Dialog -->

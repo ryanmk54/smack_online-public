@@ -1,11 +1,20 @@
 // Replaces the create forms with edit forms
 $("#options-and-run-row").replaceWith("<%= j render partial: "options_and_run_row" %>");
-$("#project_title_form").replaceWith("<%= j render partial: "title_form" %>");
+console.log("got 1");
 $("#file_tree_form").replaceWith("<%= j render partial: "file_tree_form" %>");
+console.log("got 2");
 $(".selectpicker").selectpicker();
+console.log("got 3");
 initOptionsMenu();
+console.log("got 4");
 
 // Updates the Url
 <% prev_url = url_for controller: 'projects', action: 'edit', id: @project.id %>
 var stateObj = { prev: "<%= prev_url %>" };
+console.log("got 5");
 window.history.pushState(stateObj, "<%= @project.title %>", "<%= prev_url %>");
+console.log("got 6");
+<% if params[:run] %>
+  <% poll_url = url_for controller: 'projects', action: :show, id: @project.id, format: :json %>
+  RunProjectForm.requestOutputFromServer("<%= poll_url %>");
+<% end %>

@@ -57,7 +57,7 @@ var InputEditor = (function() {
   /** Saves to the file tree if the contents have changed */
   save = function() {
     if (changed) {
-      FileTree.setValueOfCurrentFile(editor.getValue(), true);
+      FileTree.setValueOfCurrentFile(editor.getValue());
       changed = false;
     }
   };

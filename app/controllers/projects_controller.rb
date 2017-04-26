@@ -7,7 +7,8 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :receive_service_output]
 
   # Production SMACK server URL
-  SERVICE_REQUEST_HOST = ENV['SMACK_SERVER_HOST']
+  #SERVICE_REQUEST_HOST = ENV['SMACK_SERVER_HOST']
+  SERVICE_REQUEST_HOST = "ec2-52-53-187-90.us-west-1.compute.amazonaws.com:3000"
   PROJECT_CSV_PATH = Rails.root.join('public', 'assets', 'ProjectLocations.csv')
   RUNTIME_THRESHOLD = 500; # Ignore projects with runtimes more than this number when calculating average runtimes for eta.
 
@@ -47,11 +48,7 @@ class ProjectsController < ApplicationController
       @project.save
     end
 
-    puts "project_input"
-    puts @project.input
-    if project_params.has_key? :input
-      @project.input= params[:project][:input]
-    end
+    @project.input = params[:project][:input]
 
     # Need to save before send_service_input in order to know the project id
     # current_user.projects.push @project if current_user

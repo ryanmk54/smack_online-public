@@ -5,11 +5,9 @@ var Title = (function() {
 
       init,
       get,
-      onlySubmitIfChanged,
+      submitIfChanged,
       set,
-      setIfEmpty,
-      submitForm,
-      submitOnBlur;
+      setIfEmpty;
 
   /** Initializes  the Title form */
   init = function() {
@@ -17,27 +15,25 @@ var Title = (function() {
     var titleEl = document.getElementById("project_title");
     if (titleEl.form.classList.contains("new_project")) {
       titleEl.value = "";
+      document.getElementById("title").value = "";
     }
     lastValue = titleEl.value;
 
     // Update the form onblur
-    $(document).on('blur', '#project_title', submitOnBlur);
-
-    // Only submit the form if the title has changed
-    $(document).on('ajax:before', '#project_title_form', onlySubmitIfChanged);
+    $(document).on('blur', '#title', submitIfChanged);
   };
 
 
   /** Returns the title */
   get = function(value) {
-    return $('#project_title').val();
+    return $('#title').val();
   };
 
 
   /** Sets the title */
   set = function(value) {
-    document.getElementById("project_title").value = value;
-    submitForm();
+    document.getElementById("title").value = value;
+    submitIfChanged();
   };
 
 
@@ -50,28 +46,17 @@ var Title = (function() {
   }
 
 
-  /** Saves the  title to the server */
-  submitForm = function() {
-    var titleEl = document.getElementById("project_title");
-    $.rails.handleRemote($(titleEl.form));
-  }
-
-
-  /** Submits the title form */
-  submitOnBlur = function(event) {
-    submitForm();
-  }
-
-
   /** Submits the title form only if it has changed */
-  onlySubmitIfChanged = function(event) {
-    var titleEl = document.getElementById("project_title");
+  submitIfChanged = function(event) {
+    var titleEl = document.getElementById("title");
     var currentValue = titleEl.value;
     if (currentValue == lastValue) {
       return false;
     }
 
     lastValue = currentValue;
+    document.getElementById("project_title").value = currentValue;
+    RunProjectForm.submit();
     return true;
   };
 
