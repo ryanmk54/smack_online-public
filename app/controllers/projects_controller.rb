@@ -120,7 +120,7 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if @project.update(project_params)
         format.html { redirect_to edit_project_path(@project)}
-        format.js { render nothing: :true, status: 200}
+        format.js {}
         format.json { render json: @project, only: [:eta, :output, :id] }
       else
         format.any(:js, :json) do
@@ -221,6 +221,7 @@ class ProjectsController < ApplicationController
   # Returns: eta
   def send_service_input
     # Send the request
+    puts "entered send_service_input"
     base64Input = params[:project][:input]
     response = RestClient.post("#{SERVICE_REQUEST_HOST}/job_started",
     {
@@ -230,7 +231,10 @@ class ProjectsController < ApplicationController
         return_port: request.port
     }.to_json, {content_type: :json, accept: :json})
     # Set the project's eta to the SMACK server's predicted processing time
-    return JSON.parse(response.body)['eta']
+    eta = JSON.parse(response.body)['eta']
+    puts "send_service_input eta"
+    puts eta
+    return eta
   end
 
   # Use callbacks to share common setup or constraints between actions.

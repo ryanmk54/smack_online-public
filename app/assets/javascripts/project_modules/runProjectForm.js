@@ -29,6 +29,7 @@ RunProjectForm = (function() {
 
   /** Starts polling if there isn't already a request pending */
   startPollingServerForOutput = function(event, xhr, status) {
+    console.log("start polling server for output");
     if (status == "error") {
       if (xhr.status == 500) {
         OutputEditor.set("There was an internal server error.");
@@ -65,7 +66,8 @@ RunProjectForm = (function() {
         url: url,
         success: function(data, textStatus, jqXHR) {
           console.log(data.eta);
-          pollDelay = data.eta*250; // eta is in seconds, poll every 1/4th of the eta
+          //pollDelay = data.eta*250; // eta is in seconds, poll every 1/4th of the eta
+          pollDelay = data.eta*2000; // eta is in seconds, poll every 1/4th of the eta
           if (data.eta == 0) {
             OutputEditor.set(data.output);
             clearInterval(intervalId);

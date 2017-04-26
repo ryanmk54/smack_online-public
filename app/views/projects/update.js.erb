@@ -1,0 +1,4 @@
+<% if params[:run] %>
+  <% poll_url = url_for controller: 'projects', action: :show, id: @project.id, format: :json %>
+  RunProjectForm.requestOutputFromServer("<%= poll_url %>");
+<% end %>
