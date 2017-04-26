@@ -66,8 +66,7 @@ RunProjectForm = (function() {
         url: url,
         success: function(data, textStatus, jqXHR) {
           console.log(data.eta);
-          //pollDelay = data.eta*250; // eta is in seconds, poll every 1/4th of the eta
-          pollDelay = data.eta*2000; // eta is in seconds, poll every 1/4th of the eta
+          pollDelay = data.eta*250; // eta is in seconds, poll every 1/4th of the eta
           if (data.eta == 0) {
             OutputEditor.set(data.output);
             clearInterval(intervalId);
