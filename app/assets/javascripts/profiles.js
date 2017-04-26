@@ -439,9 +439,10 @@ $(document).ready(function() {
     $('#search_for_users').click(function() {
         displaySearchBar();
     });
-    
-    displayNewProjectButton();
-    displayProjects();
+    if(window.location.href.endsWith("profile")) { 
+      displayNewProjectButton();
+      displayProjects();
+    }
 });
 
 
