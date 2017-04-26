@@ -439,11 +439,12 @@ $(document).ready(function() {
     $('#search_for_users').click(function() {
         displaySearchBar();
     });
+    
+    displayNewProjectButton();
+    displayProjects();
 });
 
-function makeProjectPrivate() {
 
-}
 
 
 /*
