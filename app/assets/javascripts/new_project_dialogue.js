@@ -47,14 +47,7 @@ function displayGitForm() {
     $('#project_git_form').toggle(true);
 }
 
-// Code for GitHub import, added by Jake
-// GitHub API tutorial followed at:  http://blog.teamtreehouse.com/code-a-simple-github-api-webapp-using-jquery-ajax
-$(function() {
-  $("#upload_project_button").on("click", submitProjectUploadForm);
-
-    // on click of the submit button, load the respositories for the entered username
-    $('#ghsubmitbtn').on('click', function(e) 
-    {
+function loadRepos(e) {
         e.preventDefault();
         $('#ghapidata').html('<p>Loading...</p>');
 
@@ -249,16 +242,30 @@ $(function() {
                 }
             }
         });
+}
+
+function requestJSON(url, callback) 
+{
+    $.ajax({
+        url: url,
+        complete: function(xhr) 
+        {
+            callback.call(null, xhr.responseJSON);
+        }
+    });
+}
+
+// Code for GitHub import, added by Jake
+// GitHub API tutorial followed at:  http://blog.teamtreehouse.com/code-a-simple-github-api-webapp-using-jquery-ajax
+$(function() {
+  $("#upload_project_button").on("click", submitProjectUploadForm);
+
+    // on click of the submit button, load the respositories for the entered username
+    $('#ghsubmitbtn').on('click', loadRepos);
+    $('#ghusername').keypress(function(event) {
+      if (event.which == 13) {
+        loadRepos(event);
+      }
     });
 
-    function requestJSON(url, callback) 
-    {
-        $.ajax({
-            url: url,
-            complete: function(xhr) 
-            {
-                callback.call(null, xhr.responseJSON);
-            }
-        });
-    }
 });

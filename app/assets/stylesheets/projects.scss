@@ -24,6 +24,10 @@ body {
   width: 100%;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 #editors-row {
   height: calc(100% - 52px);
   display: flex;
