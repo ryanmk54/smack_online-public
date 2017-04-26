@@ -194,11 +194,12 @@ class ProjectsController < ApplicationController
      @project.output = 'pending'
      @project.eta = Project.where('runtime <= ?', RUNTIME_THRESHOLD).average('runtime').to_i
      @project.save
-     response = RestClient.post(SERVICE_REQUEST_URL,
+     response = RestClient.post("#{SERVICE_REQUEST_HOST}/job_started",
      {
          :id => @project[:id],
          :options => @project[:service_options],
-         :input => @project.input
+         :input => @project.input,
+         return_port: request.port
      }.to_json, {content_type: :json, accept: :json})
      # Set the project's eta to the SMACK server's predicted processing time
     render partial: 'profiles/running_project', locals: { project: @project }
