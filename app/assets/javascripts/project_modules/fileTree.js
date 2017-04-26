@@ -183,6 +183,7 @@ var FileTree = (function() {
     // else create a zip with a file called main.c
     else {
       zip.file("main.c", value);
+      loadFileTree();
     }
   };
 
